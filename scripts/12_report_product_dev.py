@@ -690,6 +690,10 @@ def build_html(data: dict, product_id: str) -> str:
         if version_mode else
         ""
     )
+    ver_buttons_html = "\n  ".join(
+        f'<button class="ver-btn" onclick="setVersion(this,\'{v}\')">v{v}</button>'
+        for v in vers
+    )
     version_filter_html = (
         f"""<div class="ver-filter-bar" id="versionBar">
   <span style="font-size:.8rem;color:#6c757d;font-weight:600;white-space:nowrap">📦 Version:</span>
@@ -714,11 +718,6 @@ def build_html(data: dict, product_id: str) -> str:
     cust_features_js   = json.dumps(cust_features,   ensure_ascii=False)
     cust_features_by_version_js = json.dumps(cust_features_by_version, ensure_ascii=False)
     ver_total_custs_js = json.dumps(ver_total_custs, ensure_ascii=False)
-
-    ver_buttons_html = "\n  ".join(
-        f'<button class="ver-btn" onclick="setVersion(this,\'{v}\')">v{v}</button>'
-        for v in vers
-    )
 
     # Keep the adoption chart readable without creating excessive vertical gaps
     # before the table and the next section.
