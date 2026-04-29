@@ -137,6 +137,34 @@ python3 scripts/07_generate_schema_diagram.py
 
 ## Report Views
 
+### Web Launcher
+
+Open the browser-based launcher that links to all report views:
+
+```text
+http://127.0.0.1:8001/views
+```
+
+The launcher supports:
+
+- Product Development all versions
+- Product Development for a specific version
+- Customer Success Management
+- Regional Managers all regions
+- Regional Managers for a specific region
+- Technical Owner for a specific customer
+
+Direct launcher-backed routes:
+
+```text
+http://127.0.0.1:8001/views/product-dev?product_id=identity-server
+http://127.0.0.1:8001/views/product-dev?product_id=identity-server&version=7.3.0
+http://127.0.0.1:8001/views/customer-success
+http://127.0.0.1:8001/views/regional
+http://127.0.0.1:8001/views/regional?region=eu-west
+http://127.0.0.1:8001/views/technical-owner?customer_id=umbrella
+```
+
 ### View 1: Technical Owner
 
 List customers:
