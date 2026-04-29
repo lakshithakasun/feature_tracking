@@ -221,6 +221,73 @@ Generate a version-specific product report:
 python3 scripts/12_report_product_dev.py --product identity-server --version 7.3.0 --out reports/product_dev_7_3_0.html
 ```
 
+## Troubleshooting
+
+### `uvicorn: command not found`
+
+Use the project virtual environment:
+
+```bash
+.venv/bin/uvicorn app.main:app --reload --port 8001
+```
+
+### `Address already in use` on port `8001`
+
+Another FastAPI process is already running.
+
+Find the process:
+
+```bash
+lsof -i :8001
+```
+
+Stop it with the PID shown:
+
+```bash
+kill <PID>
+```
+
+Or just reuse the running server if `http://127.0.0.1:8001/health` already responds.
+
+### Reports show empty or zero values after reseeding
+
+Make sure the API is running before seeding:
+
+```bash
+.venv/bin/uvicorn app.main:app --reload --port 8001
+```
+
+Then reset and reseed:
+
+```bash
+bash scripts/clear_data.sh --yes
+bash scripts/00_seed_test_data.sh
+```
+
+After reseeding, regenerate the HTML report you want to inspect.
+
+### Launcher page opens but a report fails
+
+Open the launcher here:
+
+```text
+http://127.0.0.1:8001/views
+```
+
+If a parameterized report does not open:
+
+- Product Development version view needs a selected version
+- Regional view needs a selected region
+- Technical Owner view needs a selected customer
+
+You can also test the report routes directly:
+
+```text
+http://127.0.0.1:8001/views/product-dev?product_id=identity-server
+http://127.0.0.1:8001/views/regional?region=eu-west
+http://127.0.0.1:8001/views/technical-owner?customer_id=umbrella
+```
+
 ## Typical Daily Flows
 
 ### Fresh demo setup
