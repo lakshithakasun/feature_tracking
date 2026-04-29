@@ -1,0 +1,177 @@
+# Nova Financial Services — Enterprise, EU North, v7.2.0 Production
+# Profile: Financial-grade security — FAPI, passkey-first, strong governance, RAR
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "nova-finance-prod-eu"
+  customer_id: "nova-finance"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 42000
+      dimension_breakdown:
+        grant_type: { authorization-code: 28000, client-credentials: 14000 }
+        response_type: { code: 38000, id-token: 4000 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 8500
+      dimension_breakdown:
+        binding_type: { http-post: 7000, http-redirect: 1500 }
+        assertion_encryption: { "true": 8500 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 9200
+      dimension_breakdown:
+        action: { authenticate: 8600, enroll: 520, auth-failed: 80 }
+        authenticator_type: { platform: 7500, cross-platform: 1700 }
+
+  - code: "is.mfa.x509"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        action: { authenticate: 1720, auth-failed: 80 }
+
+  - code: "is.mfa.backup-codes"
+    utilization:
+      total_count: 450
+      dimension_breakdown:
+        action: { generated: 200, used: 220, regenerated: 30 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 18000
+      dimension_breakdown:
+        template: { ip-based: 8000, new-device-based: 6000, role-based: 4000 }
+        outcome: { step-up-not-triggered: 10000, step-up-triggered: 7200, access-denied: 800 }
+
+  - code: "is.app-management.fapi-app"
+    utilization:
+      total_count: 120
+      dimension_breakdown:
+        fapi_profile: { fapi1-advanced: 90, fapi2: 30 }
+
+  - code: "is.app-management.dcr"
+    utilization:
+      total_count: 380
+      dimension_breakdown:
+        action: { register: 200, update: 150, delete: 30 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { role-created: 600, role-updated: 1200, permission-assigned: 1000 }
+        role_type: { application: 1900, organization: 900 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        action: { api-resource-registered: 900, scope-defined: 1800, policy-created: 1500 }
+
+  - code: "is.authorization.rich-authorization-requests"
+    utilization:
+      total_count: 1600
+      dimension_breakdown:
+        action: { configured: 80, request-processed: 1520 }
+
+  - code: "is.authorization.user-impersonation"
+    utilization:
+      total_count: 90
+      dimension_breakdown:
+        scope: { console: 65, business-app: 25 }
+        action: { impersonation-started: 45, impersonation-ended: 45 }
+
+  - code: "is.customization.identity-verification"
+
+  - code: "is.governance.password-policy"
+    utilization:
+      total_count: 35
+      dimension_breakdown:
+        action: { configured: 15, updated: 20 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { account-locked: 2400, account-unlocked: 350, policy-configured: 50 }
+
+  - code: "is.governance.bot-detection"
+    utilization:
+      total_count: 4500
+      dimension_breakdown:
+        action: { triggered: 4200, enabled: 200, disabled: 100 }
+
+  - code: "is.governance.session-management"
+    utilization:
+      total_count: 220
+      dimension_breakdown:
+        action: { policy-configured: 100, session-terminated-admin: 120 }
+
+  - code: "is.governance.account-disabling"
+    utilization:
+      total_count: 180
+      dimension_breakdown:
+        action: { disabled: 130, enabled: 50 }
+
+  - code: "is.governance.notification-settings"
+    utilization:
+      total_count: 42
+      dimension_breakdown:
+        channel: { email: 30, sms: 12 }
+        action: { configured: 20, updated: 18, tested: 4 }
+
+  - code: "is.customization.webhooks"
+    utilization:
+      total_count: 6200
+      dimension_breakdown:
+        event_type: { login: 3500, user-update: 1500, registration: 800, user-delete: 400 }
+        action: { triggered: 5900, failed: 300 }
+
+  - code: "is.user-management.admin-onboard"
+    utilization:
+      total_count: 1200
+      dimension_breakdown:
+        method: { scim-api: 800, admin-api: 300, console: 100 }
+
+  - code: "is.provisioning.inbound-scim"
+    utilization:
+      total_count: 5400
+      dimension_breakdown:
+        operation: { create: 2000, update: 2800, delete: 500, bulk: 100 }
+
+  - code: "is.enterprise-login.saml-idp"
+    utilization:
+      total_count: 3800
+      dimension_breakdown:
+        action: { login-success: 3600, login-failed: 200 }
+
+  - code: "is.enterprise-login.microsoft-365"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        action: { login-success: 2000, login-failed: 100 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 38
+      dimension_breakdown:
+        scope: { organization: 25, application: 13 }
+        customization_type: { theme: 15, logo: 12, color-palette: 11 }
+
+  - code: "is.branding.email-templates"
+    utilization:
+      total_count: 55
+      dimension_breakdown:
+        template_type: { password-reset: 20, account-verification: 15, otp: 12, account-lock: 8 }
+        action: { customized: 55 }

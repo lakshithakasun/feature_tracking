@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regional Managers Dashboard — eu-west</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --brand-dark: #173b45;
+      --brand-mid: #2d6a73;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#1f2937; }
+    .page-header {
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+      color: white; padding: 2.4rem 0 2rem;
+    }
+    .page-header .subtitle { opacity:.78; font-size:.94rem; }
+    .tag-pill {
+      background: rgba(255,255,255,.14); border-radius:999px;
+      padding:.35rem .8rem; font-size:.76rem; letter-spacing:.05em;
+    }
+    .stat-card {
+      background:white; border-radius:14px; padding:1.2rem 1.3rem;
+      box-shadow:0 2px 10px rgba(15,23,42,.06); height:100%;
+    }
+    .stat-card .value { font-size:1.9rem; font-weight:700; line-height:1; }
+    .stat-card .label { color:#64748b; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; margin-top:.35rem; }
+    .stat-card .sub { color:#64748b; font-size:.79rem; margin-top:.3rem; }
+    .section-card {
+      background:white; border-radius:14px; box-shadow:0 2px 10px rgba(15,23,42,.06);
+      margin-bottom:1.5rem; overflow:hidden;
+    }
+    .section-card .card-header {
+      background:none; border-bottom:1px solid #e5e7eb; padding:1rem 1.25rem;
+      font-weight:650; font-size:.96rem;
+    }
+    .section-card .card-body { padding:1.25rem; }
+    table thead th {
+      background:#f8fafc; color:#64748b; font-size:.74rem; text-transform:uppercase;
+      letter-spacing:.04em; border-bottom:2px solid #e5e7eb;
+    }
+    table tbody td { vertical-align:middle; }
+    .status-pill {
+      display:inline-block; padding:.18rem .55rem; border-radius:999px; font-size:.73rem; font-weight:600;
+    }
+    .footer { color:#94a3b8; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+      <span class="tag-pill">REGIONAL MANAGERS VIEW</span>
+      <span class="tag-pill">eu-west</span>
+      <span class="tag-pill">Operational Regional Focus</span>
+      <span class="tag-pill">Growth + GTM Focused</span>
+    </div>
+    <h1 class="mb-1" style="font-size:1.95rem;font-weight:700">Regional Managers Dashboard — eu-west</h1>
+    <div class="subtitle">
+      Generated 2026-04-29 12:12
+      &nbsp;·&nbsp; objective: regional growth, adoption strength, and GTM prioritization
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value text-primary">1</div>
+      <div class="label">Customers</div>
+      <div class="sub">in this region</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value" style="color:#b45309">40%</div>
+      <div class="label">Adoption</div>
+      <div class="sub">regional average</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#64748b">-8%</div>
+      <div class="label">Trend</div>
+      <div class="sub">Stable</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#b45309">15%</div>
+      <div class="label">Coverage</div>
+      <div class="sub">Very High opportunity</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#b45309">Medium</div>
+      <div class="label">Risk</div>
+      <div class="sub">Moderate regional adoption</div>
+    </div>
+  </div>
+</div>
+  
+<div class="section-card mb-4">
+  <div class="card-header">
+    2. Capability Adoption in This Region
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — which categories are broadly used vs under-adopted in eu-west</span>
+  </div>
+  <div class="card-body">
+    <div class="text-muted mb-3" style="font-size:.82rem">
+      Reach % shows what share of customers in this region are using at least one feature in the category.
+      The chart mixes strongest categories with a few weakest ones, so you can quickly see both what is working and what is missing.
+      Lower reach categories are usually the best places to focus regional field campaigns, onboarding, and messaging.
+    </div>
+    <div style="position:relative;height:300px;margin-bottom:1rem"><canvas id="regionCapabilityChart"></canvas></div>
+    <table class="table table-sm table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="ps-3">Category</th>
+          <th class="text-center">Customers Using</th>
+          <th class="text-center">Reach %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ps-3"><strong>Authorization</strong></td>
+          <td class="text-center">1 / 1</td>
+          <td class="text-center"><strong style="color:#15803d">100%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Enterprise Login</strong></td>
+          <td class="text-center">1 / 1</td>
+          <td class="text-center"><strong style="color:#15803d">100%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Multi-Factor Authentication (MFA)</strong></td>
+          <td class="text-center">1 / 1</td>
+          <td class="text-center"><strong style="color:#15803d">100%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Organization Management (B2B)</strong></td>
+          <td class="text-center">1 / 1</td>
+          <td class="text-center"><strong style="color:#15803d">100%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Single Sign-On (SSO)</strong></td>
+          <td class="text-center">1 / 1</td>
+          <td class="text-center"><strong style="color:#15803d">100%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>User Provisioning</strong></td>
+          <td class="text-center">1 / 1</td>
+          <td class="text-center"><strong style="color:#15803d">100%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Adaptive / Conditional Authentication</strong></td>
+          <td class="text-center">0 / 1</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Application Management</strong></td>
+          <td class="text-center">0 / 1</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Branding & UX</strong></td>
+          <td class="text-center">0 / 1</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Customization & Extensions</strong></td>
+          <td class="text-center">0 / 1</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Identity Governance</strong></td>
+          <td class="text-center">0 / 1</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Social Login</strong></td>
+          <td class="text-center">0 / 1</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('regionCapabilityChart'), {
+  type: 'bar',
+  data: {
+    labels: ["Authorization", "Enterprise Login", "Multi-Factor Authentication (MFA)", "Organization Management (B2B)", "Single Sign-On (SSO)", "Adaptive / Conditional Authentication", "Application Management", "Branding & UX"],
+    datasets: [{
+      data: [100, 100, 100, 100, 100, 0, 0, 0],
+      backgroundColor: ["#1f6f78", "#d97706", "#4f772d", "#b45309", "#0f766e", "#2563eb", "#9f1239", "#7c3aed"],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { max: 100, grid: { color: '#eef2f7' }, ticks: { callback: value => value + '%' } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+  
+<div class="section-card mb-4">
+  <div class="card-header">
+    3. Customer Contribution
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — which accounts are driving or weakening the regional picture</span>
+  </div>
+  <div class="card-body">
+    <div class="text-muted mb-3" style="font-size:.82rem">
+      This is the one place where the region view goes customer-level.
+      It helps a Regional GM see whether momentum is broad-based or driven by only one or two accounts.
+    </div>
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="ps-3">Customer</th>
+          <th class="text-center">Adoption</th>
+          <th>Strongest Category</th>
+          <th class="text-end">Current Usage</th>
+          <th class="text-center">Trend</th>
+          <th class="text-center">Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ps-3"><strong>Globex Corporation</strong></td>
+          <td class="text-center"><strong style="color:#b45309">40%</strong></td>
+          <td>Enterprise Login</td>
+          <td class="text-end">56.7k</td>
+          <td class="text-center">Stable</td>
+          <td class="text-center">-8%</td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+  
+<div class="section-card mb-4">
+  <div class="card-header">
+    4. Expansion Opportunities
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — where this region still has the best growth headroom</span>
+  </div>
+  <div class="card-body">
+    <div class="text-muted mb-3" style="font-size:.82rem">
+      Reach % tells you how widely the category is used across accounts in this region.
+      Coverage % reflects how deeply customers use that category once it is available.
+      Low reach and low coverage together point to the strongest regional upsell opportunities.
+    </div>
+    <table class="table table-sm table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="ps-3">Category</th>
+          <th class="text-center">Reach %</th>
+          <th class="text-center">Coverage %</th>
+          <th>Recommended Focus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ps-3"><strong>Adaptive / Conditional Authentication</strong></td>
+          <td class="text-center">0%</td>
+          <td class="text-center">0%</td>
+          <td>Grow category usage in more accounts</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Application Management</strong></td>
+          <td class="text-center">0%</td>
+          <td class="text-center">0%</td>
+          <td>Grow category usage in more accounts</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Branding & UX</strong></td>
+          <td class="text-center">0%</td>
+          <td class="text-center">0%</td>
+          <td>Grow category usage in more accounts</td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+  
+<div class="section-card mb-4">
+  <div class="card-header">
+    5. Risk Watchlist
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — accounts most likely to drag the region down</span>
+  </div>
+  <div class="card-body">
+    <div class="text-muted mb-3" style="font-size:.82rem">
+      This section isolates customers whose adoption or recent trend may be weakening the region.
+      It gives a Regional GM a short list for targeted field follow-up and customer success support.
+    </div>
+    <table class="table table-sm table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="ps-3">Customer</th>
+          <th>Risk Reason</th>
+          <th class="text-center">Trend</th>
+        </tr>
+      </thead>
+      <tbody><tr><td colspan="3" class="ps-3 text-muted">No high-priority account risk signals detected in this region.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+  
+<div class="section-card mb-4">
+  <div class="card-header">
+    6. Regional Trend Over Time
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — how adoption breadth is moving over time in eu-west</span>
+  </div>
+  <div class="card-body">
+    <div class="text-muted mb-3" style="font-size:.82rem">
+      This trend shows whether the selected region is broadening or narrowing its real product usage over time.
+      It is especially useful for seeing whether regional programs are taking effect.
+    </div>
+    <div style="position:relative;height:280px;margin-bottom:1rem"><canvas id="singleRegionTrendChart"></canvas></div>
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr><th class="ps-3">Region</th><th class="text-center">2026-04</th><th class="text-center">2026-05</th></tr></thead>
+      <tbody><tr><td class="ps-3"><strong>eu-west</strong></td><td class="text-center"><strong>23%</strong></td><td class="text-center"><strong>15%</strong></td></tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('singleRegionTrendChart'), {
+  type: 'line',
+  data: {
+    labels: ["2026-04", "2026-05"],
+    datasets: [{
+      label: 'eu-west',
+      data: [23, 15],
+      borderColor: '#1f6f78',
+      backgroundColor: 'transparent',
+      tension: 0.25,
+      pointRadius: 4
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#eef2f7' } },
+      y: { max: 100, grid: { color: '#eef2f7' }, ticks: { callback: value => value + '%' } }
+    }
+  }
+});
+</script>
+  
+<div class="section-card mb-4">
+  <div class="card-header">
+    7. Customer Maturity Mix
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — how advanced the customer base is in eu-west</span>
+  </div>
+  <div class="card-body">
+    <div class="text-muted mb-3" style="font-size:.82rem">
+      This mix helps a Regional GM decide whether the market needs foundational adoption work or is ready for more advanced positioning.
+    </div>
+    <table class="table table-sm table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="ps-3">Region</th>
+          <th class="text-center">Beginner</th>
+          <th class="text-center">Intermediate</th>
+          <th class="text-center">Advanced</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ps-3"><strong>eu-west</strong></td>
+          <td class="text-center">0%</td>
+          <td class="text-center">100%</td>
+          <td class="text-center">0%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<div class="footer container">
+  WSO2 Feature Utilization — Regional Managers Dashboard — eu-west
+  &nbsp;·&nbsp; Generated 2026-04-29 12:12
+</div>
+
+</body>
+</html>

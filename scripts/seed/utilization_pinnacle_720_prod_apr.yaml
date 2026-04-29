@@ -1,0 +1,81 @@
+# Pinnacle Healthcare — Premium, AP South, v7.2.0 Production
+# Follow-up month: healthy growth across advanced and governance flows.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "pinnacle-prod-ap"
+  customer_id: "pinnacle"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 62000
+      dimension_breakdown:
+        grant_type: { authorization-code: 24800, client-credentials: 6200 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 15000
+      dimension_breakdown:
+        binding_type: { http-post: 6900, http-redirect: 1500 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 11000
+      dimension_breakdown:
+        action: { verify: 7300, enroll: 260, verify-failed: 40 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 6500
+      dimension_breakdown:
+        action: { sent: 4300, verified: 4130, verify-failed: 130, expired: 40 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 22000
+      dimension_breakdown:
+        outcome: { step-up-not-triggered: 6300, step-up-triggered: 3870, access-denied: 330 }
+
+  - code: "is.adaptive-auth.ai-step-up"
+    utilization:
+      total_count: 4500
+      dimension_breakdown:
+        outcome: { allowed: 1610, step-up-triggered: 730, denied: 60 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 2200
+      dimension_breakdown:
+        action: { role-created: 280, role-updated: 560, permission-assigned: 360 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 3000
+      dimension_breakdown:
+        action: { api-resource-registered: 370, scope-defined: 860, policy-created: 420 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 15000
+      dimension_breakdown:
+        action: { account-locked: 8010, account-unlocked: 520, policy-configured: 70 }
+
+  - code: "is.governance.admin-session-management"
+    utilization:
+      total_count: 900
+      dimension_breakdown:
+        action: { viewed: 320, terminated: 200, policy-updated: 20 }
+
+  - code: "is.user-management.admin-onboarding"
+    utilization:
+      total_count: 500
+      dimension_breakdown:
+        outcome: { success: 232, failed: 18, pending: 10 }

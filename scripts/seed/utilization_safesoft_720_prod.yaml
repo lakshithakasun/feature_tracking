@@ -1,0 +1,85 @@
+# SafeSoft Technologies — Core tier, US East, v7.2.0 Production
+# Profile: Early-stage SaaS, basic SSO + social login, minimal MFA
+# Strong upsell candidate — passkey, conditional auth, webhooks all untouched
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "safesoft-prod-us"
+  customer_id: "safesoft"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 5200
+      dimension_breakdown:
+        grant_type: { authorization-code: 4500, client-credentials: 700 }
+        response_type: { code: 5000, token: 200 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 1100
+      dimension_breakdown:
+        action: { verify: 1020, enroll: 70, verify-failed: 10 }
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { login-success: 2720, login-failed: 80 }
+
+  - code: "is.social-login.github"
+    utilization:
+      total_count: 650
+      dimension_breakdown:
+        action: { login-success: 630, login-failed: 20 }
+
+  - code: "is.mfa.email-otp"
+
+  - code: "is.adaptive-auth.conditional-auth"
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 320
+      dimension_breakdown:
+        verification_method: { email: 310, none: 10 }
+        outcome: { success: 300, failed: 15, pending-verification: 5 }
+
+  - code: "is.user-management.account-recovery"
+    utilization:
+      total_count: 85
+      dimension_breakdown:
+        recovery_type: { password-recovery: 80, username-recovery: 5 }
+        recovery_method: { email-link: 82, admin-reset: 3 }
+        outcome: { success: 78, failed: 5, expired: 2 }
+
+  - code: "is.self-service.profile-management"
+    utilization:
+      total_count: 420
+      dimension_breakdown:
+        action: { view-profile: 280, update-profile: 120, change-password: 20 }
+
+  - code: "is.self-service.session-management"
+    utilization:
+      total_count: 180
+      dimension_breakdown:
+        action: { view-sessions: 140, terminate-single: 35, terminate-all: 5 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 18
+      dimension_breakdown:
+        scope: { organization: 12, application: 6 }
+        customization_type: { logo: 8, color-palette: 6, theme: 4 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 380
+      dimension_breakdown:
+        action: { account-locked: 330, account-unlocked: 42, policy-configured: 8 }

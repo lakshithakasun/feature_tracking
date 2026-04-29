@@ -1,0 +1,83 @@
+# Cyberdyne Systems — Premium, EU Central, v7.3.0
+# Follow-up month: continued growth in advanced usage.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "cyberdyne-prod-eu"
+  customer_id: "cyberdyne"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 37000
+      dimension_breakdown:
+        grant_type: { authorization-code: 21600, client-credentials: 6400 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 12500
+      dimension_breakdown:
+        binding_type: { http-post: 7600, http-redirect: 1800 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 9800
+      dimension_breakdown:
+        action: { verify: 7320, enroll: 240, verify-failed: 40 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 6200
+      dimension_breakdown:
+        action: { authenticate: 4050, enroll: 220, auth-failed: 30 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 17800
+      dimension_breakdown:
+        outcome: { step-up-not-triggered: 7700, step-up-triggered: 5200, access-denied: 300 }
+
+  - code: "is.adaptive-auth.ai-step-up"
+    utilization:
+      total_count: 3600
+      dimension_breakdown:
+        outcome: { allowed: 1720, step-up-triggered: 820, denied: 60 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 1400
+      dimension_breakdown:
+        action: { role-created: 220, role-updated: 420, permission-assigned: 260 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 2400
+      dimension_breakdown:
+        action: { api-resource-registered: 320, scope-defined: 760, policy-created: 370 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 9800
+      dimension_breakdown:
+        action: { account-locked: 6720, account-unlocked: 430, policy-configured: 50 }
+
+  - code: "is.governance.admin-session-management"
+    utilization:
+      total_count: 780
+      dimension_breakdown:
+        action: { viewed: 320, terminated: 220, policy-updated: 20 }
+
+  - code: "is.user-management.admin-onboarding"
+    utilization:
+      total_count: 320
+      dimension_breakdown:
+        outcome: { success: 190, failed: 12, pending: 8 }
+
+  - code: "is.org-management.org-discovery"

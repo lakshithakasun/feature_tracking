@@ -1,0 +1,70 @@
+# Nova Financial Services — Enterprise, EU North, v7.2.0 Production
+# Follow-up month: steady enterprise usage with slightly stronger governance.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "nova-finance-prod-eu"
+  customer_id: "nova-finance"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 39000
+      dimension_breakdown:
+        grant_type: { authorization-code: 20400, client-credentials: 5600 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 15000
+      dimension_breakdown:
+        binding_type: { http-post: 8120, http-redirect: 1680 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 9500
+      dimension_breakdown:
+        action: { verify: 6540, enroll: 230, verify-failed: 30 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 4800
+      dimension_breakdown:
+        action: { authenticate: 3020, enroll: 150, auth-failed: 30 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 13000
+      dimension_breakdown:
+        outcome: { step-up-not-triggered: 5900, step-up-triggered: 3440, access-denied: 260 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 15000
+      dimension_breakdown:
+        action: { account-locked: 8540, account-unlocked: 600, policy-configured: 60 }
+
+  - code: "is.governance.bot-detection"
+    utilization:
+      total_count: 10500
+      dimension_breakdown:
+        action: { triggered: 5880, enabled: 170, disabled: 50 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 1100
+      dimension_breakdown:
+        action: { role-created: 180, role-updated: 380, permission-assigned: 260 }
+
+  - code: "is.organization.login-portals"
+  - code: "is.user-management.admin-onboarding"
+    utilization:
+      total_count: 350
+      dimension_breakdown:
+        outcome: { success: 214, failed: 16, pending: 10 }

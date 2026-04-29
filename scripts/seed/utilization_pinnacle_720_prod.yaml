@@ -1,0 +1,186 @@
+# Pinnacle Healthcare — Premium tier, AP South, v7.2.0 Production
+# Profile: Healthcare compliance — heavy MFA, strong governance, enterprise IdP federation,
+#          SCIM provisioning for staff, identity verification (KYC), fine-grained authorization
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "pinnacle-prod-ap"
+  customer_id: "pinnacle"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 28000
+      dimension_breakdown:
+        grant_type: { authorization-code: 22000, client-credentials: 6000 }
+        response_type: { code: 26000, id-token: 2000 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 6400
+      dimension_breakdown:
+        binding_type: { http-post: 5200, http-redirect: 1200 }
+        assertion_encryption: { "true": 6400 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 14500
+      dimension_breakdown:
+        action: { verify: 13800, enroll: 550, verify-failed: 150 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 8200
+      dimension_breakdown:
+        action: { sent: 8200, verified: 7900, verify-failed: 250, expired: 50 }
+
+  - code: "is.mfa.backup-codes"
+    utilization:
+      total_count: 980
+      dimension_breakdown:
+        action: { generated: 420, used: 510, regenerated: 50 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 12000
+      dimension_breakdown:
+        template: { ip-based: 5000, new-device-based: 4500, role-based: 2500 }
+        outcome: { step-up-not-triggered: 7200, step-up-triggered: 4200, access-denied: 600 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 3400
+      dimension_breakdown:
+        action: { role-created: 800, role-updated: 1600, permission-assigned: 1000 }
+        role_type: { application: 2200, organization: 1200 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 5800
+      dimension_breakdown:
+        action: { api-resource-registered: 1200, scope-defined: 2800, policy-created: 1800 }
+
+  - code: "is.enterprise-login.saml-idp"
+    utilization:
+      total_count: 9200
+      dimension_breakdown:
+        action: { login-success: 8900, login-failed: 300 }
+
+  - code: "is.enterprise-login.adfs"
+    utilization:
+      total_count: 4100
+      dimension_breakdown:
+        action: { login-success: 4000, login-failed: 100 }
+
+  - code: "is.authorization.user-impersonation"
+
+  - code: "is.provisioning.inbound-scim"
+    utilization:
+      total_count: 7800
+      dimension_breakdown:
+        operation: { create: 3200, update: 3800, delete: 700, bulk: 100 }
+
+  - code: "is.provisioning.jit"
+    utilization:
+      total_count: 1400
+      dimension_breakdown:
+        action: { provisioned: 1300, updated: 90, failed: 10 }
+
+  - code: "is.customization.identity-verification"
+    utilization:
+      total_count: 280
+      dimension_breakdown:
+        provider: { onfido: 280 }
+        outcome: { verified: 250, failed: 20, pending: 10 }
+
+  - code: "is.governance.password-policy"
+    utilization:
+      total_count: 48
+      dimension_breakdown:
+        action: { configured: 20, updated: 28 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        action: { account-locked: 3800, account-unlocked: 350, policy-configured: 50 }
+
+  - code: "is.governance.bot-detection"
+    utilization:
+      total_count: 6800
+      dimension_breakdown:
+        action: { triggered: 6400, enabled: 280, disabled: 120 }
+
+  - code: "is.governance.session-management"
+    utilization:
+      total_count: 380
+      dimension_breakdown:
+        action: { policy-configured: 180, session-terminated-admin: 200 }
+
+  - code: "is.governance.account-disabling"
+    utilization:
+      total_count: 240
+      dimension_breakdown:
+        action: { disabled: 180, enabled: 60 }
+
+  - code: "is.governance.notification-settings"
+    utilization:
+      total_count: 65
+      dimension_breakdown:
+        channel: { email: 45, sms: 20 }
+        action: { configured: 28, updated: 32, tested: 5 }
+
+  - code: "is.user-management.admin-onboard"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        method: { scim-api: 1200, admin-api: 480, console: 120 }
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 950
+      dimension_breakdown:
+        verification_method: { email: 920, none: 30 }
+        outcome: { success: 900, failed: 40, pending-verification: 10 }
+
+  - code: "is.user-management.account-recovery"
+    utilization:
+      total_count: 320
+      dimension_breakdown:
+        recovery_type: { password-recovery: 300, username-recovery: 20 }
+        recovery_method: { email-link: 310, admin-reset: 10 }
+        outcome: { success: 295, failed: 18, expired: 7 }
+
+  - code: "is.self-service.profile-management"
+    utilization:
+      total_count: 1650
+      dimension_breakdown:
+        action: { view-profile: 900, update-profile: 620, change-password: 130 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 52
+      dimension_breakdown:
+        scope: { organization: 35, application: 17 }
+        customization_type: { theme: 20, logo: 18, color-palette: 14 }
+
+  - code: "is.branding.email-templates"
+    utilization:
+      total_count: 78
+      dimension_breakdown:
+        template_type: { password-reset: 28, account-verification: 22, otp: 18, account-lock: 10 }
+        action: { customized: 78 }
+
+  - code: "is.customization.webhooks"
+    utilization:
+      total_count: 3800
+      dimension_breakdown:
+        event_type: { login: 2100, user-update: 900, registration: 500, user-delete: 300 }
+        action: { triggered: 3600, failed: 200 }

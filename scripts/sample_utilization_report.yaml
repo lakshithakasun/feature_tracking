@@ -1,0 +1,150 @@
+# =============================================================================
+# WSO2 Feature Utilization Report
+# =============================================================================
+# This file is sent by the WSO2 product to report feature usage for a
+# specific customer deployment over a reporting period.
+#
+# Format extends the taxonomy YAML with:
+#   - deployment block  : identifies which customer deployment is reporting
+#   - report block      : the period this data covers
+#   - per-feature utilization : total_count + dimension_breakdown
+# =============================================================================
+
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "acme-corp-prod-us-74-1"
+  customer_id: "acme-corp-74"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+
+  # ── SSO ──────────────────────────────────────────────────────────────────
+
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 15000
+      dimension_breakdown:
+        grant_type:
+          authorization-code: 12000
+          client-credentials: 3000
+        response_type:
+          code: 14500
+          token: 500
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        binding_type:
+          http-post: 2800
+          http-redirect: 400
+
+  # ── MFA ──────────────────────────────────────────────────────────────────
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 5000
+      dimension_breakdown:
+        action:
+          enroll: 150
+          verify: 4800
+          verify-failed: 50
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 1200
+      dimension_breakdown:
+        action:
+          sent: 1200
+          verified: 1100
+          verify-failed: 80
+          expired: 20
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 400
+      dimension_breakdown:
+        action:
+          enroll: 50
+          authenticate: 340
+          auth-failed: 10
+        authenticator_type:
+          platform: 350
+          cross-platform: 50
+
+  # ── ADAPTIVE AUTH ─────────────────────────────────────────────────────────
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 8500
+      dimension_breakdown:
+        template:
+          ip-based: 4000
+          new-device-based: 3000
+          role-based: 1500
+        outcome:
+          step-up-triggered: 3200
+          step-up-not-triggered: 5200
+          access-denied: 100
+
+  # ── USER MANAGEMENT ───────────────────────────────────────────────────────
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 320
+      dimension_breakdown:
+        verification_method:
+          email: 300
+          sms: 20
+        outcome:
+          success: 290
+          failed: 15
+          pending-verification: 15
+
+  - code: "is.user-management.account-recovery"
+    utilization:
+      total_count: 85
+      dimension_breakdown:
+        recovery_type:
+          password-recovery: 80
+          username-recovery: 5
+        recovery_method:
+          email-link: 75
+          admin-reset: 10
+
+  # ── SOCIAL LOGIN ──────────────────────────────────────────────────────────
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        action:
+          login-success: 2050
+          login-failed: 50
+
+  - code: "is.social-login.microsoft"
+    utilization:
+      total_count: 950
+      dimension_breakdown:
+        action:
+          login-success: 920
+          login-failed: 30
+
+  - code: "is.mfa.magic-link"
+
+  # ── ORGANIZATION MANAGEMENT ───────────────────────────────────────────────
+
+  - code: "is.org-management.create-organization"
+    utilization:
+      total_count: 12
+      dimension_breakdown:
+        onboarding_type:
+          sales-led: 10
+          self-service: 2

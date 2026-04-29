@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GM Report — All Regions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; }
+    .page-header {
+      background: linear-gradient(135deg, #1a3a2a 0%, #2d6a4a 100%);
+      color: white; padding: 2.5rem 0 2rem;
+    }
+    .page-header .subtitle { opacity: .7; font-size: .95rem; }
+    .stat-card {
+      background: white; border-radius: 12px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .stat-card .value  { font-size: 2rem; font-weight: 700; line-height: 1.1; }
+    .stat-card .label  { color: #6c757d; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; margin-top: .35rem; }
+    .stat-card .sub    { font-size: .8rem; color: #6c757d; margin-top: .4rem; }
+    .section-card {
+      background: white; border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 1.5rem;
+    }
+    .section-card .card-header {
+      background: none; border-bottom: 1px solid #e9ecef;
+      padding: 1rem 1.4rem; font-weight: 600; font-size: .95rem;
+    }
+    .section-card .card-body { padding: 1.4rem; }
+    table thead th {
+      background: #f8f9fa; font-size: .78rem; text-transform: uppercase;
+      letter-spacing: .04em; color: #6c757d; border-bottom: 2px solid #dee2e6;
+    }
+    table.table-sm tbody tr td { vertical-align: middle; }
+    code { background: #f0f4ff; color: #1a3a2a; padding: .1em .35em; border-radius: 4px; }
+    .chart-container { position: relative; }
+    .footer { color: #6c757d; font-size: .8rem; padding: 1.5rem 0 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.35rem .8rem;font-size:.78rem;letter-spacing:.06em">
+        REGIONAL GM VIEW
+      </div>
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.35rem .8rem;font-size:.78rem">
+        All Regions
+      </div>
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.35rem .8rem;font-size:.78rem">
+        identity-server v7.2.0
+      </div>
+    </div>
+    <h1 class="mb-1" style="font-size:1.9rem;font-weight:700">Regional Feature Utilization Report</h1>
+    <div class="subtitle">Generated 2026-04-16 15:50 &nbsp;·&nbsp; March 2026</div>
+  </div>
+</div>
+
+<div class="container py-4">
+
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value text-primary">10</div>
+      <div class="label">Customers</div>
+      <div class="sub"><span class="badge me-1 bg-secondary">core: 3</span><span class="badge me-1 bg-danger">enterprise: 3</span><span class="badge me-1 bg-warning text-dark">premium: 4</span></div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#E07B54">15</div>
+      <div class="label">Deployments</div>
+      <div class="sub">0 with no report</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value" style="color:#5AB08E">928,229</div>
+      <div class="label">Total Feature Events</div>
+      <div class="sub">~92,822 avg per customer</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value" style="color:#A06EC9">
+        56<span style="font-size:1rem;font-weight:400;color:#999"> / 75</span>
+      </div>
+      <div class="label">Features Adopted (v7.2.0)</div>
+      <div class="sub">
+        <div class="progress mt-1" style="height:5px;border-radius:3px">
+          <div class="progress-bar" style="width:74.7%;background:#A06EC9;border-radius:3px"></div>
+        </div>
+        <span class="fw-semibold" style="color:#A06EC9">74.7%</span> of catalog
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#E8B84B;font-size:1rem;padding-top:.4rem">7.2.0, 7.3.0</div>
+      <div class="label">Version(s) in Use</div>
+      <div class="sub">2 distinct version(s)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── B. TOP FEATURES ── -->
+<div class="section-card mb-4">
+  <div class="card-header">
+    📈 Section B — Top Features
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — global usage by region (prod)</span>
+  </div>
+  <div class="card-body">
+    <div class="chart-container" style="height:600px">
+      <canvas id="topFeatChart"></canvas>
+    </div>
+  </div>
+</div>
+<div class="section-card mb-4">
+  <div class="card-header">Top Features — Detail Table</div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3" style="width:36px">#</th>
+        <th>Category</th><th>Feature</th>
+        <th class="text-end">Global Events</th>
+        <th class="text-center">Regions Using</th>
+        <th>Active Regions</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">1</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Single Sign-On (SSO)</span></td>
+          <td><strong>OpenID Connect / OAuth 2.0 SSO</strong></td>
+          <td class="text-end fw-semibold">292,700</td>
+          <td class="text-center">7 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B">ap-southeast</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">2</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Adaptive / Conditional Authentication</span></td>
+          <td><strong>Conditional Authentication</strong></td>
+          <td class="text-end fw-semibold">69,000</td>
+          <td class="text-center">4 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">3</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Multi-Factor Authentication (MFA)</span></td>
+          <td><strong>TOTP (Authenticator App)</strong></td>
+          <td class="text-end fw-semibold">51,400</td>
+          <td class="text-center">6 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B">ap-southeast</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">4</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Social Login</span></td>
+          <td><strong>Google Social Login</strong></td>
+          <td class="text-end fw-semibold">47,300</td>
+          <td class="text-center">3 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">5</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Customization & Extensions</span></td>
+          <td><strong>Webhooks</strong></td>
+          <td class="text-end fw-semibold">46,900</td>
+          <td class="text-center">3 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">6</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Identity Governance</span></td>
+          <td><strong>Bot Detection</strong></td>
+          <td class="text-end fw-semibold">44,100</td>
+          <td class="text-center">4 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">7</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Single Sign-On (SSO)</span></td>
+          <td><strong>SAML 2.0 SSO</strong></td>
+          <td class="text-end fw-semibold">39,500</td>
+          <td class="text-center">5 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">8</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">User Provisioning</span></td>
+          <td><strong>Inbound SCIM 2.0 Provisioning</strong></td>
+          <td class="text-end fw-semibold">37,700</td>
+          <td class="text-center">4 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B">ap-southeast</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">9</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Enterprise Login</span></td>
+          <td><strong>SAML Enterprise IdP</strong></td>
+          <td class="text-end fw-semibold">28,600</td>
+          <td class="text-center">4 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">10</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Identity Governance</span></td>
+          <td><strong>Login Attempt Security</strong></td>
+          <td class="text-end fw-semibold">24,980</td>
+          <td class="text-center">6 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B">ap-southeast</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">11</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Multi-Factor Authentication (MFA)</span></td>
+          <td><strong>Passkey / FIDO2 (WebAuthn)</strong></td>
+          <td class="text-end fw-semibold">23,500</td>
+          <td class="text-center">3 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">12</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Multi-Factor Authentication (MFA)</span></td>
+          <td><strong>Email OTP</strong></td>
+          <td class="text-end fw-semibold">21,600</td>
+          <td class="text-center">4 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">13</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Authorization</span></td>
+          <td><strong>API Authorization (RBAC)</strong></td>
+          <td class="text-end fw-semibold">20,490</td>
+          <td class="text-center">4 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B">ap-southeast</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">14</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Social Login</span></td>
+          <td><strong>Facebook Social Login</strong></td>
+          <td class="text-end fw-semibold">18,500</td>
+          <td class="text-center">1 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">15</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">User Self-Service</span></td>
+          <td><strong>Self-Service Profile Management</strong></td>
+          <td class="text-end fw-semibold">18,370</td>
+          <td class="text-center">3 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">16</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Social Login</span></td>
+          <td><strong>Apple Social Login</strong></td>
+          <td class="text-end fw-semibold">15,600</td>
+          <td class="text-center">2 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">17</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Enterprise Login</span></td>
+          <td><strong>Microsoft 365 Login</strong></td>
+          <td class="text-end fw-semibold">14,600</td>
+          <td class="text-center">3 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">18</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Authorization</span></td>
+          <td><strong>Role & Permission Management</strong></td>
+          <td class="text-end fw-semibold">14,340</td>
+          <td class="text-center">5 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E">eu-north</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B">ap-southeast</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">19</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">User Management</span></td>
+          <td><strong>User Self-Registration</strong></td>
+          <td class="text-end fw-semibold">11,030</td>
+          <td class="text-center">3 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#E07B5420;color:#E07B54;border:1px solid #E07B54">us-west</span><span class="badge me-1" style="font-size:.7rem;background:#A06EC920;color:#A06EC9;border:1px solid #A06EC9">ap-south</span><span class="badge me-1" style="font-size:.7rem;background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C0">us-east</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem">20</td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Enterprise Login</span></td>
+          <td><strong>OIDC Enterprise IdP</strong></td>
+          <td class="text-end fw-semibold">9,400</td>
+          <td class="text-center">2 / 7</td>
+          <td><span class="badge me-1" style="font-size:.7rem;background:#4F86C620;color:#4F86C6;border:1px solid #4F86C6">eu-central</span><span class="badge me-1" style="font-size:.7rem;background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A">eu-west</span></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('topFeatChart'), {
+  type: 'bar',
+  data: { labels: ["OpenID Connect / OAuth 2.0 SSO", "Conditional Authentication", "TOTP (Authenticator App)", "Google Social Login", "Webhooks", "Bot Detection", "SAML 2.0 SSO", "Inbound SCIM 2.0 Provisioning", "SAML Enterprise IdP", "Login Attempt Security", "Passkey / FIDO2 (WebAuthn)", "Email OTP", "API Authorization (RBAC)", "Facebook Social Login", "Self-Service Profile Management", "Apple Social Login", "Microsoft 365 Login", "Role & Permission Management", "User Self-Registration", "OIDC Enterprise IdP"], datasets: [{"label": "eu-central", "data": [63000, 29500, 11400, 5500, 36900, 8800, 11000, 12500, 7800, 5200, 11500, 5400, 9600, 0, 0, 2800, 9400, 6700, 0, 5200], "backgroundColor": "#4F86C6", "borderRadius": 2}, {"label": "us-west", "data": [76500, 0, 4900, 36200, 0, 24000, 0, 0, 0, 9200, 0, 0, 0, 18500, 16300, 12800, 0, 0, 9350, 0], "backgroundColor": "#E07B54", "borderRadius": 2}, {"label": "eu-north", "data": [42000, 18000, 0, 0, 6200, 4500, 8500, 5400, 3800, 2800, 9200, 0, 4200, 0, 0, 0, 2100, 2800, 0, 0], "backgroundColor": "#5AB08E", "borderRadius": 2}, {"label": "ap-south", "data": [28000, 12000, 14500, 0, 3800, 6800, 6400, 7800, 9200, 4200, 0, 8200, 5800, 0, 1650, 0, 0, 3400, 950, 0], "backgroundColor": "#A06EC9", "borderRadius": 2}, {"label": "ap-southeast", "data": [38000, 0, 9200, 0, 0, 0, 0, 12000, 0, 3200, 0, 0, 890, 0, 0, 0, 0, 1100, 0, 0], "backgroundColor": "#E8B84B", "borderRadius": 2}, {"label": "us-east", "data": [23200, 9500, 7300, 5600, 0, 0, 4100, 0, 0, 380, 2800, 1500, 0, 0, 420, 0, 0, 0, 730, 0], "backgroundColor": "#4BC0C0", "borderRadius": 2}, {"label": "eu-west", "data": [22000, 0, 4100, 0, 0, 0, 9500, 0, 7800, 0, 0, 6500, 0, 0, 0, 0, 3100, 340, 0, 4200], "backgroundColor": "#E66A9A", "borderRadius": 2}] },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 12 } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toLocaleString()
+        }
+      }
+    },
+    scales: {
+      x: { stacked: true, grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 } } },
+      y: { stacked: true, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+
+<!-- ── B2. FEATURE × REGION MATRIX ── -->
+<div class="section-card mb-4">
+  <div class="card-header">
+    🔲 Feature × Region Adoption Matrix
+    <span class="text-muted fw-normal" style="font-size:.82rem">
+     — top 25 features · colored cells = used in that region, value = event count
+    </span>
+  </div>
+  <div class="card-body p-0" style="overflow-x:auto">
+    <table class="table table-sm table-hover mb-0" style="min-width:600px">
+      <thead>
+        <tr>
+          <th class="ps-3" style="min-width:180px">Feature</th>
+          <th class="text-end" style="font-size:.7rem;padding-right:.6rem">Global</th>
+          <th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#4F86C6;margin-right:3px"></span>eu-central</th><th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#E07B54;margin-right:3px"></span>us-west</th><th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5AB08E;margin-right:3px"></span>eu-north</th><th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#A06EC9;margin-right:3px"></span>ap-south</th><th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#E8B84B;margin-right:3px"></span>ap-southeast</th><th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#4BC0C0;margin-right:3px"></span>us-east</th><th class="text-center" style="font-size:.7rem;white-space:nowrap;min-width:72px;max-width:90px;writing-mode:horizontal-tb"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#E66A9A;margin-right:3px"></span>eu-west</th>
+        </tr>
+      </thead>
+      <tbody><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Single Sign-On (SSO)</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>OpenID Connect / OAuth 2.0 SSO</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">293k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">63k</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">76k</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">42k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">28k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">38k</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">23k</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">22k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Adaptive / Conditional Authentication</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Conditional Authentication</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">69k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">30k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">18k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">12k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">10k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Multi-Factor Authentication (MFA)</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>TOTP (Authenticator App)</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">51k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">11k</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">5k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">14k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">9k</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">7k</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">4k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Social Login</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Google Social Login</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">47k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">6k</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">36k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">6k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Customization & Extensions</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Webhooks</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">47k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">37k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">6k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">4k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Identity Governance</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Bot Detection</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">44k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">9k</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">24k</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">4k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">7k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Single Sign-On (SSO)</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>SAML 2.0 SSO</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">40k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">11k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">8k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">6k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">4k</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">10k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">User Provisioning</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Inbound SCIM 2.0 Provisioning</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">38k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">12k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">5k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">8k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">12k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Enterprise Login</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>SAML Enterprise IdP</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">29k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">8k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">4k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">9k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">8k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Identity Governance</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Login Attempt Security</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">25k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">5k</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">9k</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">3k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">4k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">3k</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">380</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Multi-Factor Authentication (MFA)</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Passkey / FIDO2 (WebAuthn)</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">24k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">12k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">9k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">3k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Email OTP</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">22k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">5k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">8k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">2k</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">6k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Authorization</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>API Authorization (RBAC)</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">20k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">10k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">4k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">6k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">890</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Social Login</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Facebook Social Login</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">18k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">18k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">User Self-Service</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Self-Service Profile Management</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">18k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">16k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">2k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">420</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Social Login</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Apple Social Login</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">16k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">3k</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">13k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Enterprise Login</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Microsoft 365 Login</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">15k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">9k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">2k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">3k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Authorization</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Role & Permission Management</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">14k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">7k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">3k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">3k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">1k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">340</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">User Management</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>User Self-Registration</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">11k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">9k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">950</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">730</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Enterprise Login</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>OIDC Enterprise IdP</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">9k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">5k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E66A9A18;border-left:2px solid #E66A9A;font-weight:600;color:#E66A9A">4k</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">User Provisioning</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Outbound User Provisioning</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">8k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">8k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">User Management</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Admin User Onboarding</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">8k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">3k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#5AB08E18;border-left:2px solid #5AB08E;font-weight:600;color:#5AB08E">1k</td><td class="text-center" style="font-size:.75rem;background:#A06EC918;border-left:2px solid #A06EC9;font-weight:600;color:#A06EC9">2k</td><td class="text-center" style="font-size:.75rem;background:#E8B84B18;border-left:2px solid #E8B84B;font-weight:600;color:#E8B84B">2k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Multi-Factor Authentication (MFA)</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Magic Link (Passwordless Email)</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">8k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">8k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">Adaptive / Conditional Authentication</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>AI-Driven Step-Up Authentication</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">7k</td><td class="text-center" style="font-size:.75rem;background:#4F86C618;border-left:2px solid #4F86C6;font-weight:600;color:#4F86C6">5k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">2k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr><tr class="table-light"><td colspan="9" class="ps-3 py-1"><strong style="font-size:.78rem;color:#555">User Self-Service</strong></td></tr><tr><td class="ps-3" style="font-size:.82rem;white-space:nowrap"><strong>Self-Service Session Management</strong></td><td class="text-end text-muted" style="font-size:.75rem;padding-right:.6rem">6k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#E07B5418;border-left:2px solid #E07B54;font-weight:600;color:#E07B54">6k</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td><td class="text-center" style="font-size:.75rem;background:#4BC0C018;border-left:2px solid #4BC0C0;font-weight:600;color:#4BC0C0">180</td><td class="text-center text-muted" style="font-size:.75rem;background:#fafafa">—</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── C. CUSTOMER OVERVIEW ── -->
+<div class="section-card mb-4">
+  <div class="card-header">👥 Section C — Customer Overview</div>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Customer</th><th>Tier</th><th>Version(s)</th>
+        <th class="text-center">Deployments</th>
+        <th class="text-end">Features Adopted</th>
+        <th class="text-end">Total Events</th>
+        <th>Last Report</th>
+      </tr></thead>
+      <tbody><tr style="background:#4F86C610;border-left:4px solid #4F86C6"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#4F86C6;font-size:.9rem">eu-central</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 2 customers</span>&nbsp;<span class="badge me-1 bg-warning text-dark" style="font-size:.65rem">P: 2</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">31/75</span> <span class="text-muted">(41%)</span></td><td class="text-end py-2 fw-bold" style="color:#4F86C6">260,968</td><td></td></tr><tr><td class="ps-4"><strong>Zephyr Logistics</strong></td><td><span class="badge bg-warning text-dark">premium</span></td><td><code>7.3.0</code></td><td class="text-center">2</td><td class="text-end">22<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:29%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">29%</span></div></td><td class="text-end fw-semibold">168,353</td><td class="text-muted">2026-04-01</td></tr><tr><td class="ps-4"><strong>Cyberdyne Systems</strong></td><td><span class="badge bg-warning text-dark">premium</span></td><td><code>7.3.0</code></td><td class="text-center">1</td><td class="text-end">16<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:21%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">21%</span></div></td><td class="text-end fw-semibold">92,615</td><td class="text-muted">2026-04-01</td></tr><tr style="background:#E07B5410;border-left:4px solid #E07B54"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#E07B54;font-size:.9rem">us-west</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 2 customers</span>&nbsp;<span class="badge me-1 bg-secondary" style="font-size:.65rem">C: 2</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">18/75</span> <span class="text-muted">(24%)</span></td><td class="text-end py-2 fw-bold" style="color:#E07B54">230,177</td><td></td></tr><tr><td class="ps-4"><strong>Meridian Retail</strong></td><td><span class="badge bg-secondary">core</span></td><td><code>7.2.0</code></td><td class="text-center">1</td><td class="text-end">16<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:21%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">21%</span></div></td><td class="text-end fw-semibold">209,835</td><td class="text-muted">2026-04-01</td></tr><tr><td class="ps-4"><strong>Umbrella Corp</strong></td><td><span class="badge bg-secondary">core</span></td><td><code>7.3.0</code></td><td class="text-center">1</td><td class="text-end">11<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:15%;background:#E07B54"></div></div><span style="font-size:.75rem;color:#666">15%</span></div></td><td class="text-end fw-semibold">20,342</td><td class="text-muted">2026-04-01</td></tr><tr style="background:#5AB08E10;border-left:4px solid #5AB08E"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#5AB08E;font-size:.9rem">eu-north</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 1 customers</span>&nbsp;<span class="badge me-1 bg-danger" style="font-size:.65rem">E: 1</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">25/75</span> <span class="text-muted">(33%)</span></td><td class="text-end py-2 fw-bold" style="color:#5AB08E">115,710</td><td></td></tr><tr><td class="ps-4"><strong>Nova Financial Services</strong></td><td><span class="badge bg-danger">enterprise</span></td><td><code>7.2.0</code></td><td class="text-center">2</td><td class="text-end">25<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:33%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">33%</span></div></td><td class="text-end fw-semibold">115,710</td><td class="text-muted">2026-04-01</td></tr><tr style="background:#A06EC910;border-left:4px solid #A06EC9"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#A06EC9;font-size:.9rem">ap-south</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 1 customers</span>&nbsp;<span class="badge me-1 bg-warning text-dark" style="font-size:.65rem">P: 1</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">25/75</span> <span class="text-muted">(33%)</span></td><td class="text-end py-2 fw-bold" style="color:#A06EC9">121,043</td><td></td></tr><tr><td class="ps-4"><strong>Pinnacle Healthcare</strong></td><td><span class="badge bg-warning text-dark">premium</span></td><td><code>7.2.0</code></td><td class="text-center">1</td><td class="text-end">25<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:33%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">33%</span></div></td><td class="text-end fw-semibold">121,043</td><td class="text-muted">2026-04-01</td></tr><tr style="background:#E8B84B10;border-left:4px solid #E8B84B"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#E8B84B;font-size:.9rem">ap-southeast</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 1 customers</span>&nbsp;<span class="badge me-1 bg-danger" style="font-size:.65rem">E: 1</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">15/75</span> <span class="text-muted">(20%)</span></td><td class="text-end py-2 fw-bold" style="color:#E8B84B">78,175</td><td></td></tr><tr><td class="ps-4"><strong>Initech Systems</strong></td><td><span class="badge bg-danger">enterprise</span></td><td><code>7.2.0</code></td><td class="text-center">2</td><td class="text-end">15<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:20%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">20%</span></div></td><td class="text-end fw-semibold">78,175</td><td class="text-muted">2026-04-01</td></tr><tr style="background:#4BC0C010;border-left:4px solid #4BC0C0"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#4BC0C0;font-size:.9rem">us-east</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 2 customers</span>&nbsp;<span class="badge me-1 bg-secondary" style="font-size:.65rem">C: 1</span><span class="badge me-1 bg-danger" style="font-size:.65rem">E: 1</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">18/75</span> <span class="text-muted">(24%)</span></td><td class="text-end py-2 fw-bold" style="color:#4BC0C0">60,793</td><td></td></tr><tr><td class="ps-4"><strong>Acme Corporation</strong></td><td><span class="badge bg-danger">enterprise</span></td><td><code>7.2.0, 7.3.0</code></td><td class="text-center">2</td><td class="text-end">12<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:16%;background:#E07B54"></div></div><span style="font-size:.75rem;color:#666">16%</span></div></td><td class="text-end fw-semibold">49,640</td><td class="text-muted">2026-04-01</td></tr><tr><td class="ps-4"><strong>SafeSoft Technologies</strong></td><td><span class="badge bg-secondary">core</span></td><td><code>7.2.0</code></td><td class="text-center">2</td><td class="text-end">10<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:13%;background:#E07B54"></div></div><span style="font-size:.75rem;color:#666">13%</span></div></td><td class="text-end fw-semibold">11,153</td><td class="text-muted">2026-04-01</td></tr><tr style="background:#E66A9A10;border-left:4px solid #E66A9A"><td class="ps-3 py-2" colspan="4"><span class="fw-bold" style="color:#E66A9A;font-size:.9rem">eu-west</span>&nbsp;<span class="text-muted" style="font-size:.78rem">— 1 customers</span>&nbsp;<span class="badge me-1 bg-warning text-dark" style="font-size:.65rem">P: 1</span></td><td class="text-end py-2" style="font-size:.78rem"><span class="fw-semibold">15/75</span> <span class="text-muted">(20%)</span></td><td class="text-end py-2 fw-bold" style="color:#E66A9A">61,363</td><td></td></tr><tr><td class="ps-4"><strong>Globex Corporation</strong></td><td><span class="badge bg-warning text-dark">premium</span></td><td><code>7.2.0</code></td><td class="text-center">1</td><td class="text-end">15<div><div class="progress mt-1" style="height:4px;border-radius:2px"><div class="progress-bar" style="width:20%;background:#E8B84B"></div></div><span style="font-size:.75rem;color:#666">20%</span></div></td><td class="text-end fw-semibold">61,363</td><td class="text-muted">2026-04-01</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── D. ZERO ADOPTION FEATURES ── -->
+<div class="section-card mb-4">
+  <div class="card-header d-flex align-items-center gap-2 flex-wrap">
+    🚫 Section D — Zero-Adoption Features (no customer globally uses these)
+    <span class="badge bg-secondary">22 features</span>
+    <span class="badge bg-success">0 upsell opportunities</span>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Feature</th>
+        <th>Code</th>
+        <th>Tier</th>
+      </tr></thead>
+      <tbody><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Adaptive / Conditional Authentication</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">App-Native Authentication</td><td style="font-size:.8rem"><code class="text-muted">is.adaptive-auth.app-native-auth</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Application Management</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Application Discovery</td><td style="font-size:.8rem"><code class="text-muted">is.app-management.app-discovery</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Application Registration</td><td style="font-size:.8rem"><code class="text-muted">is.app-management.create-application</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Branding & UX</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Branding AI</td><td style="font-size:.8rem"><code class="text-muted">is.branding.branding-ai</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Custom Text & Localization</td><td style="font-size:.8rem"><code class="text-muted">is.branding.custom-text</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">SMS Template Customization</td><td style="font-size:.8rem"><code class="text-muted">is.branding.sms-templates</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Customization & Extensions</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">ELK Analytics Integration</td><td style="font-size:.8rem"><code class="text-muted">is.customization.elk-analytics</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Enterprise Login</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Integrated Windows Authentication (IWA)</td><td style="font-size:.8rem"><code class="text-muted">is.enterprise-login.iwa</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">WS-Federation Enterprise IdP</td><td style="font-size:.8rem"><code class="text-muted">is.enterprise-login.ws-federation-idp</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Multi-Factor Authentication (MFA)</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Push Notification Authentication</td><td style="font-size:.8rem"><code class="text-muted">is.mfa.push-notification</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Organization Management (B2B)</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Organization Discovery</td><td style="font-size:.8rem"><code class="text-muted">is.org-management.org-discovery</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Organization User Management</td><td style="font-size:.8rem"><code class="text-muted">is.org-management.org-user-management</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Single Sign-On (SSO)</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">WS-Federation SSO</td><td style="font-size:.8rem"><code class="text-muted">is.sso.ws-federation</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">Social Login</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">X (Twitter) Social Login</td><td style="font-size:.8rem"><code class="text-muted">is.social-login.x</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">User Management</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Invitation-Based User Onboarding</td><td style="font-size:.8rem"><code class="text-muted">is.user-management.invite-user</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">User Attribute Configuration</td><td style="font-size:.8rem"><code class="text-muted">is.user-management.user-attributes</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">User Self-Service</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Linked Social Accounts</td><td style="font-size:.8rem"><code class="text-muted">is.self-service.linked-accounts</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Self-Service MFA Enrollment</td><td style="font-size:.8rem"><code class="text-muted">is.self-service.mfa-enrollment</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Workflow Approvals</td><td style="font-size:.8rem"><code class="text-muted">is.self-service.workflow-approvals</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr class="table-light"><td colspan="3" class="ps-3 py-1"><strong style="font-size:.82rem">eID Login</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">FranceConnect eID Login</td><td style="font-size:.8rem"><code class="text-muted">is.eid-login.franceconnect</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">Signicat eID Login</td><td style="font-size:.8rem"><code class="text-muted">is.eid-login.signicat</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr><tr><td class="ps-4" style="font-size:.85rem">SwissID eID Login</td><td style="font-size:.8rem"><code class="text-muted">is.eid-login.swissid</code></td><td><span class="badge bg-light text-dark border">—</span></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── E. CROSS-REGION COMPARISON ── -->
+<div class="section-card mb-4">
+  <div class="card-header">
+    🌍 Section E — Cross-Region Feature Category Comparison
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — top 8 categories by global event volume</span>
+  </div>
+  <div class="card-body">
+    <div class="chart-container" style="height:360px">
+      <canvas id="crossRegChart"></canvas>
+    </div>
+  </div>
+</div>
+<div class="section-card mb-4">
+  <div class="card-header">Region Adoption Rate &amp; Summary</div>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Region</th>
+        <th class="text-center">Customers</th>
+        <th class="text-end">Total Events</th>
+        <th>Feature Adoption</th>
+        <th>Top Category</th>
+        <th>Tier Mix</th>
+        <th>Version(s)</th>
+      </tr></thead>
+      <tbody>
+        <tr >
+          <td class="ps-3"><strong>eu-central</strong></td>
+          <td class="text-center">2</td>
+          <td class="text-end fw-semibold">267,518</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:41.3%;background:#5AB08E"></div></div><span style="font-size:.8rem;white-space:nowrap">31/75 (41.3%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-warning text-dark">premium:2</span></td>
+          <td style="font-size:.82rem"><code>7.3.0</code></td>
+        </tr>
+        <tr >
+          <td class="ps-3"><strong>us-west</strong></td>
+          <td class="text-center">2</td>
+          <td class="text-end fw-semibold">230,177</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:24.0%;background:#E8B84B"></div></div><span style="font-size:.8rem;white-space:nowrap">18/75 (24.0%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-secondary">core:2</span></td>
+          <td style="font-size:.82rem"><code>7.2.0, 7.3.0</code></td>
+        </tr>
+        <tr >
+          <td class="ps-3"><strong>eu-north</strong></td>
+          <td class="text-center">1</td>
+          <td class="text-end fw-semibold">122,967</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:33.3%;background:#E8B84B"></div></div><span style="font-size:.8rem;white-space:nowrap">25/75 (33.3%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-danger">enterprise:1</span></td>
+          <td style="font-size:.82rem"><code>7.2.0</code></td>
+        </tr>
+        <tr >
+          <td class="ps-3"><strong>ap-south</strong></td>
+          <td class="text-center">1</td>
+          <td class="text-end fw-semibold">121,043</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:33.3%;background:#E8B84B"></div></div><span style="font-size:.8rem;white-space:nowrap">25/75 (33.3%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-warning text-dark">premium:1</span></td>
+          <td style="font-size:.82rem"><code>7.2.0</code></td>
+        </tr>
+        <tr >
+          <td class="ps-3"><strong>ap-southeast</strong></td>
+          <td class="text-center">1</td>
+          <td class="text-end fw-semibold">84,493</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:20.0%;background:#E8B84B"></div></div><span style="font-size:.8rem;white-space:nowrap">15/75 (20.0%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-danger">enterprise:1</span></td>
+          <td style="font-size:.82rem"><code>7.2.0</code></td>
+        </tr>
+        <tr >
+          <td class="ps-3"><strong>us-east</strong></td>
+          <td class="text-center">2</td>
+          <td class="text-end fw-semibold">62,041</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:24.0%;background:#E8B84B"></div></div><span style="font-size:.8rem;white-space:nowrap">18/75 (24.0%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-secondary">core:1</span> <span class="badge bg-danger">enterprise:1</span></td>
+          <td style="font-size:.82rem"><code>7.2.0, 7.3.0</code></td>
+        </tr>
+        <tr >
+          <td class="ps-3"><strong>eu-west</strong></td>
+          <td class="text-center">1</td>
+          <td class="text-end fw-semibold">61,363</td>
+          <td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:3px;min-width:80px"><div class="progress-bar" style="width:20.0%;background:#E8B84B"></div></div><span style="font-size:.8rem;white-space:nowrap">15/75 (20.0%)</span></div></td>
+          <td style="font-size:.85rem">Single Sign-On (SSO)</td>
+          <td><span class="badge bg-warning text-dark">premium:1</span></td>
+          <td style="font-size:.82rem"><code>7.2.0</code></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('crossRegChart'), {
+  type: 'bar',
+  data: { labels: ["Single Sign-On (SSO)", "Multi-Factor Authentication (MFA)", "Social Login", "Adaptive / Conditional Authentication", "Identity Governance", "Enterprise Login", "Customization & Extensions", "User Provisioning"], datasets: [{"label": "eu-central", "data": [74000, 28300, 8300, 34300, 16832, 22400, 42300, 12500], "backgroundColor": "#4F86C6", "borderRadius": 3}, {"label": "us-west", "data": [76500, 12500, 73480, 0, 33238, 0, 0, 0], "backgroundColor": "#E07B54", "borderRadius": 3}, {"label": "eu-north", "data": [50500, 11450, 0, 18000, 7777, 5900, 6200, 5400], "backgroundColor": "#5AB08E", "borderRadius": 3}, {"label": "ap-south", "data": [34400, 23680, 0, 12000, 11733, 13300, 4080, 7800], "backgroundColor": "#A06EC9", "borderRadius": 3}, {"label": "ap-southeast", "data": [38000, 11300, 0, 0, 3845, 0, 0, 20500], "backgroundColor": "#E8B84B", "borderRadius": 3}, {"label": "us-east", "data": [27300, 11600, 7450, 11600, 1230, 0, 0, 0], "backgroundColor": "#4BC0C0", "borderRadius": 3}, {"label": "eu-west", "data": [31500, 10600, 0, 0, 0, 15100, 0, 3200], "backgroundColor": "#E66A9A", "borderRadius": 3}] },
+  options: {
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14 } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString()
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+
+</div>
+
+<div class="footer container">
+  WSO2 Feature Utilization — Regional GM Report &nbsp;·&nbsp; All Regions
+  &nbsp;·&nbsp; Generated 2026-04-16 15:50
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

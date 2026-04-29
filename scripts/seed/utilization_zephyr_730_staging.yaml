@@ -1,0 +1,61 @@
+# Zephyr Logistics — v7.3.0 Staging
+# Features being tested that are NOT yet live in prod:
+#   is.adaptive-auth.ai-step-up (v7.3.0 new), is.org-management.org-discovery, is.governance.continuous-access-eval
+# Strong staging→prod pipeline signals for AM/TO
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "zephyr-staging-eu"
+  customer_id: "zephyr"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 3800
+      dimension_breakdown:
+        grant_type: { authorization-code: 2800, client-credentials: 1000 }
+        response_type: { code: 3500, id-token: 300 }
+
+  - code: "is.adaptive-auth.ai-step-up"
+    utilization:
+      total_count: 650
+      dimension_breakdown:
+        action: { evaluated: 650, step-up-triggered: 180, step-up-not-triggered: 470 }
+        risk_signal: { new-device: 240, unusual-location: 210, behaviour-anomaly: 200 }
+
+  - code: "is.org-management.org-discovery"
+    utilization:
+      total_count: 420
+      dimension_breakdown:
+        action: { discovery-initiated: 420, org-matched: 380, no-match: 40 }
+        method: { email-domain: 360, hrd: 60 }
+
+  - code: "is.governance.continuous-access-eval"
+    utilization:
+      total_count: 280
+      dimension_breakdown:
+        action: { evaluated: 280, session-revoked: 45, access-maintained: 235 }
+        trigger: { ip-change: 120, risk-score-change: 95, policy-update: 65 }
+
+  - code: "is.governance.session-management"
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 1400
+      dimension_breakdown:
+        template: { ip-based: 600, new-device-based: 500, role-based: 300 }
+        outcome: { step-up-not-triggered: 850, step-up-triggered: 500, access-denied: 50 }
+
+  - code: "is.org-management.b2b-login"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        action: { login-success: 1720, login-failed: 80 }
+        org_type: { sub-org: 1400, root: 400 }

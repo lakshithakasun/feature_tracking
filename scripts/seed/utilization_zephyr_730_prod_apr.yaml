@@ -1,0 +1,89 @@
+# Zephyr Logistics — Premium, EU Central, v7.3.0 Production
+# Follow-up month: broad adoption remains strong with moderate growth.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "zephyr-prod-eu"
+  customer_id: "zephyr"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 54000
+      dimension_breakdown:
+        grant_type: { authorization-code: 27600, client-credentials: 9600 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 16500
+      dimension_breakdown:
+        binding_type: { http-post: 9100, http-redirect: 2700 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 11500
+      dimension_breakdown:
+        action: { verify: 8300, enroll: 250, verify-failed: 50 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 7600
+      dimension_breakdown:
+        action: { sent: 5700, verified: 5490, verify-failed: 170, expired: 40 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 22000
+      dimension_breakdown:
+        outcome: { step-up-not-triggered: 9230, step-up-triggered: 5350, access-denied: 520 }
+
+  - code: "is.org-management.create-organization"
+    utilization:
+      total_count: 3400
+      dimension_breakdown:
+        action: { created: 860, updated: 1210, deleted: 170, suspended: 160 }
+
+  - code: "is.org-management.b2b-login"
+    utilization:
+      total_count: 28500
+      dimension_breakdown:
+        action: { login-success: 18840, login-failed: 760 }
+
+  - code: "is.enterprise-login.saml-idp"
+    utilization:
+      total_count: 11800
+      dimension_breakdown:
+        action: { login-success: 7790, login-failed: 310 }
+
+  - code: "is.enterprise-login.microsoft-365"
+    utilization:
+      total_count: 13500
+      dimension_breakdown:
+        action: { login-success: 9580, login-failed: 220 }
+
+  - code: "is.provisioning.inbound-scim"
+    utilization:
+      total_count: 17800
+      dimension_breakdown:
+        operation: { create: 4800, update: 6800, delete: 1400, bulk: 200 }
+
+  - code: "is.customization.webhooks"
+    utilization:
+      total_count: 47000
+      dimension_breakdown:
+        action: { triggered: 29020, failed: 1080 }
+
+  - code: "is.customization.service-extensions"
+    utilization:
+      total_count: 3000
+      dimension_breakdown:
+        action: { invoked: 2030, failed: 70 }
+
+  - code: "is.org-management.org-discovery"

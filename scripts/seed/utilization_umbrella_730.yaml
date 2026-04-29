@@ -1,0 +1,88 @@
+# Umbrella Corp — Core tier, US West, v7.3.0
+# Profile: Basic SSO + light social login, minimal MFA, self-service focused
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "umbrella-prod-us"
+  customer_id: "umbrella"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 8500
+      dimension_breakdown:
+        grant_type: { authorization-code: 7500, client-credentials: 1000 }
+        response_type: { code: 8200, token: 300 }
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        action: { login-success: 4050, login-failed: 150 }
+
+  - code: "is.social-login.github"
+    utilization:
+      total_count: 1100
+      dimension_breakdown:
+        action: { login-success: 1050, login-failed: 50 }
+
+  - code: "is.social-login.microsoft"
+    utilization:
+      total_count: 680
+      dimension_breakdown:
+        action: { login-success: 660, login-failed: 20 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        action: { verify: 1700, enroll: 90, verify-failed: 10 }
+
+  - code: "is.mfa.email-otp"
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 950
+      dimension_breakdown:
+        verification_method: { email: 900, none: 50 }
+        outcome: { success: 880, failed: 50, pending-verification: 20 }
+
+  - code: "is.self-service.profile-management"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        action: { view-profile: 1500, update-profile: 500, change-password: 100 }
+
+  - code: "is.self-service.consent-management"
+    utilization:
+      total_count: 480
+      dimension_breakdown:
+        action: { view-consents: 400, revoke-consent: 80 }
+
+  - code: "is.self-service.session-management"
+    utilization:
+      total_count: 320
+      dimension_breakdown:
+        action: { view-sessions: 250, terminate-single: 60, terminate-all: 10 }
+
+  - code: "is.user-management.account-recovery"
+    utilization:
+      total_count: 190
+      dimension_breakdown:
+        recovery_type: { password-recovery: 180, username-recovery: 10 }
+        recovery_method: { email-link: 170, admin-reset: 20 }
+        outcome: { success: 175, failed: 12, expired: 3 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 22
+      dimension_breakdown:
+        scope: { application: 15, organization: 7 }
+        customization_type: { logo: 10, color-palette: 8, theme: 4 }

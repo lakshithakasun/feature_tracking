@@ -1,0 +1,58 @@
+# Nova Financial Services — v7.2.0 Staging
+# Features being tested: identity verification (KYC), push notification MFA, ELK analytics
+# None of these are live in prod yet — staging → prod pipeline signals
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "nova-finance-staging-eu"
+  customer_id: "nova-finance"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        grant_type: { authorization-code: 2800, client-credentials: 1400 }
+        response_type: { code: 3800, id-token: 400 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 920
+      dimension_breakdown:
+        action: { authenticate: 860, enroll: 52, auth-failed: 8 }
+        authenticator_type: { platform: 750, cross-platform: 170 }
+
+  - code: "is.mfa.push-notification"
+    utilization:
+      total_count: 280
+      dimension_breakdown:
+        action: { sent: 280, approved: 260, denied: 15, expired: 5 }
+
+  - code: "is.customization.webhooks"
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        template: { ip-based: 800, new-device-based: 600, role-based: 400 }
+        outcome: { step-up-not-triggered: 1000, step-up-triggered: 720, access-denied: 80 }
+
+  - code: "is.customization.identity-verification"
+    utilization:
+      total_count: 45
+      dimension_breakdown:
+        provider: { onfido: 45 }
+        outcome: { verified: 38, failed: 5, pending: 2 }
+
+  - code: "is.customization.elk-analytics"
+    utilization:
+      total_count: 12
+      dimension_breakdown:
+        action: { configured: 5, dashboard-viewed: 7 }

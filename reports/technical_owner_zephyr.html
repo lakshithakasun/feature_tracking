@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Technical Owner Dashboard — Zephyr Logistics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+  :root {
+    --bg: #eef3f7;
+    --surface: #ffffff;
+    --ink: #12263a;
+    --muted: #5d7187;
+    --line: #dbe4ee;
+    --accent: #165dff;
+    --good-bg: #e7f8ee;
+    --good-ink: #166534;
+    --warn-bg: #fff4dd;
+    --warn-ink: #b45309;
+    --bad-bg: #fde8e8;
+    --bad-ink: #b91c1c;
+    --info-bg: #e8f1ff;
+    --info-ink: #1d4ed8;
+    --muted-bg: #eef2f7;
+    --muted-ink: #607286;
+  }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Segoe UI", system-ui, sans-serif; }
+  .hero { background: linear-gradient(135deg, #12334a, #1f5c73); color: white; padding: 2.4rem 0 2rem; }
+  .container { width: min(1420px, calc(100vw - 48px)); margin: 0 auto; }
+  .eyebrow { display: inline-block; padding: .35rem .65rem; border-radius: 999px; background: rgba(255,255,255,.14); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+  .hero h1 { margin: .8rem 0 .4rem; font-size: 2rem; }
+  .subtitle { color: rgba(255,255,255,.78); }
+  .grid { display: grid; gap: 16px; }
+  .cards { grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 24px 0; }
+  .card, .section { background: var(--surface); border-radius: 16px; box-shadow: 0 10px 28px rgba(18, 38, 58, .06); }
+  .card { padding: 1.15rem 1.2rem; }
+  .card .value { font-size: 2rem; font-weight: 700; }
+  .card .label { margin-top: .35rem; color: var(--muted); text-transform: uppercase; font-size: .78rem; letter-spacing: .06em; }
+  .card .sub { margin-top: .4rem; color: var(--muted); }
+  .section { margin-bottom: 18px; overflow: hidden; }
+  .section-head { padding: 1rem 1.2rem; border-bottom: 1px solid var(--line); font-weight: 700; font-size: 1rem; }
+  .section-body { padding: 1.2rem; }
+  .explain { color: var(--muted); line-height: 1.55; margin-bottom: 1rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: .72rem .75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { text-align: left; font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; background: #f8fbfd; }
+  tr:last-child td { border-bottom: none; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; color: #335; }
+  .pill { display: inline-block; padding: .22rem .5rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+  .good { background: var(--good-bg); color: var(--good-ink); }
+  .warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .bad { background: var(--bad-bg); color: var(--bad-ink); }
+  .info { background: var(--info-bg); color: var(--info-ink); }
+  .muted { background: var(--muted-bg); color: var(--muted-ink); }
+  .soft-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+  .issue { border-left: 4px solid #f59e0b; background: #fffaf0; border-radius: 10px; padding: .9rem 1rem; margin-bottom: .8rem; }
+  .issue.bad { border-left-color: #ef4444; background: #fff4f4; }
+  .issue.info { border-left-color: #3b82f6; background: #f7fbff; }
+  .issue strong { display: block; margin-bottom: .25rem; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mini { color: var(--muted); font-size: .88rem; }
+  .chart-wrap { height: 300px; }
+  .footer { color: var(--muted); text-align: center; padding: 1.5rem 0 2rem; font-size: .84rem; }
+  .stack > * + * { margin-top: .7rem; }
+  @media (max-width: 1200px) {
+    .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .soft-grid, .split { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .container { width: min(100vw - 24px, 1420px); }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <span class="eyebrow">Technical Owner Dashboard</span>
+      <h1>Zephyr Logistics</h1>
+      <div class="subtitle">
+        Customer ID: <strong>zephyr</strong> · Region: <strong>eu-central</strong> · Tier: <strong>premium</strong> · Version: <strong>7.3.0</strong>
+      </div>
+      <div class="subtitle" style="margin-top:.45rem">
+        Environments: <strong>prod, staging</strong> · Latest prod report: <strong>2026-05-01T05:29:59+05:30</strong> · Previous prod report: <strong>2026-04-01T05:29:59+05:30</strong> · Generated 2026-04-29 14:12
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+<div class="grid cards">
+  <div class="card">
+    <div class="value" style="color:#165dff">13</div>
+    <div class="label">Enabled Features</div>
+    <div class="sub">listed in latest production report</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color:#0f9d58">12</div>
+    <div class="label">Actively Used</div>
+    <div class="sub">features with non-zero production traffic</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color:#b45309">1</div>
+    <div class="label">Configured / Unused</div>
+    <div class="sub">enabled but zero events in latest production period</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color:#7c3aed">236,600</div>
+    <div class="label">Production Events</div>
+    <div class="sub">latest reporting window total</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color:#2563eb">18%</div>
+    <div class="label">Period Change</div>
+    <div class="sub">vs previous production reporting window</div>
+  </div>
+  <div class="card">
+    <div class="value" style="color:#dc2626">5</div>
+    <div class="label">Action Items</div>
+    <div class="sub">prioritized technical follow-ups</div>
+  </div>
+</div>
+
+    
+<section class="section">
+  <div class="section-head">1. Feature Status Matrix</div>
+  <div class="section-body">
+    <div class="explain">
+      This is the core technical view of the account. A feature counts as <strong>Enabled</strong> when it appears in the latest production utilization report for this customer. It counts as <strong>Actively used</strong> when that same production snapshot reports more than zero events. The <strong>Usage</strong> band compares active features inside this account only: the busiest features appear as High, the middle layer as Medium, and the long tail as Low.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Enabled</th>
+          <th>Actively Used</th>
+          <th>Usage</th>
+          <th>Events</th>
+          <th>Status</th>
+          <th>Catalog State</th>
+        </tr>
+      </thead>
+      <tbody><tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Adaptive / Conditional Authentication</td></tr>
+        <tr>
+          <td>
+            <div><strong>Conditional Authentication</strong></div>
+            <div class="mono">is.adaptive-auth.conditional-auth</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>High</td>
+          <td>22,000</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>AI-Driven Step-Up Authentication</strong></div>
+            <div class="mono">is.adaptive-auth.ai-step-up</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Beta</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>App-Native Authentication</strong></div>
+            <div class="mono">is.adaptive-auth.app-native-auth</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Application Management</td></tr>
+        <tr>
+          <td>
+            <div><strong>Application Discovery</strong></div>
+            <div class="mono">is.app-management.app-discovery</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Application Registration</strong></div>
+            <div class="mono">is.app-management.create-application</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Dynamic Client Registration</strong></div>
+            <div class="mono">is.app-management.dcr</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>FAPI-Compliant Application</strong></div>
+            <div class="mono">is.app-management.fapi-app</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Authorization</td></tr>
+        <tr>
+          <td>
+            <div><strong>API Authorization (RBAC)</strong></div>
+            <div class="mono">is.authorization.api-authorization</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Rich Authorization Requests (RAR)</strong></div>
+            <div class="mono">is.authorization.rich-authorization-requests</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Role & Permission Management</strong></div>
+            <div class="mono">is.authorization.role-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>User Impersonation</strong></div>
+            <div class="mono">is.authorization.user-impersonation</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Branding & UX</td></tr>
+        <tr>
+          <td>
+            <div><strong>Branding AI</strong></div>
+            <div class="mono">is.branding.branding-ai</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Custom Text & Localization</strong></div>
+            <div class="mono">is.branding.custom-text</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Email Template Customization</strong></div>
+            <div class="mono">is.branding.email-templates</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SMS Template Customization</strong></div>
+            <div class="mono">is.branding.sms-templates</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>UI Branding</strong></div>
+            <div class="mono">is.branding.ui-branding</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Customization & Extensions</td></tr>
+        <tr>
+          <td>
+            <div><strong>Webhooks</strong></div>
+            <div class="mono">is.customization.webhooks</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>High</td>
+          <td>47,000</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Service Extensions (Actions)</strong></div>
+            <div class="mono">is.customization.service-extensions</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Low</td>
+          <td>3,000</td>
+          <td><span class="pill warn">Underused</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>ELK Analytics Integration</strong></div>
+            <div class="mono">is.customization.elk-analytics</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Identity Verification</strong></div>
+            <div class="mono">is.customization.identity-verification</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Enterprise Login</td></tr>
+        <tr>
+          <td>
+            <div><strong>Microsoft 365 Login</strong></div>
+            <div class="mono">is.enterprise-login.microsoft-365</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Medium</td>
+          <td>13,500</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SAML Enterprise IdP</strong></div>
+            <div class="mono">is.enterprise-login.saml-idp</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Medium</td>
+          <td>11,800</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>AD FS Login</strong></div>
+            <div class="mono">is.enterprise-login.adfs</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Integrated Windows Authentication (IWA)</strong></div>
+            <div class="mono">is.enterprise-login.iwa</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>OIDC Enterprise IdP</strong></div>
+            <div class="mono">is.enterprise-login.oidc-idp</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>WS-Federation Enterprise IdP</strong></div>
+            <div class="mono">is.enterprise-login.ws-federation-idp</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Identity Governance</td></tr>
+        <tr>
+          <td>
+            <div><strong>Account Disabling</strong></div>
+            <div class="mono">is.governance.account-disabling</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Admin Session Management</strong></div>
+            <div class="mono">is.governance.session-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Bot Detection</strong></div>
+            <div class="mono">is.governance.bot-detection</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Continuous Access Evaluation (CAE)</strong></div>
+            <div class="mono">is.governance.continuous-access-eval</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Login Attempt Security</strong></div>
+            <div class="mono">is.governance.login-attempts</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Notification Settings</strong></div>
+            <div class="mono">is.governance.notification-settings</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Password Policy Configuration</strong></div>
+            <div class="mono">is.governance.password-policy</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Multi-Factor Authentication (MFA)</td></tr>
+        <tr>
+          <td>
+            <div><strong>TOTP (Authenticator App)</strong></div>
+            <div class="mono">is.mfa.totp</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Medium</td>
+          <td>11,500</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Email OTP</strong></div>
+            <div class="mono">is.mfa.email-otp</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Medium</td>
+          <td>7,600</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Backup Codes</strong></div>
+            <div class="mono">is.mfa.backup-codes</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Magic Link (Passwordless Email)</strong></div>
+            <div class="mono">is.mfa.magic-link</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Passkey / FIDO2 (WebAuthn)</strong></div>
+            <div class="mono">is.mfa.passkey</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Push Notification Authentication</strong></div>
+            <div class="mono">is.mfa.push-notification</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SMS OTP</strong></div>
+            <div class="mono">is.mfa.sms-otp</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>X.509 Certificate Authentication</strong></div>
+            <div class="mono">is.mfa.x509</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Organization Management (B2B)</td></tr>
+        <tr>
+          <td>
+            <div><strong>B2B Organization Login</strong></div>
+            <div class="mono">is.org-management.b2b-login</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>High</td>
+          <td>28,500</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>B2B Organization Creation</strong></div>
+            <div class="mono">is.org-management.create-organization</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Low</td>
+          <td>3,400</td>
+          <td><span class="pill warn">Underused</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization Discovery</strong></div>
+            <div class="mono">is.org-management.org-discovery</div>
+          </td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill warn">Configured / Unused</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Delegated Organization Administration</strong></div>
+            <div class="mono">is.org-management.delegated-admin</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization Application Sharing</strong></div>
+            <div class="mono">is.org-management.app-sharing</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization Audit Log</strong></div>
+            <div class="mono">is.org-management.org-audit-log</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization Role Management</strong></div>
+            <div class="mono">is.org-management.org-roles</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization SSO</strong></div>
+            <div class="mono">is.org-management.org-sso</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization User Management</strong></div>
+            <div class="mono">is.org-management.org-user-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization-Level Branding</strong></div>
+            <div class="mono">is.org-management.org-branding</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Single Sign-On (SSO)</td></tr>
+        <tr>
+          <td>
+            <div><strong>OpenID Connect / OAuth 2.0 SSO</strong></div>
+            <div class="mono">is.sso.oidc</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>High</td>
+          <td>54,000</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SAML 2.0 SSO</strong></div>
+            <div class="mono">is.sso.saml</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Medium</td>
+          <td>16,500</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>WS-Federation SSO</strong></div>
+            <div class="mono">is.sso.ws-federation</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">Social Login</td></tr>
+        <tr>
+          <td>
+            <div><strong>Apple Social Login</strong></div>
+            <div class="mono">is.social-login.apple</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Facebook Social Login</strong></div>
+            <div class="mono">is.social-login.facebook</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>GitHub Social Login</strong></div>
+            <div class="mono">is.social-login.github</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Google Social Login</strong></div>
+            <div class="mono">is.social-login.google</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Microsoft Social Login</strong></div>
+            <div class="mono">is.social-login.microsoft</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>X (Twitter) Social Login</strong></div>
+            <div class="mono">is.social-login.x</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">User Management</td></tr>
+        <tr>
+          <td>
+            <div><strong>Account Recovery</strong></div>
+            <div class="mono">is.user-management.account-recovery</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Admin User Onboarding</strong></div>
+            <div class="mono">is.user-management.admin-onboard</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Bulk User Import</strong></div>
+            <div class="mono">is.user-management.bulk-import</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Group Management</strong></div>
+            <div class="mono">is.user-management.group-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Invitation-Based User Onboarding</strong></div>
+            <div class="mono">is.user-management.invite-user</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>User Attribute Configuration</strong></div>
+            <div class="mono">is.user-management.user-attributes</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>User Self-Registration</strong></div>
+            <div class="mono">is.user-management.self-registration</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">User Provisioning</td></tr>
+        <tr>
+          <td>
+            <div><strong>Inbound SCIM 2.0 Provisioning</strong></div>
+            <div class="mono">is.provisioning.inbound-scim</div>
+          </td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Medium</td>
+          <td>17,800</td>
+          <td><span class="pill good">Healthy</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Just-in-Time (JIT) Provisioning</strong></div>
+            <div class="mono">is.provisioning.jit</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Outbound User Provisioning</strong></div>
+            <div class="mono">is.provisioning.outbound</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">User Self-Service</td></tr>
+        <tr>
+          <td>
+            <div><strong>Linked Social Accounts</strong></div>
+            <div class="mono">is.self-service.linked-accounts</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Self-Service Consent Management</strong></div>
+            <div class="mono">is.self-service.consent-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Self-Service MFA Enrollment</strong></div>
+            <div class="mono">is.self-service.mfa-enrollment</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Self-Service Profile Management</strong></div>
+            <div class="mono">is.self-service.profile-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Self-Service Session Management</strong></div>
+            <div class="mono">is.self-service.session-management</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Workflow Approvals</strong></div>
+            <div class="mono">is.self-service.workflow-approvals</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">User Stores</td></tr>
+        <tr>
+          <td>
+            <div><strong>User Store Configuration</strong></div>
+            <div class="mono">is.user-stores.configure</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        <tr><td colspan="7" style="background:#f8fbfd;font-weight:700;color:#506275">eID Login</td></tr>
+        <tr>
+          <td>
+            <div><strong>FranceConnect eID Login</strong></div>
+            <div class="mono">is.eid-login.franceconnect</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Signicat eID Login</strong></div>
+            <div class="mono">is.eid-login.signicat</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SwissID eID Login</strong></div>
+            <div class="mono">is.eid-login.swissid</div>
+          </td>
+          <td>No</td>
+          <td>No</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="pill muted">Not Enabled</span></td>
+          <td><span class="pill muted">Stable</span></td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+    
+<section class="section">
+  <div class="section-head">2. Configuration Gaps / Misconfigurations</div>
+  <div class="section-body">
+    <div class="explain">
+      This section highlights technical patterns that usually deserve follow-up: features configured but unused, capabilities active only in staging, production paths with high failure rates, and lifecycle risks such as beta or deprecated features running live.
+    </div>
+    <div class="stack">
+        <div class="issue">
+          <strong>Organization Discovery</strong>
+          Enabled in production but produced no events in the latest reporting window. This usually means incomplete rollout, dormant configuration, or a capability users are not reaching.
+        </div>
+        
+        <div class="issue info">
+          <strong>AI-Driven Step-Up Authentication</strong>
+          Active in staging with 650 events, but not active in production. This suggests a rollout stuck between testing and go-live.
+        </div>
+        
+        <div class="issue info">
+          <strong>Organization Discovery</strong>
+          Active in staging with 420 events, but not active in production. This suggests a rollout stuck between testing and go-live.
+        </div>
+        
+        <div class="issue info">
+          <strong>Continuous Access Evaluation (CAE)</strong>
+          Active in staging with 280 events, but not active in production. This suggests a rollout stuck between testing and go-live.
+        </div>
+        
+        <div class="issue bad">
+          <strong>Conditional Authentication</strong>
+          100% of observed success/failure outcomes were failures. This is a technical health signal worth investigating before users feel it more broadly.
+        </div>
+        
+        <div class="issue bad">
+          <strong>Service Extensions (Actions)</strong>
+          100% of observed success/failure outcomes were failures. This is a technical health signal worth investigating before users feel it more broadly.
+        </div>
+        </div>
+  </div>
+</section>
+
+    <div class="split">
+      
+<section class="section">
+  <div class="section-head">3. Feature Usage Detail</div>
+  <div class="section-body">
+    <div class="explain">
+      This drill-down focuses on the busiest production features in the latest reporting window. The metric column interprets each feature’s dimension breakdown where possible, for example success rate, verification rate, or which protocol or template dominates the traffic.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Category</th>
+          <th>Events</th>
+          <th>Key Metric</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div><strong>OpenID Connect / OAuth 2.0 SSO</strong></div>
+            <div class="mono">is.sso.oidc</div>
+          </td>
+          <td>Single Sign-On (SSO)</td>
+          <td>54,000</td>
+          <td>Grant Type: authorization-code (74%)</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Webhooks</strong></div>
+            <div class="mono">is.customization.webhooks</div>
+          </td>
+          <td>Customization & Extensions</td>
+          <td>47,000</td>
+          <td>Success rate 96%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>B2B Organization Login</strong></div>
+            <div class="mono">is.org-management.b2b-login</div>
+          </td>
+          <td>Organization Management (B2B)</td>
+          <td>28,500</td>
+          <td>Success rate 96%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Conditional Authentication</strong></div>
+            <div class="mono">is.adaptive-auth.conditional-auth</div>
+          </td>
+          <td>Adaptive / Conditional Authentication</td>
+          <td>22,000</td>
+          <td>Success rate 0%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Inbound SCIM 2.0 Provisioning</strong></div>
+            <div class="mono">is.provisioning.inbound-scim</div>
+          </td>
+          <td>User Provisioning</td>
+          <td>17,800</td>
+          <td>17,800 events</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SAML 2.0 SSO</strong></div>
+            <div class="mono">is.sso.saml</div>
+          </td>
+          <td>Single Sign-On (SSO)</td>
+          <td>16,500</td>
+          <td>Binding Type: http-post (77%)</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Microsoft 365 Login</strong></div>
+            <div class="mono">is.enterprise-login.microsoft-365</div>
+          </td>
+          <td>Enterprise Login</td>
+          <td>13,500</td>
+          <td>Success rate 98%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SAML Enterprise IdP</strong></div>
+            <div class="mono">is.enterprise-login.saml-idp</div>
+          </td>
+          <td>Enterprise Login</td>
+          <td>11,800</td>
+          <td>Success rate 96%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>TOTP (Authenticator App)</strong></div>
+            <div class="mono">is.mfa.totp</div>
+          </td>
+          <td>Multi-Factor Authentication (MFA)</td>
+          <td>11,500</td>
+          <td>Success rate 99%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Email OTP</strong></div>
+            <div class="mono">is.mfa.email-otp</div>
+          </td>
+          <td>Multi-Factor Authentication (MFA)</td>
+          <td>7,600</td>
+          <td>Success rate 96%</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>B2B Organization Creation</strong></div>
+            <div class="mono">is.org-management.create-organization</div>
+          </td>
+          <td>Organization Management (B2B)</td>
+          <td>3,400</td>
+          <td>3,400 events</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Service Extensions (Actions)</strong></div>
+            <div class="mono">is.customization.service-extensions</div>
+          </td>
+          <td>Customization & Extensions</td>
+          <td>3,000</td>
+          <td>Success rate 0%</td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+      
+<section class="section">
+  <div class="section-head">4. Flow-Level Visibility</div>
+  <div class="section-body">
+    <div class="explain">
+      This view groups active production traffic into practical flow families such as OIDC SSO, enterprise federation, MFA, and adaptive authentication. It helps a technical owner see which login paths actually carry user traffic and which ones are mostly configuration without reach.
+    </div>
+    <div class="soft-grid">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Flow Family</th>
+              <th>Events</th>
+              <th>Usage</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td>OIDC / OAuth SSO</td>
+          <td>54,000</td>
+          <td><span class="pill good">High</span></td>
+        </tr>
+        
+        <tr>
+          <td>Customization & Extensions</td>
+          <td>50,000</td>
+          <td><span class="pill good">High</span></td>
+        </tr>
+        
+        <tr>
+          <td>B2B Organization Login</td>
+          <td>31,900</td>
+          <td><span class="pill good">High</span></td>
+        </tr>
+        
+        <tr>
+          <td>Federated Enterprise Login</td>
+          <td>25,300</td>
+          <td><span class="pill warn">Medium</span></td>
+        </tr>
+        
+        <tr>
+          <td>Adaptive / Conditional</td>
+          <td>22,000</td>
+          <td><span class="pill warn">Medium</span></td>
+        </tr>
+        
+        <tr>
+          <td>MFA Challenge</td>
+          <td>19,100</td>
+          <td><span class="pill warn">Medium</span></td>
+        </tr>
+        
+        <tr>
+          <td>User Provisioning</td>
+          <td>17,800</td>
+          <td><span class="pill warn">Medium</span></td>
+        </tr>
+        
+        <tr>
+          <td>SAML SSO</td>
+          <td>16,500</td>
+          <td><span class="pill warn">Medium</span></td>
+        </tr>
+        </tbody>
+        </table>
+      </div>
+      <div class="chart-wrap"><canvas id="flowChart"></canvas></div>
+    </div>
+    <script>
+      window.__flowLabels = ["OIDC / OAuth SSO", "Customization & Extensions", "B2B Organization Login", "Federated Enterprise Login", "Adaptive / Conditional", "MFA Challenge", "User Provisioning", "SAML SSO"];
+      window.__flowValues = [54000, 50000, 31900, 25300, 22000, 19100, 17800, 16500];
+    </script>
+  </div>
+</section>
+
+    </div>
+    
+<section class="section">
+  <div class="section-head">5. Security Posture Indicators</div>
+  <div class="section-body">
+    <div class="explain">
+      These are lightweight technical security signals rather than full audit findings. MFA activity is estimated by comparing MFA traffic with login-like traffic. Modern protocol mix compares OIDC/OAuth usage against SAML usage. Deprecated or beta features in production are treated as review items because they can increase long-term platform risk.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Indicator</th>
+          <th>Status</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MFA activity vs sign-in traffic</td>
+          <td><span class="pill bad">Low</span></td>
+          <td>13% of login-like traffic touched MFA features in the latest production period.</td>
+        </tr>
+        
+        <tr>
+          <td>Modern protocol mix</td>
+          <td><span class="pill warn">Mixed</span></td>
+          <td>OIDC/OAuth represents 66% of OIDC+SAML traffic.</td>
+        </tr>
+        
+        <tr>
+          <td>Passkey / FIDO2 adoption</td>
+          <td><span class="pill bad">Not active</span></td>
+          <td>No passkey or FIDO2 activity was reported in the latest production period.</td>
+        </tr>
+        
+        <tr>
+          <td>Deprecated / beta features in production</td>
+          <td><span class="pill good">Clear</span></td>
+          <td>No beta or deprecated features are active in production.</td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+    
+<section class="section">
+  <div class="section-head">6. Unused / Redundant Configurations</div>
+  <div class="section-body">
+    <div class="explain">
+      This section isolates technical clutter: features that exist in production but show no usage, plus features that appear to be active only in staging. These are good cleanup candidates because they add mental overhead without delivering runtime value.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Category</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Organization Discovery</td>
+          <td>Organization Management (B2B)</td>
+          <td>Enabled, 0 events across 2 prod period(s)</td>
+        </tr>
+        
+        <tr>
+          <td>AI-Driven Step-Up Authentication</td>
+          <td>Adaptive / Conditional Authentication</td>
+          <td>Active in staging only (650 events)</td>
+        </tr>
+        
+        <tr>
+          <td>Organization Discovery</td>
+          <td>Organization Management (B2B)</td>
+          <td>Active in staging only (420 events)</td>
+        </tr>
+        
+        <tr>
+          <td>Continuous Access Evaluation (CAE)</td>
+          <td>Identity Governance</td>
+          <td>Active in staging only (280 events)</td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+    
+<section class="section">
+  <div class="section-head">7. Optimization Recommendations</div>
+  <div class="section-body">
+    <div class="explain">
+      This is the execution list for the technical owner. The priorities come from the latest production snapshot first, then staging and feature-alignment context. High means a security or reliability concern is visible now. Medium usually means cleanup or rollout friction. Low points to modernization or value-expansion opportunities.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>Recommendation</th>
+          <th>Why It Matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill bad">High</span></td>
+          <td>Strengthen MFA in live sign-in flows</td>
+          <td>MFA activity is low compared with reported login traffic, which suggests weak enforcement or limited user uptake.</td>
+        </tr>
+        
+        <tr>
+          <td><span class="pill bad">High</span></td>
+          <td>Investigate failure-heavy flow for Conditional Authentication</td>
+          <td>100% of the observed success/failure events for this feature ended in failure.</td>
+        </tr>
+        
+        <tr>
+          <td><span class="pill warn">Medium</span></td>
+          <td>Clean up or complete rollout of enabled-but-unused features</td>
+          <td>1 feature(s) are configured in production but produced no usage in the latest reporting window.</td>
+        </tr>
+        
+        <tr>
+          <td><span class="pill warn">Medium</span></td>
+          <td>Promote validated staging features into production</td>
+          <td>3 feature(s) show live activity in staging but not in production.</td>
+        </tr>
+        
+        <tr>
+          <td><span class="pill info">Low</span></td>
+          <td>Evaluate passkey / FIDO2 rollout</td>
+          <td>The version supports modern passwordless capabilities, but no passkey activity is visible yet.</td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+    
+<section class="section">
+  <div class="section-head">8. Version &amp; Feature Alignment</div>
+  <div class="section-body">
+    <div class="explain">
+      This compares the customer’s live environment with the features available in version <strong>7.3.0</strong>. The most important rows here are capabilities that the version already supports but the account has either not enabled yet or has enabled without getting any actual usage.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Category</th>
+          <th>Tier</th>
+          <th>Available</th>
+          <th>Enabled</th>
+          <th>Used</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div><strong>AI-Driven Step-Up Authentication</strong></div>
+            <div class="mono">is.adaptive-auth.ai-step-up</div>
+          </td>
+          <td>Adaptive / Conditional Authentication</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>FAPI-Compliant Application</strong></div>
+            <div class="mono">is.app-management.fapi-app</div>
+          </td>
+          <td>Application Management</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Rich Authorization Requests (RAR)</strong></div>
+            <div class="mono">is.authorization.rich-authorization-requests</div>
+          </td>
+          <td>Authorization</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Identity Verification</strong></div>
+            <div class="mono">is.customization.identity-verification</div>
+          </td>
+          <td>Customization & Extensions</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Integrated Windows Authentication (IWA)</strong></div>
+            <div class="mono">is.enterprise-login.iwa</div>
+          </td>
+          <td>Enterprise Login</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>WS-Federation Enterprise IdP</strong></div>
+            <div class="mono">is.enterprise-login.ws-federation-idp</div>
+          </td>
+          <td>Enterprise Login</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Continuous Access Evaluation (CAE)</strong></div>
+            <div class="mono">is.governance.continuous-access-eval</div>
+          </td>
+          <td>Identity Governance</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>X.509 Certificate Authentication</strong></div>
+            <div class="mono">is.mfa.x509</div>
+          </td>
+          <td>Multi-Factor Authentication (MFA)</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>FranceConnect eID Login</strong></div>
+            <div class="mono">is.eid-login.franceconnect</div>
+          </td>
+          <td>eID Login</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Signicat eID Login</strong></div>
+            <div class="mono">is.eid-login.signicat</div>
+          </td>
+          <td>eID Login</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>SwissID eID Login</strong></div>
+            <div class="mono">is.eid-login.swissid</div>
+          </td>
+          <td>eID Login</td>
+          <td>enterprise</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>App-Native Authentication</strong></div>
+            <div class="mono">is.adaptive-auth.app-native-auth</div>
+          </td>
+          <td>Adaptive / Conditional Authentication</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Dynamic Client Registration</strong></div>
+            <div class="mono">is.app-management.dcr</div>
+          </td>
+          <td>Application Management</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>API Authorization (RBAC)</strong></div>
+            <div class="mono">is.authorization.api-authorization</div>
+          </td>
+          <td>Authorization</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>User Impersonation</strong></div>
+            <div class="mono">is.authorization.user-impersonation</div>
+          </td>
+          <td>Authorization</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Branding AI</strong></div>
+            <div class="mono">is.branding.branding-ai</div>
+          </td>
+          <td>Branding & UX</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>ELK Analytics Integration</strong></div>
+            <div class="mono">is.customization.elk-analytics</div>
+          </td>
+          <td>Customization & Extensions</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>AD FS Login</strong></div>
+            <div class="mono">is.enterprise-login.adfs</div>
+          </td>
+          <td>Enterprise Login</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>OIDC Enterprise IdP</strong></div>
+            <div class="mono">is.enterprise-login.oidc-idp</div>
+          </td>
+          <td>Enterprise Login</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Passkey / FIDO2 (WebAuthn)</strong></div>
+            <div class="mono">is.mfa.passkey</div>
+          </td>
+          <td>Multi-Factor Authentication (MFA)</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Push Notification Authentication</strong></div>
+            <div class="mono">is.mfa.push-notification</div>
+          </td>
+          <td>Multi-Factor Authentication (MFA)</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Delegated Organization Administration</strong></div>
+            <div class="mono">is.org-management.delegated-admin</div>
+          </td>
+          <td>Organization Management (B2B)</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization Application Sharing</strong></div>
+            <div class="mono">is.org-management.app-sharing</div>
+          </td>
+          <td>Organization Management (B2B)</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div><strong>Organization Audit Log</strong></div>
+            <div class="mono">is.org-management.org-audit-log</div>
+          </td>
+          <td>Organization Management (B2B)</td>
+          <td>premium</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Available in this version but not enabled</td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+  </main>
+
+  <div class="footer">
+    WSO2 Feature Utilization — Technical Owner Dashboard · Zephyr Logistics · Generated 2026-04-29 14:12
+  </div>
+
+  <script>
+    const flowLabels = ["OIDC / OAuth SSO", "Customization & Extensions", "B2B Organization Login", "Federated Enterprise Login", "Adaptive / Conditional", "MFA Challenge", "User Provisioning", "SAML SSO"];
+    const flowValues = [54000, 50000, 31900, 25300, 22000, 19100, 17800, 16500];
+    if (flowLabels.length) {
+      new Chart(document.getElementById('flowChart'), {
+        type: 'bar',
+        data: {
+          labels: flowLabels,
+          datasets: [{
+            data: flowValues,
+            backgroundColor: ['#165dff', '#0f9d58', '#f59e0b', '#7c3aed', '#ef4444', '#14b8a6', '#64748b'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#496176' }, grid: { display: false } },
+            y: { ticks: { color: '#496176' }, grid: { color: '#eef3f7' } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

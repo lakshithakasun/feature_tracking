@@ -1,0 +1,114 @@
+# Initech Systems — Enterprise, AP Southeast, v7.2.0 Production
+# Profile: Heavy user management + governance + SCIM provisioning
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "initech-prod-ap"
+  customer_id: "initech"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 38000
+      dimension_breakdown:
+        grant_type: { authorization-code: 25000, client-credentials: 13000 }
+        response_type: { code: 35000, token: 3000 }
+
+  - code: "is.provisioning.inbound-scim"
+    utilization:
+      total_count: 12000
+      dimension_breakdown:
+        operation: { create: 5000, update: 5500, delete: 1000, bulk: 500 }
+
+  - code: "is.provisioning.outbound"
+    utilization:
+      total_count: 8500
+      dimension_breakdown:
+        connector: { scim2: 5000, google: 2000, salesforce: 1500 }
+        operation: { create: 3000, update: 4000, delete: 1500 }
+
+  - code: "is.user-management.bulk-import"
+    utilization:
+      total_count: 42
+      dimension_breakdown:
+        import_method: { scim-bulk: 25, csv-upload: 17 }
+        outcome: { success: 35, partial: 5, failed: 2 }
+
+  - code: "is.user-management.admin-onboard"
+    utilization:
+      total_count: 1850
+      dimension_breakdown:
+        method: { scim-api: 1200, admin-api: 500, console: 150 }
+
+  - code: "is.user-management.group-management"
+    utilization:
+      total_count: 620
+      dimension_breakdown:
+        action: { created: 120, updated: 300, user-assigned: 180, user-removed: 20 }
+
+  - code: "is.user-stores.configure"
+    utilization:
+      total_count: 28
+      dimension_breakdown:
+        store_type: { ldap-read-write: 12, active-directory: 10, jdbc: 6 }
+        action: { configured: 18, updated: 10 }
+        store_level: { primary: 15, secondary: 13 }
+
+  - code: "is.governance.password-policy"
+    utilization:
+      total_count: 45
+      dimension_breakdown:
+        action: { configured: 20, updated: 25 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        action: { account-locked: 2800, account-unlocked: 350, policy-configured: 50 }
+
+  - code: "is.governance.session-management"
+    utilization:
+      total_count: 180
+      dimension_breakdown:
+        action: { policy-configured: 80, session-terminated-admin: 100 }
+
+  - code: "is.governance.account-disabling"
+    utilization:
+      total_count: 420
+      dimension_breakdown:
+        action: { disabled: 320, enabled: 100 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 890
+      dimension_breakdown:
+        action: { api-resource-registered: 200, scope-defined: 400, policy-created: 290 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 1100
+      dimension_breakdown:
+        action: { role-created: 250, role-updated: 500, permission-assigned: 350 }
+        role_type: { application: 700, organization: 400 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 9200
+      dimension_breakdown:
+        action: { verify: 8800, enroll: 350, verify-failed: 50 }
+
+  - code: "is.mfa.sms-otp"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        action: { sent: 2100, verified: 1950, verify-failed: 120, expired: 30 }
+        sms_provider: { twilio: 1800, vonage: 300 }
+
+  - code: "is.mfa.passkey"

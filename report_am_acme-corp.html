@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AM Report — Acme Corporation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; }
+    .page-header { background: linear-gradient(135deg, #1a2a4a 0%, #2d4a7a 100%); color: white; padding: 2.5rem 0 2rem; }
+    .page-header .subtitle { opacity: .7; font-size: .95rem; }
+    .stat-card { background: white; border-radius: 12px; padding: 1.4rem 1.6rem; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    .stat-card .value { font-size: 2rem; font-weight: 700; line-height: 1; }
+    .stat-card .label { color: #6c757d; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }
+    .stat-card .sub { font-size: .8rem; color: #6c757d; margin-top: .4rem; }
+    .section-card { background: white; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 1.5rem; }
+    .section-card .card-header { background: none; border-bottom: 1px solid #e9ecef; padding: 1rem 1.4rem; font-weight: 600; font-size: .95rem; }
+    .section-card .card-body { padding: 1.4rem; }
+    table thead th { background: #f8f9fa; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: #6c757d; border-bottom: 2px solid #dee2e6; }
+    code { background: #f0f4ff; color: #2d4a7a; padding: .1em .35em; border-radius: 4px; }
+    .chart-container { position: relative; height: 280px; }
+    .footer { color: #6c757d; font-size: .8rem; padding: 1.5rem 0 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex align-items-center gap-3 mb-2">
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.4rem .8rem;font-size:.8rem;letter-spacing:.06em">
+        ACCOUNT MANAGER VIEW
+      </div>
+      <span style="opacity:.5">•</span>
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.4rem .8rem;font-size:.8rem">
+        <span class="badge bg-danger">enterprise</span>
+      </div>
+    </div>
+    <h1 class="mb-1" style="font-size:1.9rem;font-weight:700">Acme Corporation</h1>
+    <div class="subtitle">Generated 2026-04-16 13:20 &nbsp;·&nbsp; Region: us-east &nbsp;·&nbsp; Last report: 2026-04-01</div>
+  </div>
+</div>
+
+<div class="container py-4">
+
+<!-- ── SUMMARY CARDS ─────────────────────────────────────────────────────── -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value text-primary">2</div>
+      <div class="label">Deployments</div>
+      <div class="sub">prod, prod</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value" style="color:#E07B54">49,640</div>
+      <div class="label">Total Feature Events</div>
+      <div class="sub">7 categories active</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value" style="color:#5AB08E">12</div>
+      <div class="label">Features Used</div>
+      <div class="sub">132 not yet activated</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="value" style="color:#A06EC9"><span class="badge bg-danger">enterprise</span></div>
+      <div class="label">Tier</div>
+      <div class="sub">Region: us-east</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 1.1 CUSTOMER HEADER ───────────────────────────────────────────────── -->
+<div class="section-card mb-4">
+  <div class="card-header">🏢 Section 1.1 — Customer & Deployment Overview</div>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Deployment ID</th><th>Environment</th><th>Version</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><code class="small">acme-corp-prod-us-73</code></td>
+          <td>prod</td>
+          <td><strong>7.3.0</strong></td>
+          <td><span class="badge bg-success">latest</span></td>
+        </tr>
+        <tr>
+          <td><code class="small">acme-corp-prod-us</code></td>
+          <td>prod</td>
+          <td><strong>7.2.0</strong></td>
+          <td><span class="badge bg-success">latest</span></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── 1.2 + 1.3 FEATURE TABLE AND CHART ────────────────────────────────── -->
+<div class="row g-3 mb-4">
+  <div class="col-md-8">
+    <div class="section-card h-100">
+      <div class="card-header">📋 Section 1.2 — Feature Usage Summary (with dimension breakdown)</div>
+      <div class="card-body p-0">
+        <table class="table table-sm table-hover mb-0">
+          <thead><tr>
+            <th class="ps-3">Feature Code / Dimensions</th>
+            <th>Feature Name</th>
+            <th>Total Events</th>
+            <th>By Deployment</th>
+          </tr></thead>
+          <tbody>
+        <tr class="table-light">
+          <td colspan="5"><strong>Single Sign-On (SSO)</strong>
+            <span class="badge bg-primary ms-2">22,100 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.sso.oidc</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>grant_type</em>: <span class="badge bg-light text-dark border me-1">authorization-code: <strong>14,000</strong></span>, <span class="badge bg-light text-dark border me-1">client-credentials: <strong>4,000</strong></span></div><div class="small text-muted mb-1"><em>response_type</em>: <span class="badge bg-light text-dark border me-1">code: <strong>17,000</strong></span>, <span class="badge bg-light text-dark border me-1">token: <strong>1,000</strong></span></div></div>
+              </td>
+              <td>OpenID Connect / OAuth 2.0 SSO</td>
+              <td><strong>18,000</strong></td>
+              <td><div class="small text-muted">prod: 18,000</div></td>
+            </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.sso.saml</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>binding_type</em>: <span class="badge bg-light text-dark border me-1">http-post: <strong>3,500</strong></span>, <span class="badge bg-light text-dark border me-1">http-redirect: <strong>600</strong></span></div></div>
+              </td>
+              <td>SAML 2.0 SSO</td>
+              <td><strong>4,100</strong></td>
+              <td><div class="small text-muted">prod: 4,100</div></td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="5"><strong>Adaptive / Conditional Authentication</strong>
+            <span class="badge bg-primary ms-2">11,600 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.adaptive-auth.conditional-auth</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>outcome</em>: <span class="badge bg-light text-dark border me-1">step-up-not-triggered: <strong>5,500</strong></span>, <span class="badge bg-light text-dark border me-1">step-up-triggered: <strong>3,800</strong></span>, <span class="badge bg-light text-dark border me-1">access-denied: <strong>200</strong></span></div><div class="small text-muted mb-1"><em>template</em>: <span class="badge bg-light text-dark border me-1">new-device-based: <strong>4,000</strong></span>, <span class="badge bg-light text-dark border me-1">ip-based: <strong>3,500</strong></span>, <span class="badge bg-light text-dark border me-1">role-based: <strong>2,000</strong></span></div></div>
+              </td>
+              <td>Conditional Authentication</td>
+              <td><strong>9,500</strong></td>
+              <td><div class="small text-muted">prod: 9,500</div></td>
+            </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.mfa.ai-step-up</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>outcome</em>: <span class="badge bg-light text-dark border me-1">allowed: <strong>1,400</strong></span>, <span class="badge bg-light text-dark border me-1">step-up-triggered: <strong>660</strong></span>, <span class="badge bg-light text-dark border me-1">denied: <strong>40</strong></span></div><div class="small text-muted mb-1"><em>risk_level</em>: <span class="badge bg-light text-dark border me-1">low: <strong>1,400</strong></span>, <span class="badge bg-light text-dark border me-1">medium: <strong>500</strong></span>, <span class="badge bg-light text-dark border me-1">high: <strong>180</strong></span>, <span class="badge bg-light text-dark border me-1">critical: <strong>20</strong></span></div></div>
+              </td>
+              <td>AI-Driven Step-Up Authentication</td>
+              <td><strong>2,100</strong></td>
+              <td><div class="small text-muted">prod: 2,100</div></td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="5"><strong>Multi-Factor Authentication (MFA)</strong>
+            <span class="badge bg-primary ms-2">10,500 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.mfa.totp</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">verify: <strong>5,900</strong></span>, <span class="badge bg-light text-dark border me-1">enroll: <strong>270</strong></span>, <span class="badge bg-light text-dark border me-1">verify-failed: <strong>30</strong></span></div></div>
+              </td>
+              <td>TOTP (Authenticator App)</td>
+              <td><strong>6,200</strong></td>
+              <td><div class="small text-muted">prod: 6,200</div></td>
+            </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.mfa.passkey</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">authenticate: <strong>2,600</strong></span>, <span class="badge bg-light text-dark border me-1">enroll: <strong>180</strong></span>, <span class="badge bg-light text-dark border me-1">auth-failed: <strong>20</strong></span></div><div class="small text-muted mb-1"><em>authenticator_type</em>: <span class="badge bg-light text-dark border me-1">platform: <strong>2,400</strong></span>, <span class="badge bg-light text-dark border me-1">cross-platform: <strong>400</strong></span></div></div>
+              </td>
+              <td>Passkey / FIDO2 (WebAuthn)</td>
+              <td><strong>2,800</strong></td>
+              <td><div class="small text-muted">prod: 2,800</div></td>
+            </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.mfa.email-otp</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">sent: <strong>1,500</strong></span>, <span class="badge bg-light text-dark border me-1">verified: <strong>1,420</strong></span>, <span class="badge bg-light text-dark border me-1">verify-failed: <strong>70</strong></span>, <span class="badge bg-light text-dark border me-1">expired: <strong>10</strong></span></div></div>
+              </td>
+              <td>Email OTP</td>
+              <td><strong>1,500</strong></td>
+              <td><div class="small text-muted">prod: 1,500</div></td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="5"><strong>Social Login</strong>
+            <span class="badge bg-primary ms-2">4,000 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.social-login.google</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">login-success: <strong>2,720</strong></span>, <span class="badge bg-light text-dark border me-1">login-failed: <strong>80</strong></span></div></div>
+              </td>
+              <td>Google Social Login</td>
+              <td><strong>2,800</strong></td>
+              <td><div class="small text-muted">prod: 2,800</div></td>
+            </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.social-login.microsoft</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">login-success: <strong>1,160</strong></span>, <span class="badge bg-light text-dark border me-1">login-failed: <strong>40</strong></span></div></div>
+              </td>
+              <td>Microsoft Social Login</td>
+              <td><strong>1,200</strong></td>
+              <td><div class="small text-muted">prod: 1,200</div></td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="5"><strong>Identity Governance</strong>
+            <span class="badge bg-primary ms-2">850 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.governance.continuous-access-eval</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">session-revoked: <strong>600</strong></span>, <span class="badge bg-light text-dark border me-1">token-invalidated: <strong>250</strong></span></div><div class="small text-muted mb-1"><em>trigger</em>: <span class="badge bg-light text-dark border me-1">ip-change: <strong>400</strong></span>, <span class="badge bg-light text-dark border me-1">password-change: <strong>300</strong></span>, <span class="badge bg-light text-dark border me-1">account-disabled: <strong>100</strong></span>, <span class="badge bg-light text-dark border me-1">role-change: <strong>50</strong></span></div></div>
+              </td>
+              <td>Continuous Access Evaluation (CAE)</td>
+              <td><strong>850</strong></td>
+              <td><div class="small text-muted">prod: 850</div></td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="5"><strong>User Management</strong>
+            <span class="badge bg-primary ms-2">410 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.user-management.self-registration</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>outcome</em>: <span class="badge bg-light text-dark border me-1">success: <strong>380</strong></span>, <span class="badge bg-light text-dark border me-1">failed: <strong>20</strong></span>, <span class="badge bg-light text-dark border me-1">pending-verification: <strong>10</strong></span></div><div class="small text-muted mb-1"><em>verification_method</em>: <span class="badge bg-light text-dark border me-1">email: <strong>390</strong></span>, <span class="badge bg-light text-dark border me-1">sms: <strong>20</strong></span></div></div>
+              </td>
+              <td>User Self-Registration</td>
+              <td><strong>410</strong></td>
+              <td><div class="small text-muted">prod: 410</div></td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="5"><strong>Organization Management (B2B)</strong>
+            <span class="badge bg-primary ms-2">180 events</span>
+          </td>
+        </tr>
+            <tr>
+              <td class="ps-4"><code class="small">is.org-management.org-audit-log</code>
+                <div class="mt-1 ps-2 border-start border-3 border-primary"><div class="small text-muted mb-1"><em>action</em>: <span class="badge bg-light text-dark border me-1">viewed: <strong>140</strong></span>, <span class="badge bg-light text-dark border me-1">exported: <strong>35</strong></span>, <span class="badge bg-light text-dark border me-1">filtered: <strong>5</strong></span></div><div class="small text-muted mb-1"><em>export_format</em>: <span class="badge bg-light text-dark border me-1">csv: <strong>25</strong></span>, <span class="badge bg-light text-dark border me-1">json: <strong>10</strong></span></div></div>
+              </td>
+              <td>Organization Audit Log</td>
+              <td><strong>180</strong></td>
+              <td><div class="small text-muted">prod: 180</div></td>
+            </tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="section-card h-100">
+      <div class="card-header">📊 Section 1.3 — Events by Category</div>
+      <div class="card-body">
+        <div class="chart-container"><canvas id="catChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 1.4 DEPLOYMENT COMPARISON ─────────────────────────────────────────── -->
+
+
+<!-- ── 1.5 FEATURES NOT YET USED ─────────────────────────────────────────── -->
+<div class="section-card mb-4">
+  <div class="card-header">💡 Section 1.5 — Features Available But Not Yet Activated</div>
+  <div class="card-body p-0">
+    
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Feature Code</th><th>Feature Name</th><th>Tier / Status</th>
+      </tr></thead>
+      <tbody>
+        <tr class="table-light">
+          <td colspan="3"><strong>Adaptive / Conditional Authentication</strong>
+            <span class="badge bg-secondary ms-2">2 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.adaptive-auth.app-native-auth</code></td>
+              <td>App-Native Authentication</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.adaptive-auth.app-native-auth</code></td>
+              <td>App-Native Authentication</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Application Management</strong>
+            <span class="badge bg-secondary ms-2">8 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.app-discovery</code></td>
+              <td>Application Discovery</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.create-application</code></td>
+              <td>Application Registration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.dcr</code></td>
+              <td>Dynamic Client Registration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.fapi-app</code></td>
+              <td>FAPI-Compliant Application</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.app-discovery</code></td>
+              <td>Application Discovery</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.create-application</code></td>
+              <td>Application Registration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.dcr</code></td>
+              <td>Dynamic Client Registration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.app-management.fapi-app</code></td>
+              <td>FAPI-Compliant Application</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Authorization</strong>
+            <span class="badge bg-secondary ms-2">8 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.api-authorization</code></td>
+              <td>API Authorization (RBAC)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.rich-authorization-requests</code></td>
+              <td>Rich Authorization Requests (RAR)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.role-management</code></td>
+              <td>Role & Permission Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.user-impersonation</code></td>
+              <td>User Impersonation</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.api-authorization</code></td>
+              <td>API Authorization (RBAC)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.rich-authorization-requests</code></td>
+              <td>Rich Authorization Requests (RAR)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.role-management</code></td>
+              <td>Role & Permission Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.authorization.user-impersonation</code></td>
+              <td>User Impersonation</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Branding & UX</strong>
+            <span class="badge bg-secondary ms-2">10 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.branding-ai</code></td>
+              <td>Branding AI</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.custom-text</code></td>
+              <td>Custom Text & Localization</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.email-templates</code></td>
+              <td>Email Template Customization</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.sms-templates</code></td>
+              <td>SMS Template Customization</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.ui-branding</code></td>
+              <td>UI Branding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.branding-ai</code></td>
+              <td>Branding AI</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.custom-text</code></td>
+              <td>Custom Text & Localization</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.email-templates</code></td>
+              <td>Email Template Customization</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.sms-templates</code></td>
+              <td>SMS Template Customization</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.branding.ui-branding</code></td>
+              <td>UI Branding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Customization & Extensions</strong>
+            <span class="badge bg-secondary ms-2">8 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.elk-analytics</code></td>
+              <td>ELK Analytics Integration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.identity-verification</code></td>
+              <td>Identity Verification</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.service-extensions</code></td>
+              <td>Service Extensions (Actions)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.webhooks</code></td>
+              <td>Webhooks</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.elk-analytics</code></td>
+              <td>ELK Analytics Integration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.identity-verification</code></td>
+              <td>Identity Verification</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.service-extensions</code></td>
+              <td>Service Extensions (Actions)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.customization.webhooks</code></td>
+              <td>Webhooks</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Enterprise Login</strong>
+            <span class="badge bg-secondary ms-2">12 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.adfs</code></td>
+              <td>AD FS Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.iwa</code></td>
+              <td>Integrated Windows Authentication (IWA)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.microsoft-365</code></td>
+              <td>Microsoft 365 Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.oidc-idp</code></td>
+              <td>OIDC Enterprise IdP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.saml-idp</code></td>
+              <td>SAML Enterprise IdP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.ws-federation-idp</code></td>
+              <td>WS-Federation Enterprise IdP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.adfs</code></td>
+              <td>AD FS Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.iwa</code></td>
+              <td>Integrated Windows Authentication (IWA)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.microsoft-365</code></td>
+              <td>Microsoft 365 Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.oidc-idp</code></td>
+              <td>OIDC Enterprise IdP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.saml-idp</code></td>
+              <td>SAML Enterprise IdP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.enterprise-login.ws-federation-idp</code></td>
+              <td>WS-Federation Enterprise IdP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Identity Governance</strong>
+            <span class="badge bg-secondary ms-2">12 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.account-disabling</code></td>
+              <td>Account Disabling</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.session-management</code></td>
+              <td>Admin Session Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.bot-detection</code></td>
+              <td>Bot Detection</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.login-attempts</code></td>
+              <td>Login Attempt Security</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.notification-settings</code></td>
+              <td>Notification Settings</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.password-policy</code></td>
+              <td>Password Policy Configuration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.account-disabling</code></td>
+              <td>Account Disabling</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.session-management</code></td>
+              <td>Admin Session Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.bot-detection</code></td>
+              <td>Bot Detection</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.login-attempts</code></td>
+              <td>Login Attempt Security</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.notification-settings</code></td>
+              <td>Notification Settings</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.governance.password-policy</code></td>
+              <td>Password Policy Configuration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Multi-Factor Authentication (MFA)</strong>
+            <span class="badge bg-secondary ms-2">10 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.backup-codes</code></td>
+              <td>Backup Codes</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.magic-link</code></td>
+              <td>Magic Link (Passwordless Email)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.push-notification</code></td>
+              <td>Push Notification Authentication</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.sms-otp</code></td>
+              <td>SMS OTP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.x509</code></td>
+              <td>X.509 Certificate Authentication</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.backup-codes</code></td>
+              <td>Backup Codes</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.magic-link</code></td>
+              <td>Magic Link (Passwordless Email)</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.push-notification</code></td>
+              <td>Push Notification Authentication</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.sms-otp</code></td>
+              <td>SMS OTP</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.mfa.x509</code></td>
+              <td>X.509 Certificate Authentication</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Organization Management (B2B)</strong>
+            <span class="badge bg-secondary ms-2">14 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.create-organization</code></td>
+              <td>B2B Organization Creation</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.delegated-admin</code></td>
+              <td>Delegated Organization Administration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.app-sharing</code></td>
+              <td>Organization Application Sharing</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-discovery</code></td>
+              <td>Organization Discovery</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-sso</code></td>
+              <td>Organization SSO</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-user-management</code></td>
+              <td>Organization User Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-branding</code></td>
+              <td>Organization-Level Branding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.create-organization</code></td>
+              <td>B2B Organization Creation</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.delegated-admin</code></td>
+              <td>Delegated Organization Administration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.app-sharing</code></td>
+              <td>Organization Application Sharing</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-discovery</code></td>
+              <td>Organization Discovery</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-sso</code></td>
+              <td>Organization SSO</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-user-management</code></td>
+              <td>Organization User Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.org-management.org-branding</code></td>
+              <td>Organization-Level Branding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Single Sign-On (SSO)</strong>
+            <span class="badge bg-secondary ms-2">2 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.sso.ws-federation</code></td>
+              <td>WS-Federation SSO</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.sso.ws-federation</code></td>
+              <td>WS-Federation SSO</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>Social Login</strong>
+            <span class="badge bg-secondary ms-2">8 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.apple</code></td>
+              <td>Apple Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.facebook</code></td>
+              <td>Facebook Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.github</code></td>
+              <td>GitHub Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.x</code></td>
+              <td>X (Twitter) Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.apple</code></td>
+              <td>Apple Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.facebook</code></td>
+              <td>Facebook Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.github</code></td>
+              <td>GitHub Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.social-login.x</code></td>
+              <td>X (Twitter) Social Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>User Management</strong>
+            <span class="badge bg-secondary ms-2">12 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.account-recovery</code></td>
+              <td>Account Recovery</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.admin-onboard</code></td>
+              <td>Admin User Onboarding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.bulk-import</code></td>
+              <td>Bulk User Import</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.group-management</code></td>
+              <td>Group Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.invite-user</code></td>
+              <td>Invitation-Based User Onboarding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.user-attributes</code></td>
+              <td>User Attribute Configuration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.account-recovery</code></td>
+              <td>Account Recovery</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.admin-onboard</code></td>
+              <td>Admin User Onboarding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.bulk-import</code></td>
+              <td>Bulk User Import</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.group-management</code></td>
+              <td>Group Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.invite-user</code></td>
+              <td>Invitation-Based User Onboarding</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-management.user-attributes</code></td>
+              <td>User Attribute Configuration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>User Provisioning</strong>
+            <span class="badge bg-secondary ms-2">6 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.provisioning.inbound-scim</code></td>
+              <td>Inbound SCIM 2.0 Provisioning</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.provisioning.jit</code></td>
+              <td>Just-in-Time (JIT) Provisioning</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.provisioning.outbound</code></td>
+              <td>Outbound User Provisioning</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.provisioning.inbound-scim</code></td>
+              <td>Inbound SCIM 2.0 Provisioning</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.provisioning.jit</code></td>
+              <td>Just-in-Time (JIT) Provisioning</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.provisioning.outbound</code></td>
+              <td>Outbound User Provisioning</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>User Self-Service</strong>
+            <span class="badge bg-secondary ms-2">12 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.linked-accounts</code></td>
+              <td>Linked Social Accounts</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.consent-management</code></td>
+              <td>Self-Service Consent Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.mfa-enrollment</code></td>
+              <td>Self-Service MFA Enrollment</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.profile-management</code></td>
+              <td>Self-Service Profile Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.session-management</code></td>
+              <td>Self-Service Session Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.workflow-approvals</code></td>
+              <td>Workflow Approvals</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.linked-accounts</code></td>
+              <td>Linked Social Accounts</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.consent-management</code></td>
+              <td>Self-Service Consent Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.mfa-enrollment</code></td>
+              <td>Self-Service MFA Enrollment</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.profile-management</code></td>
+              <td>Self-Service Profile Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.session-management</code></td>
+              <td>Self-Service Session Management</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.self-service.workflow-approvals</code></td>
+              <td>Workflow Approvals</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>User Stores</strong>
+            <span class="badge bg-secondary ms-2">2 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-stores.configure</code></td>
+              <td>User Store Configuration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.user-stores.configure</code></td>
+              <td>User Store Configuration</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+        <tr class="table-light">
+          <td colspan="3"><strong>eID Login</strong>
+            <span class="badge bg-secondary ms-2">6 unused</span>
+          </td>
+        </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.eid-login.franceconnect</code></td>
+              <td>FranceConnect eID Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.eid-login.signicat</code></td>
+              <td>Signicat eID Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.eid-login.swissid</code></td>
+              <td>SwissID eID Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.eid-login.franceconnect</code></td>
+              <td>FranceConnect eID Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.eid-login.signicat</code></td>
+              <td>Signicat eID Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr>
+            <tr class="text-muted">
+              <td class="ps-4"><code class="small">is.eid-login.swissid</code></td>
+              <td>SwissID eID Login</td>
+              <td><span class="badge bg-light text-dark border">—</span>&nbsp;</td>
+            </tr></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<div class="footer container">
+  WSO2 Feature Utilization — Account Manager Report &nbsp;·&nbsp; Acme Corporation &nbsp;·&nbsp; Generated 2026-04-16 13:20
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+new Chart(document.getElementById('catChart'), {
+  type: 'doughnut',
+  data: { labels: ["Single Sign-On (SSO)", "Adaptive / Conditional Authentication", "Multi-Factor Authentication (MFA)", "Social Login", "Identity Governance", "User Management", "Organization Management (B2B)"], datasets: [{ data: [22100, 11600, 10500, 4000, 850, 410, 180], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E", "#A06EC9", "#E8B84B", "#4BC0C0", "#E66A9A"], borderWidth: 2 }] },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } } }, cutout: '60%' }
+});
+</script>
+</body>
+</html>

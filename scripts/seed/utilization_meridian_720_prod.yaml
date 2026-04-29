@@ -1,0 +1,121 @@
+# Meridian Retail — Core tier, US West, v7.2.0 Production
+# Profile: B2C retail — high OIDC volume, heavy social login (4 providers),
+#          magic link, self-registration funnel, deep self-service, branding, bot detection
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "meridian-prod-us"
+  customer_id: "meridian"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 68000
+      dimension_breakdown:
+        grant_type: { authorization-code: 62000, client-credentials: 6000 }
+        response_type: { code: 65000, token: 3000 }
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 32000
+      dimension_breakdown:
+        action: { login-success: 31200, login-failed: 800 }
+
+  - code: "is.social-login.facebook"
+    utilization:
+      total_count: 18500
+      dimension_breakdown:
+        action: { login-success: 18000, login-failed: 500 }
+
+  - code: "is.social-login.apple"
+    utilization:
+      total_count: 12800
+      dimension_breakdown:
+        action: { login-success: 12500, login-failed: 300 }
+
+  - code: "is.social-login.microsoft"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        action: { login-success: 4100, login-failed: 100 }
+
+  - code: "is.mfa.passkey"
+
+  - code: "is.mfa.magic-link"
+    utilization:
+      total_count: 7600
+      dimension_breakdown:
+        action: { sent: 7600, verified: 7200, verify-failed: 280, expired: 120 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 3100
+      dimension_breakdown:
+        action: { verify: 2950, enroll: 130, verify-failed: 20 }
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 8400
+      dimension_breakdown:
+        verification_method: { email: 8200, none: 200 }
+        outcome: { success: 8100, failed: 240, pending-verification: 60 }
+
+  - code: "is.user-management.account-recovery"
+    utilization:
+      total_count: 1850
+      dimension_breakdown:
+        recovery_type: { password-recovery: 1800, username-recovery: 50 }
+        recovery_method: { email-link: 1820, admin-reset: 30 }
+        outcome: { success: 1780, failed: 50, expired: 20 }
+
+  - code: "is.self-service.profile-management"
+    utilization:
+      total_count: 14200
+      dimension_breakdown:
+        action: { view-profile: 9000, update-profile: 4500, change-password: 700 }
+
+  - code: "is.self-service.session-management"
+    utilization:
+      total_count: 5800
+      dimension_breakdown:
+        action: { view-sessions: 4200, terminate-single: 1400, terminate-all: 200 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 9200
+      dimension_breakdown:
+        action: { account-locked: 8500, account-unlocked: 620, policy-configured: 80 }
+
+  - code: "is.governance.bot-detection"
+    utilization:
+      total_count: 24000
+      dimension_breakdown:
+        action: { triggered: 23200, enabled: 600, disabled: 200 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 85
+      dimension_breakdown:
+        scope: { organization: 55, application: 30 }
+        customization_type: { logo: 32, color-palette: 28, theme: 25 }
+
+  - code: "is.branding.email-templates"
+    utilization:
+      total_count: 62
+      dimension_breakdown:
+        template_type: { password-reset: 25, account-verification: 20, otp: 12, account-lock: 5 }
+        action: { customized: 62 }
+
+  - code: "is.governance.notification-settings"
+    utilization:
+      total_count: 38
+      dimension_breakdown:
+        channel: { email: 38 }
+        action: { configured: 18, updated: 16, tested: 4 }

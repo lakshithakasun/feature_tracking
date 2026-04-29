@@ -1,0 +1,362 @@
+# =============================================================================
+# WSO2 Feature Taxonomy — Common Schema Definition
+# =============================================================================
+# Version  : 1.0.0
+# Purpose  : Authoritative template for defining feature taxonomies across all
+#            WSO2 products. Every product taxonomy YAML must conform to this
+#            structure. Fields map directly to the feature-usage-tracking DB.
+#
+# Field notation used in comments:
+#   [required]   — must be present; taxonomy is invalid without it
+#   [optional]   — may be omitted; system uses the stated default when absent
+#   type(...)    — expected YAML scalar type or structure
+#   enum(...)    — value must be one of the listed options
+#   pattern(...) — value must match the given regex
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# SCHEMA IDENTITY
+# -----------------------------------------------------------------------------
+
+
+schema:
+ # [required] type(string) pattern(^\d+\.\d+\.\d+$)
+ # Version of this schema definition. Increment on breaking changes.
+ version: "1.0.0"
+
+
+ # [required] type(string)
+ # Canonical URL identifying this schema. Used for tooling validation.
+ id: "https://wso2.com/schemas/feature-taxonomy/v1"
+
+
+
+
+# -----------------------------------------------------------------------------
+# PRODUCT
+# Maps to → products table
+# -----------------------------------------------------------------------------
+
+
+product:
+
+
+ # [required] type(string) pattern(^[a-z][a-z0-9-]*$)
+ # Unique machine-friendly slug. Must match product_code in the DB.
+ # Becomes the namespace prefix for all feature_code values under this product.
+ # Examples: "apim", "identity-server", "mi", "choreo", "streaming-integrator"
+ id: "<product-id>"
+
+
+ # [required] type(string)
+ # Full human-readable product name. Maps to product_name in DB.
+ name: "<Product Display Name>"
+
+
+ # [required] type(string) pattern(^\d+\.\d+\.\d+$)
+ # The product release version this taxonomy file describes.
+ # A separate taxonomy file (or version block) should exist per major version.
+ version: "<major.minor.patch>"
+
+
+ # [optional] type(string)
+ # Brief description of the product's purpose.
+ description: ""
+
+
+ # [optional] type(string)
+ # Engineering team that owns this product and is responsible for this file.
+ team_owner: ""
+
+
+ # [optional] type(string) enum(api-management, integration, identity-access,
+ #   analytics, developer-platform, cloud, security)
+ # High-level product category for cross-product grouping in dashboards.
+ category: ""
+
+
+ # [optional] type(boolean) default(true)
+ # Set to false when a product is end-of-life and no new events are expected.
+ is_active: true
+
+
+
+
+
+
+# -----------------------------------------------------------------------------
+# FEATURE CATEGORIES
+# Maps to → feature_categories table (supports self-referencing hierarchy)
+# Define all categories before referencing them in features below.
+# -----------------------------------------------------------------------------
+
+
+categories:
+ - # [required] type(string) pattern(^[a-z][a-z0-9-]*$)
+   # Unique slug for this category within the product.
+   # Used as the category reference key in feature definitions below.
+   # Example: "api-design", "security", "analytics"
+   id: "<category-id>"
+
+
+   # [required] type(string)
+   # Human-readable category name for display in dashboards.
+   name: "<Category Display Name>"
+
+
+   # [optional] type(string)
+   # Description of which features belong in this category.
+   description: ""
+
+
+   # [optional] type(string)
+   # Reference to a parent category id defined in this same list.
+   # Omit or set to null (~) for top-level categories.
+   parent_category_id: ~
+
+
+   # [optional] Nested sub-categories (shorthand alternative to parent_category_id).
+   # Each entry follows the same structure as a top-level category.
+   sub_categories:
+     - id: "<sub-category-id>"
+       name: "<Sub-Category Display Name>"
+       description: ""
+
+
+
+
+# -----------------------------------------------------------------------------
+# FEATURES
+# Maps to → features table (core registry) +
+#           feature_version_map table (version availability) +
+#           feature_flags table (rollout control) +
+#           tracking config (event emission guide for instrumentation teams)
+# -----------------------------------------------------------------------------
+
+
+features:
+ - # ── IDENTITY ─────────────────────────────────────────────────────────────
+
+
+   # [required] type(string) pattern(^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)*$)
+   # Globally unique dotted-path identifier. Convention:
+   #   <product-id>.<category-id>.<action>  e.g. "apim.api-designer.openapi-import"
+   # The second segment must exactly match the feature's category id (or
+   # sub-category id) defined in the categories section above.
+   # Maps to feature_code in DB. Used as the event namespace.
+   code: "<product-id>.<category-id>.<feature-action>"
+
+
+   # [required] type(string)
+   # Human-readable feature name. Maps to feature_name in DB.
+   name: "<Feature Display Name>"
+
+
+   # [optional] type(string)
+   # Clear description of what this feature does and its user value.
+   description: ""
+
+
+   # ── CLASSIFICATION ────────────────────────────────────────────────────────
+
+
+   # [required] type(string) pattern(^[a-z][a-z0-9-]*$)
+   # Id of the most specific category this feature belongs to.
+   # Must exactly match the second segment of this feature's code.
+   # If sub-categories are defined, use the sub-category id, not the parent.
+   # Maps to category_id (FK) in DB → feature_categories table.
+   category: "<category-id>"
+
+
+   # [required] type(string) enum(core, premium, enterprise)
+   # Minimum plan tier required to access this feature.
+   #   core       — available on all plans including free/trial
+   #   premium    — requires a paid plan
+   #   enterprise — requires enterprise/custom contract
+   # Maps to tier_required in DB.
+   tier: "core"
+
+
+   # [required] type(string) enum(stable, beta, experimental, deprecated)
+   # Current lifecycle status of this feature.
+   status: "stable"
+
+
+   # ── VERSION AVAILABILITY ──────────────────────────────────────────────────
+   # Maps to → feature_version_map table
+
+
+   availability:
+
+
+     # [required] type(string) pattern(^\d+\.\d+\.\d+[\w.-]*$)
+     # Product version in which this feature was first shipped.
+     # Informational — not validated against a local list. The product_versions
+     # table in the DB is the authoritative source for version history.
+     # Maps to introduced_in_version in DB.
+     introduced_in: "<major.minor.patch>"
+
+
+     # [optional] type(string) pattern(^\d+\.\d+\.\d+[\w.-]*$)
+     # Product version in which this feature was deprecated or removed.
+     # Omit when the feature is still active. Maps to deprecated_in_version.
+     deprecated_in: ~
+
+
+     # [optional] type(string) enum(core, premium, enterprise)
+     # Override tier for a specific version if it differs from the feature default.
+     # Omit to inherit from the top-level tier field. Maps to availability_tier.
+     version_tier_override: ~
+
+
+   # ── FEATURE FLAGS ─────────────────────────────────────────────────────────
+   # Maps to → feature_flags table
+   # Define flags for features that require gradual rollout or runtime control.
+   # Omit this block entirely for features that are always-on in a given version.
+
+
+   flags:
+     - # [required] type(string) pattern(^[a-z][a-z0-9_]*$)
+       # Programmatic key used in product code and feature-flag SDKs.
+       # Must be unique across all features. Maps to flag_key in DB.
+       key: "<enable_feature_name>"
+
+
+       # [optional] type(boolean) default(false)
+       # Global on/off switch. A flag with is_enabled: false overrides all
+       # other rollout settings. Maps to is_enabled in DB.
+       is_enabled: false
+
+
+       # [optional] type(integer) min(0) max(100) default(0)
+       # Percentage of users who will see this feature when is_enabled is true.
+       # 0 = nobody, 100 = everyone. Maps to rollout_percentage in DB.
+       rollout_percentage: 0
+
+
+       # [optional] type(string) pattern(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$)
+       # ISO 8601 datetime from which this flag becomes active.
+       # Maps to enabled_from in DB.
+       enabled_from: ~
+
+
+       # [optional] type(string) pattern(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$)
+       # ISO 8601 datetime after which this flag is automatically disabled.
+       # Maps to enabled_until in DB.
+       enabled_until: ~
+
+
+   # ── TRACKING ──────────────────────────────────────────────────────────────
+   # Instrumentation guide for engineers adding SDK calls in the product.
+   # This block does NOT map to a single DB column — it is the source of truth
+   # for event_name, event_category, and dimensions in feature_usage_events.
+
+
+   tracking:
+
+
+     # [required] type(string) pattern(^[a-z][a-z0-9.]*$)
+     # Primary event emitted when a user interacts with this feature.
+     # Convention: mirrors the feature code exactly (hyphens replaced with hyphens —
+     # dots are the only separator). Must equal the feature's code value.
+     # Example: "apim.api-designer.openapi-import"
+     # Maps to event_name in feature_usage_events.
+     event_name: "<product-id>.<category-id>.<feature-action>"
+
+
+     # [required] type(string)
+     #   enum(discovery, engagement, adoption, abandonment, lifecycle)
+     # Broad category classifying the nature of the event.
+     #   discovery    — user first finds/views the feature
+     #   engagement   — user actively uses the feature
+     #   adoption     — user completes a key value action (north-star moment)
+     #   abandonment  — user starts but does not complete the feature flow
+     #   lifecycle    — system-level event (create, update, delete of an artifact)
+     # Maps to event_category in feature_usage_events.
+     event_category: "engagement"
+
+
+     # [optional] type(string) enum(web, mobile-ios, mobile-android, desktop, api)
+     # Expected surface(s) where this feature is accessible.
+     # Maps to platform in feature_usage_events.
+     platforms:
+       - "web"
+
+
+     # [optional]
+     # Dimensions (attributes) captured alongside the event for segmentation.
+     # Each dimension maps to a key in a metadata/properties payload attached
+     # to the feature_usage_events row.
+     dimensions:
+       - # [required] type(string) pattern(^[a-z][a-z0-9_]*$)
+         # Attribute key as it will appear in the event payload.
+         name: "<dimension_name>"
+
+
+         # [required] type(string) enum(string, integer, float, boolean, enum)
+         # Data type of the dimension value.
+         type: "enum"
+
+
+         # [required when type=enum] type(list of strings)
+         # Exhaustive list of valid values. Required for enum type.
+         values: []
+
+
+         # [optional] type(boolean) default(false)
+         # Whether this dimension must be present in every event emission.
+         required: false
+
+
+         # [optional] type(string)
+         # Description of what this dimension captures and why it is useful.
+         description: ""
+
+
+     # [optional]
+     # Defines how raw events should be aggregated in analytics dashboards.
+     aggregations:
+       - # [required] type(string)
+         #   enum(count, count_distinct, sum, avg, p50, p95, p99)
+         type: "count"
+
+
+         # [required] type(string)
+         # Human-readable label for this metric in dashboards.
+         label: "<Metric Label>"
+
+
+         # [optional] type(string)
+         # The dimension name to aggregate over.
+         # Required for count_distinct, sum, avg, and percentile types.
+         dimension: ~
+
+
+   # ── SUB-FEATURES ──────────────────────────────────────────────────────────
+   # Child features that are variants or sub-actions of this parent feature.
+   # Each sub-feature follows the same structure as a top-level feature.
+   # Sub-feature codes must be prefixed with the parent code.
+   # Example parent: "apim.api-designer"
+   # Example child:  "apim.api-designer.openapi-import"
+
+
+   sub_features:
+     - code: "<parent-code>.<child-action>"
+       name: "<Sub-Feature Display Name>"
+       description: ""
+       category: "<category-id>"       # inherits parent category if omitted
+       tier: "core"
+       status: "stable"
+       availability:
+         introduced_in: "<major.minor.patch>"
+         deprecated_in: ~
+       tracking:
+         event_name: "<parent-code>.<child-action>"
+         event_category: "engagement"
+         platforms:
+           - "web"
+         dimensions: []
+         aggregations:
+           - type: "count"
+             label: "<Metric Label>"

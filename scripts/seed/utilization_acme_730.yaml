@@ -1,0 +1,96 @@
+# Acme Corporation — Enterprise, US East, v7.3.0 (upgraded from 7.2.0)
+# Profile: Same heavy SSO/MFA usage + new v7.3.0 features adopted
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "acme-corp-prod-us-73"
+  customer_id: "acme-corp"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 18000
+      dimension_breakdown:
+        grant_type: { authorization-code: 14000, client-credentials: 4000 }
+        response_type: { code: 17000, token: 1000 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 4100
+      dimension_breakdown:
+        binding_type: { http-post: 3500, http-redirect: 600 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 6200
+      dimension_breakdown:
+        action: { verify: 5900, enroll: 270, verify-failed: 30 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { authenticate: 2600, enroll: 180, auth-failed: 20 }
+        authenticator_type: { platform: 2400, cross-platform: 400 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 1500
+      dimension_breakdown:
+        action: { sent: 1500, verified: 1420, verify-failed: 70, expired: 10 }
+
+  - code: "is.adaptive-auth.ai-step-up"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        risk_level: { low: 1400, medium: 500, high: 180, critical: 20 }
+        outcome: { allowed: 1400, step-up-triggered: 660, denied: 40 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 9500
+      dimension_breakdown:
+        template: { new-device-based: 4000, ip-based: 3500, role-based: 2000 }
+        outcome: { step-up-not-triggered: 5500, step-up-triggered: 3800, access-denied: 200 }
+
+  - code: "is.governance.continuous-access-eval"
+    utilization:
+      total_count: 850
+      dimension_breakdown:
+        trigger: { ip-change: 400, password-change: 300, account-disabled: 100, role-change: 50 }
+        action: { session-revoked: 600, token-invalidated: 250 }
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { login-success: 2720, login-failed: 80 }
+
+  - code: "is.social-login.microsoft"
+    utilization:
+      total_count: 1200
+      dimension_breakdown:
+        action: { login-success: 1160, login-failed: 40 }
+
+  - code: "is.mfa.magic-link"
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 410
+      dimension_breakdown:
+        verification_method: { email: 390, sms: 20 }
+        outcome: { success: 380, failed: 20, pending-verification: 10 }
+
+  - code: "is.org-management.org-audit-log"
+    utilization:
+      total_count: 180
+      dimension_breakdown:
+        action: { viewed: 140, exported: 35, filtered: 5 }
+        export_format: { csv: 25, json: 10 }

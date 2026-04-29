@@ -1,0 +1,77 @@
+# Globex Corporation — Premium, EU West, v7.2.0
+# Follow-up month: federation remains strong with slightly broader governance use.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "globex-prod-eu"
+  customer_id: "globex"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 20500
+      dimension_breakdown:
+        grant_type: { authorization-code: 16600, client-credentials: 3900 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 9100
+      dimension_breakdown:
+        binding_type: { http-post: 7700, http-redirect: 1400 }
+
+  - code: "is.enterprise-login.saml-idp"
+    utilization:
+      total_count: 7400
+      dimension_breakdown:
+        action: { login-success: 7040, login-failed: 360 }
+
+  - code: "is.enterprise-login.oidc-idp"
+    utilization:
+      total_count: 4600
+      dimension_breakdown:
+        action: { login-success: 4410, login-failed: 190 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 6100
+      dimension_breakdown:
+        action: { sent: 6100, verified: 5810, verify-failed: 230, expired: 60 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 4500
+      dimension_breakdown:
+        action: { verify: 4290, enroll: 180, verify-failed: 30 }
+
+  - code: "is.provisioning.jit"
+    utilization:
+      total_count: 3600
+      dimension_breakdown:
+        outcome: { provisioned: 3160, existing-user-linked: 390, failed: 50 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 520
+      dimension_breakdown:
+        action: { role-created: 120, role-updated: 220, permission-assigned: 180 }
+
+  - code: "is.org-management.org-sso"
+    utilization:
+      total_count: 150
+      dimension_breakdown:
+        idp_protocol: { saml: 100, oidc: 50 }
+
+  - code: "is.org-management.delegated-admin"
+    utilization:
+      total_count: 260
+      dimension_breakdown:
+        action: { admin-created: 110, admin-removed: 40, portal-configured: 110 }
+
+  - code: "is.org-management.b2b-login"

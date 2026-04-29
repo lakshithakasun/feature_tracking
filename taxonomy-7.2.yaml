@@ -1,0 +1,1884 @@
+# =============================================================================
+# WSO2 Identity Server — Feature Taxonomy
+# =============================================================================
+# Schema   : https://wso2.com/schemas/feature-taxonomy/v1
+# Product  : WSO2 Identity Server (IS)
+# Maintainer: Identity Server Engineering Team
+# Reference: https://is.docs.wso2.com/en/latest/
+# =============================================================================
+
+schema:
+  version: "1.0.0"
+  id: "https://wso2.com/schemas/feature-taxonomy/v1"
+
+# -----------------------------------------------------------------------------
+# PRODUCT
+# -----------------------------------------------------------------------------
+
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+  description: "Customer identity and access management (CIAM) platform providing SSO, MFA, federation, and user lifecycle management."
+  team_owner: "identity-server-engineering"
+  category: "identity-access"
+  is_active: true
+
+# -----------------------------------------------------------------------------
+# FEATURE CATEGORIES
+# -----------------------------------------------------------------------------
+
+categories:
+  - id: "sso"
+    name: "Single Sign-On (SSO)"
+    description: "Authentication protocols for enabling SSO across applications."
+
+  - id: "mfa"
+    name: "Multi-Factor Authentication (MFA)"
+    description: "Second and additional factor authenticators and passwordless login."
+    sub_categories:
+      - id: "adaptive-auth"
+        name: "Adaptive / Conditional Authentication"
+        description: "Risk-based and conditional MFA step-up authentication using scripts and templates."
+
+  - id: "user-management"
+    name: "User Management"
+    description: "User onboarding, profile management, account recovery, and self-service."
+    sub_categories:
+      - id: "user-stores"
+        name: "User Stores"
+        description: "Configuration and management of user directories (JDBC, LDAP, AD)."
+      - id: "provisioning"
+        name: "User Provisioning"
+        description: "Inbound and outbound user provisioning across systems."
+      - id: "self-service"
+        name: "User Self-Service"
+        description: "End-user self-service capabilities via My Account portal."
+
+  - id: "app-management"
+    name: "Application Management"
+    description: "Registering and configuring client applications."
+    sub_categories:
+      - id: "branding"
+        name: "Branding & UX"
+        description: "Customizing login flows, themes, and end-user experience."
+
+  - id: "federation"
+    name: "Identity Federation"
+    description: "Connecting external identity providers for social and enterprise login."
+    sub_categories:
+      - id: "social-login"
+        name: "Social Login"
+        description: "Social identity provider integrations (Google, Facebook, GitHub, etc.)."
+      - id: "enterprise-login"
+        name: "Enterprise Login"
+        description: "Enterprise IdP connections (SAML, OIDC, WS-Fed, IWA, AD FS)."
+      - id: "eid-login"
+        name: "eID Login"
+        description: "Electronic identity provider integrations (Signicat, FranceConnect, SwissID)."
+
+  - id: "authorization"
+    name: "Authorization"
+    description: "Role-based access control, permissions, and fine-grained authorization."
+
+  - id: "governance"
+    name: "Identity Governance"
+    description: "Password policies, session management, account locking, and audit."
+
+  - id: "org-management"
+    name: "Organization Management (B2B)"
+    description: "Multi-tenant B2B organization hierarchy management."
+
+  - id: "customization"
+    name: "Customization & Extensions"
+    description: "Service extensions, webhooks, identity verification, and workflow approvals."
+
+# -----------------------------------------------------------------------------
+# FEATURES
+# code convention: is.<category-id>.<action>
+# Note: tier, status, and availability fields are omitted where not confirmed.
+# -----------------------------------------------------------------------------
+
+features:
+
+  # ============================================================
+  # SSO
+  # ============================================================
+
+  - code: "is.sso.oidc"
+    name: "OpenID Connect / OAuth 2.0 SSO"
+    description: "Configure OIDC/OAuth 2.0 based single sign-on for registered applications."
+    category: "sso"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.sso.oidc"
+      event_category: "engagement"
+      platforms: ["web", "api", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "grant_type"
+          type: "enum"
+          values: ["authorization-code", "implicit", "client-credentials", "device-code", "hybrid", "jwt-bearer", "token-exchange"]
+          required: true
+        - name: "pkce_enabled"
+          type: "boolean"
+          required: false
+          description: "Whether PKCE was used in the flow."
+        - name: "response_type"
+          type: "enum"
+          values: ["code", "token", "id-token", "code-token", "code-id-token"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "OIDC SSO Logins"
+        - type: "count_distinct"
+          dimension: "grant_type"
+          label: "Grant Types Used"
+
+  - code: "is.sso.saml"
+    name: "SAML 2.0 SSO"
+    description: "Configure SAML 2.0 based single sign-on for service provider applications."
+    category: "sso"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.sso.saml"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "binding_type"
+          type: "enum"
+          values: ["http-post", "http-redirect", "artifact"]
+          required: true
+        - name: "assertion_encryption"
+          type: "boolean"
+          required: false
+      aggregations:
+        - type: "count"
+          label: "SAML SSO Logins"
+
+  - code: "is.sso.ws-federation"
+    name: "WS-Federation SSO"
+    description: "Configure WS-Federation passive requestor profile for legacy application SSO."
+    category: "sso"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.sso.ws-federation"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions: []
+      aggregations:
+        - type: "count"
+          label: "WS-Federation SSO Logins"
+
+  # ============================================================
+  # MFA
+  # ============================================================
+
+  - code: "is.mfa.totp"
+    name: "TOTP (Authenticator App)"
+    description: "Time-based one-time password authentication using apps like Google Authenticator or Microsoft Authenticator."
+    category: "mfa"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.totp"
+      event_category: "engagement"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["enroll", "verify", "verify-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "TOTP Authentications"
+
+  - code: "is.mfa.email-otp"
+    name: "Email OTP"
+    description: "Send a one-time passcode to the user's registered email address as a second factor."
+    category: "mfa"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.email-otp"
+      event_category: "engagement"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["sent", "verified", "verify-failed", "expired"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Email OTP Authentications"
+
+  - code: "is.mfa.sms-otp"
+    name: "SMS OTP"
+    description: "Send a one-time passcode to the user's registered mobile number as a second factor."
+    category: "mfa"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.sms-otp"
+      event_category: "engagement"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["sent", "verified", "verify-failed", "expired"]
+          required: true
+        - name: "sms_provider"
+          type: "enum"
+          values: ["twilio", "vonage", "custom"]
+          required: false
+      aggregations:
+        - type: "count"
+          label: "SMS OTP Authentications"
+
+  - code: "is.mfa.passkey"
+    name: "Passkey / FIDO2 (WebAuthn)"
+    description: "Passwordless authentication using device biometrics or hardware security keys via FIDO2/WebAuthn."
+    category: "mfa"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.passkey"
+      event_category: "adoption"
+      platforms: ["web", "mobile-ios", "mobile-android", "desktop"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["enroll", "authenticate", "auth-failed"]
+          required: true
+        - name: "authenticator_type"
+          type: "enum"
+          values: ["platform", "cross-platform"]
+          required: false
+          description: "Platform = device biometrics; cross-platform = security key."
+      aggregations:
+        - type: "count"
+          label: "Passkey Authentications"
+
+  - code: "is.mfa.magic-link"
+    name: "Magic Link (Passwordless Email)"
+    description: "Send a one-click login link to the user's email for passwordless authentication."
+    category: "mfa"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.magic-link"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["sent", "clicked", "verified", "expired"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Magic Link Authentications"
+
+  - code: "is.mfa.push-notification"
+    name: "Push Notification Authentication"
+    description: "Authenticate users via push notification to a registered mobile device."
+    category: "mfa"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.push-notification"
+      event_category: "engagement"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["sent", "approved", "denied", "expired"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Push Notification Authentications"
+
+  - code: "is.mfa.x509"
+    name: "X.509 Certificate Authentication"
+    description: "Authenticate users using client X.509 digital certificates."
+    category: "mfa"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.x509"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["authenticate", "auth-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "X.509 Authentications"
+
+  - code: "is.mfa.backup-codes"
+    name: "Backup Codes"
+    description: "Generate and use single-use backup codes as a fallback MFA method."
+    category: "mfa"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.mfa.backup-codes"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["generated", "used", "regenerated"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Backup Code Usages"
+
+  # ============================================================
+  # ADAPTIVE / CONDITIONAL AUTHENTICATION
+  # ============================================================
+
+  - code: "is.adaptive-auth.conditional-auth"
+    name: "Conditional Authentication"
+    description: "Dynamically adjust authentication steps based on risk signals using conditional authentication scripts and templates."
+    category: "adaptive-auth"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.adaptive-auth.conditional-auth"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "template"
+          type: "enum"
+          values:
+            - "role-based"
+            - "group-based"
+            - "ip-based"
+            - "new-device-based"
+            - "login-attempt-based"
+            - "concurrent-session-based"
+            - "user-age-based"
+            - "user-store-based"
+            - "passkey-progressive-enrollment"
+            - "elk-risk-based"
+            - "typingdna-based"
+            - "custom"
+          required: true
+        - name: "step_up_method"
+          type: "enum"
+          values: ["totp", "email-otp", "sms-otp", "passkey", "push-notification", "deny"]
+          required: false
+        - name: "outcome"
+          type: "enum"
+          values: ["step-up-triggered", "step-up-not-triggered", "access-denied"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Conditional Auth Evaluations"
+        - type: "count_distinct"
+          dimension: "template"
+          label: "Templates Used"
+
+  - code: "is.adaptive-auth.app-native-auth"
+    name: "App-Native Authentication"
+    description: "Enable native authentication flows within mobile and SPA applications without browser redirects."
+    category: "adaptive-auth"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.adaptive-auth.app-native-auth"
+      event_category: "adoption"
+      platforms: ["mobile-ios", "mobile-android", "web"]
+      dimensions:
+        - name: "app_type"
+          type: "enum"
+          values: ["mobile", "spa"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "App-Native Auth Flows"
+
+  # ============================================================
+  # USER MANAGEMENT
+  # ============================================================
+
+  - code: "is.user-management.self-registration"
+    name: "User Self-Registration"
+    description: "End users register their own accounts via the sign-up portal."
+    category: "user-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.self-registration"
+      event_category: "adoption"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "verification_method"
+          type: "enum"
+          values: ["email", "sms", "admin-approval", "none"]
+          required: true
+        - name: "outcome"
+          type: "enum"
+          values: ["success", "failed", "pending-verification"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Self-Registrations"
+
+  - code: "is.user-management.invite-user"
+    name: "Invitation-Based User Onboarding"
+    description: "Administrators onboard users by sending email invitations to set up their accounts."
+    category: "user-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.invite-user"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "outcome"
+          type: "enum"
+          values: ["invited", "accepted", "expired"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "User Invitations Sent"
+
+  - code: "is.user-management.admin-onboard"
+    name: "Admin User Onboarding"
+    description: "Administrators directly create user accounts via the console or management APIs."
+    category: "user-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.admin-onboard"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "method"
+          type: "enum"
+          values: ["console", "scim-api", "admin-api"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Admin User Creations"
+
+  - code: "is.user-management.account-recovery"
+    name: "Account Recovery"
+    description: "Users recover access to locked or forgotten accounts via email, security questions, or admin reset."
+    category: "user-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.account-recovery"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "recovery_type"
+          type: "enum"
+          values: ["password-recovery", "username-recovery"]
+          required: true
+        - name: "recovery_method"
+          type: "enum"
+          values: ["email-link", "security-questions", "admin-reset", "sms-otp"]
+          required: true
+        - name: "outcome"
+          type: "enum"
+          values: ["success", "failed", "expired"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Account Recoveries"
+        - type: "count_distinct"
+          dimension: "recovery_method"
+          label: "Recovery Methods Used"
+
+  - code: "is.user-management.bulk-import"
+    name: "Bulk User Import"
+    description: "Import users in bulk via CSV file upload or SCIM 2.0 bulk endpoint."
+    category: "user-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.bulk-import"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "import_method"
+          type: "enum"
+          values: ["csv-upload", "scim-bulk", "admin-api"]
+          required: true
+        - name: "user_count"
+          type: "integer"
+          required: true
+          description: "Number of users in the import batch."
+        - name: "outcome"
+          type: "enum"
+          values: ["success", "partial", "failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Bulk Import Jobs"
+        - type: "sum"
+          dimension: "user_count"
+          label: "Total Users Imported"
+
+  - code: "is.user-management.group-management"
+    name: "Group Management"
+    description: "Create and manage user groups for organizational structure and access control."
+    category: "user-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.group-management"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["created", "updated", "deleted", "user-assigned", "user-removed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Group Management Actions"
+
+  - code: "is.user-management.user-attributes"
+    name: "User Attribute Configuration"
+    description: "Configure user profile attributes, SCIM2 mappings, unique attributes, and multi-valued contact attributes."
+    category: "user-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-management.user-attributes"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["attribute-added", "attribute-updated", "attribute-deleted", "mapping-configured"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Attribute Configuration Changes"
+
+  # ---- USER STORES ----
+
+  - code: "is.user-stores.configure"
+    name: "User Store Configuration"
+    description: "Configure primary and secondary user stores including JDBC, LDAP, Active Directory, and custom user stores."
+    category: "user-stores"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.user-stores.configure"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "store_type"
+          type: "enum"
+          values: ["jdbc", "ldap-read-only", "ldap-read-write", "active-directory", "custom"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["configured", "updated", "deleted"]
+          required: true
+        - name: "store_level"
+          type: "enum"
+          values: ["primary", "secondary"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "User Store Configurations"
+        - type: "count_distinct"
+          dimension: "store_type"
+          label: "User Store Types Used"
+
+  # ---- PROVISIONING ----
+
+  - code: "is.provisioning.inbound-scim"
+    name: "Inbound SCIM 2.0 Provisioning"
+    description: "Provision users into the Identity Server from external systems via the SCIM 2.0 API."
+    category: "provisioning"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.provisioning.inbound-scim"
+      event_category: "lifecycle"
+      platforms: ["api"]
+      dimensions:
+        - name: "operation"
+          type: "enum"
+          values: ["create", "update", "delete", "bulk"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Inbound SCIM Operations"
+
+  - code: "is.provisioning.outbound"
+    name: "Outbound User Provisioning"
+    description: "Automatically provision user lifecycle events (create, update, delete) to external systems."
+    category: "provisioning"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.provisioning.outbound"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "connector"
+          type: "enum"
+          values: ["google", "salesforce", "scim2", "custom"]
+          required: true
+        - name: "operation"
+          type: "enum"
+          values: ["create", "update", "delete"]
+          required: true
+        - name: "trigger"
+          type: "enum"
+          values: ["admin-action", "self-signup", "jit-provisioning", "api"]
+          required: false
+      aggregations:
+        - type: "count"
+          label: "Outbound Provisioning Events"
+        - type: "count_distinct"
+          dimension: "connector"
+          label: "Provisioning Connectors Used"
+
+  - code: "is.provisioning.jit"
+    name: "Just-in-Time (JIT) Provisioning"
+    description: "Automatically provision user accounts during federated login when users authenticate via an external IdP for the first time."
+    category: "provisioning"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.provisioning.jit"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "idp_protocol"
+          type: "enum"
+          values: ["oidc", "saml", "social"]
+          required: true
+        - name: "outcome"
+          type: "enum"
+          values: ["provisioned", "existing-user-linked", "failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "JIT Provisioning Events"
+
+  # ---- SELF-SERVICE (My Account) ----
+
+  - code: "is.self-service.profile-management"
+    name: "Self-Service Profile Management"
+    description: "Users update their own profile information via the My Account portal."
+    category: "self-service"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.self-service.profile-management"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["view-profile", "update-profile", "change-password", "export-profile"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Self-Service Profile Actions"
+
+  - code: "is.self-service.consent-management"
+    name: "Self-Service Consent Management"
+    description: "Users view and manage their consent grants for applications sharing their personal data."
+    category: "self-service"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.self-service.consent-management"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["view-consents", "revoke-consent"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Consent Management Actions"
+
+  - code: "is.self-service.linked-accounts"
+    name: "Linked Social Accounts"
+    description: "Users link or unlink their social identity provider accounts from the My Account portal."
+    category: "self-service"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.self-service.linked-accounts"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["linked", "unlinked"]
+          required: true
+        - name: "provider"
+          type: "enum"
+          values: ["google", "github", "facebook", "apple", "microsoft", "x", "custom"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Account Link/Unlink Actions"
+
+  - code: "is.self-service.session-management"
+    name: "Self-Service Session Management"
+    description: "Users view and terminate their active login sessions from the My Account portal."
+    category: "self-service"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.self-service.session-management"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["view-sessions", "terminate-single", "terminate-all"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Self-Service Session Actions"
+
+  - code: "is.self-service.mfa-enrollment"
+    name: "Self-Service MFA Enrollment"
+    description: "Users enroll or manage their MFA devices (TOTP, passkeys, push notification) from My Account."
+    category: "self-service"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.self-service.mfa-enrollment"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "mfa_type"
+          type: "enum"
+          values: ["totp", "passkey", "push-notification", "backup-codes"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["enrolled", "removed", "regenerated"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "MFA Enrollment Actions"
+
+  - code: "is.self-service.workflow-approvals"
+    name: "Workflow Approvals"
+    description: "Users and admins review and approve or reject pending workflow tasks from My Account."
+    category: "self-service"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.self-service.workflow-approvals"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["approved", "rejected", "viewed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Workflow Approval Actions"
+
+  # ============================================================
+  # APPLICATION MANAGEMENT
+  # ============================================================
+
+  - code: "is.app-management.create-application"
+    name: "Application Registration"
+    description: "Register a new client application (OIDC, SAML, or WS-Federation) in the Identity Server."
+    category: "app-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.app-management.create-application"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "protocol"
+          type: "enum"
+          values: ["oidc", "saml", "ws-federation"]
+          required: true
+        - name: "app_type"
+          type: "enum"
+          values: ["spa", "web", "mobile", "m2m", "standard"]
+          required: true
+        - name: "template_used"
+          type: "boolean"
+          required: false
+          description: "Whether a pre-built application template was used."
+      aggregations:
+        - type: "count"
+          label: "Applications Registered"
+        - type: "count_distinct"
+          dimension: "protocol"
+          label: "Protocols Used"
+
+  - code: "is.app-management.fapi-app"
+    name: "FAPI-Compliant Application"
+    description: "Register and configure a Financial-grade API (FAPI) compliant application."
+    category: "app-management"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.app-management.fapi-app"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "fapi_profile"
+          type: "enum"
+          values: ["fapi1-baseline", "fapi1-advanced", "fapi2"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "FAPI Applications Registered"
+
+  - code: "is.app-management.dcr"
+    name: "Dynamic Client Registration"
+    description: "Automatically register OAuth 2.0/OIDC client applications using the DCR endpoint."
+    category: "app-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.app-management.dcr"
+      event_category: "lifecycle"
+      platforms: ["api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["register", "update", "delete"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "DCR Operations"
+
+  - code: "is.app-management.app-discovery"
+    name: "Application Discovery"
+    description: "Make applications visible in users' My Account portal with configurable access URLs and group-based restrictions."
+    category: "app-management"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.app-management.app-discovery"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["enabled", "disabled", "configured"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "App Discovery Configurations"
+
+  # ---- BRANDING ----
+
+  - code: "is.branding.ui-branding"
+    name: "UI Branding"
+    description: "Customize the login page theme, logo, color palette, and layout for an application or the organization."
+    category: "branding"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.branding.ui-branding"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "scope"
+          type: "enum"
+          values: ["application", "organization"]
+          required: true
+        - name: "customization_type"
+          type: "enum"
+          values: ["theme", "logo", "color-palette", "custom-css", "custom-layout", "favicon"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Branding Customizations Applied"
+
+  - code: "is.branding.branding-ai"
+    name: "Branding AI"
+    description: "Use AI-assisted branding to automatically generate themes and styling for login flows."
+    category: "branding"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.branding.branding-ai"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["generated", "applied", "discarded"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Branding AI Generations"
+
+  - code: "is.branding.custom-text"
+    name: "Custom Text & Localization"
+    description: "Customize text labels and localize UI content for login, registration, and recovery flows."
+    category: "branding"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.branding.custom-text"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["text-customized", "locale-added", "locale-updated"]
+          required: true
+        - name: "locale"
+          type: "string"
+          required: false
+          description: "Locale code (e.g. en-US, fr-FR, de-DE)."
+      aggregations:
+        - type: "count"
+          label: "Custom Text Changes"
+
+  - code: "is.branding.email-templates"
+    name: "Email Template Customization"
+    description: "Customize email notification templates for account verification, recovery, and other flows."
+    category: "branding"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.branding.email-templates"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "template_type"
+          type: "enum"
+          values: ["account-verification", "password-reset", "password-expiry", "otp", "invite", "account-lock", "custom"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["customized", "reset-to-default"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Email Template Customizations"
+
+  - code: "is.branding.sms-templates"
+    name: "SMS Template Customization"
+    description: "Customize SMS notification templates for OTP and other verification flows."
+    category: "branding"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.branding.sms-templates"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["customized", "reset-to-default"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "SMS Template Customizations"
+
+  # ============================================================
+  # IDENTITY FEDERATION
+  # ============================================================
+
+  # ---- SOCIAL LOGIN ----
+
+  - code: "is.social-login.google"
+    name: "Google Social Login"
+    description: "Allow users to log in using their Google account."
+    category: "social-login"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.social-login.google"
+      event_category: "adoption"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Google Logins"
+
+  - code: "is.social-login.facebook"
+    name: "Facebook Social Login"
+    description: "Allow users to log in using their Facebook account."
+    category: "social-login"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.social-login.facebook"
+      event_category: "adoption"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Facebook Logins"
+
+  - code: "is.social-login.github"
+    name: "GitHub Social Login"
+    description: "Allow users to log in using their GitHub account."
+    category: "social-login"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.social-login.github"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "GitHub Logins"
+
+  - code: "is.social-login.microsoft"
+    name: "Microsoft Social Login"
+    description: "Allow users to log in using their Microsoft account."
+    category: "social-login"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.social-login.microsoft"
+      event_category: "adoption"
+      platforms: ["web", "mobile-ios", "mobile-android"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Microsoft Logins"
+
+  - code: "is.social-login.apple"
+    name: "Apple Social Login"
+    description: "Allow users to log in using their Apple ID via Sign in with Apple."
+    category: "social-login"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.social-login.apple"
+      event_category: "adoption"
+      platforms: ["web", "mobile-ios"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Apple Logins"
+
+  - code: "is.social-login.x"
+    name: "X (Twitter) Social Login"
+    description: "Allow users to log in using their X (formerly Twitter) account."
+    category: "social-login"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.social-login.x"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "X Logins"
+
+  # ---- ENTERPRISE LOGIN ----
+
+  - code: "is.enterprise-login.oidc-idp"
+    name: "OIDC Enterprise IdP"
+    description: "Connect to an external enterprise identity provider using the OpenID Connect protocol."
+    category: "enterprise-login"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.enterprise-login.oidc-idp"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "OIDC Enterprise IdP Logins"
+
+  - code: "is.enterprise-login.saml-idp"
+    name: "SAML Enterprise IdP"
+    description: "Connect to an external enterprise identity provider using the SAML 2.0 protocol."
+    category: "enterprise-login"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.enterprise-login.saml-idp"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "SAML Enterprise IdP Logins"
+
+  - code: "is.enterprise-login.ws-federation-idp"
+    name: "WS-Federation Enterprise IdP"
+    description: "Connect to an external enterprise identity provider using the WS-Federation protocol."
+    category: "enterprise-login"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.enterprise-login.ws-federation-idp"
+      event_category: "lifecycle"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "WS-Federation Enterprise IdP Logins"
+
+  - code: "is.enterprise-login.iwa"
+    name: "Integrated Windows Authentication (IWA)"
+    description: "Enable single sign-on for Windows domain-joined users via Kerberos/NTLM."
+    category: "enterprise-login"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.enterprise-login.iwa"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "IWA Logins"
+
+  - code: "is.enterprise-login.microsoft-365"
+    name: "Microsoft 365 Login"
+    description: "Enable enterprise login via Microsoft 365 / Azure AD for workforce authentication."
+    category: "enterprise-login"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.enterprise-login.microsoft-365"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Microsoft 365 Logins"
+
+  - code: "is.enterprise-login.adfs"
+    name: "AD FS Login"
+    description: "Enable enterprise login via Active Directory Federation Services."
+    category: "enterprise-login"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.enterprise-login.adfs"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "AD FS Logins"
+
+  # ---- eID LOGIN ----
+
+  - code: "is.eid-login.signicat"
+    name: "Signicat eID Login"
+    description: "Enable electronic identity login via the Signicat identity broker."
+    category: "eid-login"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.eid-login.signicat"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Signicat eID Logins"
+
+  - code: "is.eid-login.franceconnect"
+    name: "FranceConnect eID Login"
+    description: "Enable electronic identity login via FranceConnect for French citizens."
+    category: "eid-login"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.eid-login.franceconnect"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "FranceConnect eID Logins"
+
+  - code: "is.eid-login.swissid"
+    name: "SwissID eID Login"
+    description: "Enable electronic identity login via SwissID for Swiss citizens."
+    category: "eid-login"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.eid-login.swissid"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "login-success", "login-failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "SwissID eID Logins"
+
+  # ============================================================
+  # AUTHORIZATION
+  # ============================================================
+
+  - code: "is.authorization.role-management"
+    name: "Role & Permission Management"
+    description: "Create and assign roles and permissions to users and groups within an organization."
+    category: "authorization"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.authorization.role-management"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["role-created", "role-updated", "role-deleted", "permission-assigned", "permission-revoked"]
+          required: true
+        - name: "role_type"
+          type: "enum"
+          values: ["application", "organization"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Role Management Actions"
+
+  - code: "is.authorization.api-authorization"
+    name: "API Authorization (RBAC)"
+    description: "Protect API resources using Role-Based Access Control (RBAC) via the IS authorization engine."
+    category: "authorization"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.authorization.api-authorization"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["api-resource-registered", "scope-defined", "policy-created", "policy-updated"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "API Authorization Configurations"
+
+  - code: "is.authorization.user-impersonation"
+    name: "User Impersonation"
+    description: "Allow administrators to temporarily act on behalf of another user for support and troubleshooting."
+    category: "authorization"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.authorization.user-impersonation"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "scope"
+          type: "enum"
+          values: ["console", "business-app"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["impersonation-started", "impersonation-ended"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Impersonation Sessions"
+
+  - code: "is.authorization.rich-authorization-requests"
+    name: "Rich Authorization Requests (RAR)"
+    description: "Implement RFC 9396 Rich Authorization Requests for fine-grained authorization details in OAuth 2.0 flows."
+    category: "authorization"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.authorization.rich-authorization-requests"
+      event_category: "engagement"
+      platforms: ["api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "request-processed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "RAR Requests Processed"
+
+  # ============================================================
+  # ORGANIZATION MANAGEMENT (B2B)
+  # ============================================================
+
+  - code: "is.org-management.create-organization"
+    name: "B2B Organization Creation"
+    description: "Create a child organization under the root tenant for B2B multi-tenancy."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.create-organization"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "hierarchy_depth"
+          type: "integer"
+          required: false
+          description: "Depth of the org in the organization tree (1 = direct child of root)."
+        - name: "onboarding_type"
+          type: "enum"
+          values: ["sales-led", "self-service"]
+          required: false
+      aggregations:
+        - type: "count"
+          label: "Organizations Created"
+
+  - code: "is.org-management.org-sso"
+    name: "Organization SSO"
+    description: "Configure SSO for a specific child organization using its own identity provider."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.org-sso"
+      event_category: "adoption"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "idp_protocol"
+          type: "enum"
+          values: ["oidc", "saml"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Organization SSO Configs"
+
+  - code: "is.org-management.app-sharing"
+    name: "Organization Application Sharing"
+    description: "Share applications and their associated roles with child organizations."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.app-sharing"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["shared", "unshared"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Apps Shared with Organizations"
+
+  - code: "is.org-management.delegated-admin"
+    name: "Delegated Organization Administration"
+    description: "Delegate administration of child organizations to their own admins via dedicated admin portals."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.delegated-admin"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["admin-created", "admin-removed", "portal-configured"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Delegated Admin Actions"
+
+  - code: "is.org-management.org-user-management"
+    name: "Organization User Management"
+    description: "Onboard, share, and manage users within child organizations."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.org-user-management"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["user-onboarded", "user-shared", "user-removed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Organization User Management Actions"
+
+  - code: "is.org-management.org-branding"
+    name: "Organization-Level Branding"
+    description: "Apply or inherit custom branding, email templates, and SMS templates at the organization level."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.org-branding"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["branding-customized", "branding-inherited", "email-template-customized", "sms-template-customized"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Organization Branding Actions"
+
+  - code: "is.org-management.org-discovery"
+    name: "Organization Discovery"
+    description: "Configure organization discovery mechanisms for users to find and authenticate to their organization."
+    category: "org-management"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.org-management.org-discovery"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "discovery-triggered"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Organization Discovery Events"
+
+  # ============================================================
+  # GOVERNANCE
+  # ============================================================
+
+  - code: "is.governance.password-policy"
+    name: "Password Policy Configuration"
+    description: "Define organization-wide password complexity, expiry, and history rules."
+    category: "governance"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.governance.password-policy"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "updated"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Password Policy Changes"
+
+  - code: "is.governance.login-attempts"
+    name: "Login Attempt Security"
+    description: "Configure login attempt restrictions, account locking thresholds, and lockout durations."
+    category: "governance"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.governance.login-attempts"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["policy-configured", "account-locked", "account-unlocked"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Login Attempt Policy Actions"
+
+  - code: "is.governance.bot-detection"
+    name: "Bot Detection"
+    description: "Enable and configure bot detection (CAPTCHA) to prevent automated login attacks."
+    category: "governance"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.governance.bot-detection"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["enabled", "disabled", "triggered"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Bot Detection Events"
+
+  - code: "is.governance.session-management"
+    name: "Admin Session Management"
+    description: "Configure session policies including idle timeout, remember-me duration, and session termination rules."
+    category: "governance"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.governance.session-management"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["policy-configured", "session-terminated-admin"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Session Policy Changes"
+
+  - code: "is.governance.account-disabling"
+    name: "Account Disabling"
+    description: "Administratively disable or enable user accounts."
+    category: "governance"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.governance.account-disabling"
+      event_category: "lifecycle"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["disabled", "enabled"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Account Disable/Enable Actions"
+
+  - code: "is.governance.notification-settings"
+    name: "Notification Settings"
+    description: "Configure email and SMS notification channels and delivery settings for the organization."
+    category: "governance"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.governance.notification-settings"
+      event_category: "lifecycle"
+      platforms: ["web"]
+      dimensions:
+        - name: "channel"
+          type: "enum"
+          values: ["email", "sms"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["configured", "updated", "tested"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Notification Setting Changes"
+
+  # ============================================================
+  # CUSTOMIZATION & EXTENSIONS
+  # ============================================================
+
+  - code: "is.customization.service-extensions"
+    name: "Service Extensions (Actions)"
+    description: "Configure custom service extensions to hook into authentication and token flows with external services."
+    category: "customization"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.customization.service-extensions"
+      event_category: "adoption"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "extension_point"
+          type: "enum"
+          values: ["pre-issue-access-token", "pre-update-password", "pre-registration", "custom"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["created", "updated", "deleted", "invoked"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Service Extension Invocations"
+
+  - code: "is.customization.webhooks"
+    name: "Webhooks"
+    description: "Configure webhooks to notify external systems about identity events in real-time."
+    category: "customization"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.customization.webhooks"
+      event_category: "adoption"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "event_type"
+          type: "enum"
+          values: ["login", "registration", "user-update", "user-delete", "custom"]
+          required: true
+        - name: "action"
+          type: "enum"
+          values: ["configured", "triggered", "failed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Webhook Deliveries"
+
+  - code: "is.customization.identity-verification"
+    name: "Identity Verification"
+    description: "Integrate third-party identity verification providers (e.g., Onfido) for KYC and document verification."
+    category: "customization"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.customization.identity-verification"
+      event_category: "adoption"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "provider"
+          type: "enum"
+          values: ["onfido", "custom"]
+          required: true
+        - name: "outcome"
+          type: "enum"
+          values: ["verified", "failed", "pending"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "Identity Verification Checks"
+
+  - code: "is.customization.elk-analytics"
+    name: "ELK Analytics Integration"
+    description: "Configure ELK-based analytics for login and session event analysis and risk-based authentication."
+    category: "customization"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "7.2.0"
+    tracking:
+      event_name: "is.customization.elk-analytics"
+      event_category: "adoption"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          values: ["configured", "dashboard-viewed"]
+          required: true
+      aggregations:
+        - type: "count"
+          label: "ELK Analytics Actions"

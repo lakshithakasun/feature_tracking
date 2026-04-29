@@ -1,0 +1,190 @@
+# Zephyr Logistics — Premium tier, EU Central, v7.3.0 Production
+# Profile: Multi-tenant SaaS logistics platform — full org management suite,
+#          enterprise federation (SAML+OIDC+M365), SCIM+JIT provisioning, webhooks, service extensions
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "zephyr-prod-eu"
+  customer_id: "zephyr"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 35000
+      dimension_breakdown:
+        grant_type: { authorization-code: 26000, client-credentials: 9000 }
+        response_type: { code: 32000, id-token: 3000 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 11000
+      dimension_breakdown:
+        binding_type: { http-post: 8500, http-redirect: 2500 }
+        assertion_encryption: { "true": 11000 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 8200
+      dimension_breakdown:
+        action: { verify: 7900, enroll: 250, verify-failed: 50 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 5400
+      dimension_breakdown:
+        action: { sent: 5400, verified: 5200, verify-failed: 160, expired: 40 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 14500
+      dimension_breakdown:
+        template: { ip-based: 6000, new-device-based: 5000, role-based: 3500 }
+        outcome: { step-up-not-triggered: 8800, step-up-triggered: 5200, access-denied: 500 }
+
+  - code: "is.org-management.create-organization"
+    utilization:
+      total_count: 2200
+      dimension_breakdown:
+        action: { created: 800, updated: 1100, deleted: 150, suspended: 150 }
+        type: { business: 1800, personal: 400 }
+
+  - code: "is.org-management.b2b-login"
+    utilization:
+      total_count: 18500
+      dimension_breakdown:
+        action: { login-success: 17800, login-failed: 700 }
+        org_type: { sub-org: 14000, root: 4500 }
+
+  - code: "is.org-management.org-branding"
+    utilization:
+      total_count: 480
+      dimension_breakdown:
+        action: { configured: 200, updated: 240, reset: 40 }
+
+  - code: "is.org-management.org-discovery"
+
+  - code: "is.org-management.org-roles"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        action: { role-created: 900, role-updated: 1500, permission-assigned: 800 }
+
+  - code: "is.enterprise-login.saml-idp"
+    utilization:
+      total_count: 7800
+      dimension_breakdown:
+        action: { login-success: 7500, login-failed: 300 }
+
+  - code: "is.enterprise-login.oidc-idp"
+    utilization:
+      total_count: 5200
+      dimension_breakdown:
+        action: { login-success: 5000, login-failed: 200 }
+
+  - code: "is.enterprise-login.microsoft-365"
+    utilization:
+      total_count: 9400
+      dimension_breakdown:
+        action: { login-success: 9200, login-failed: 200 }
+
+  - code: "is.provisioning.inbound-scim"
+    utilization:
+      total_count: 12500
+      dimension_breakdown:
+        operation: { create: 4500, update: 6500, delete: 1300, bulk: 200 }
+
+  - code: "is.provisioning.jit"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        action: { provisioned: 3000, updated: 180, failed: 20 }
+
+  - code: "is.provisioning.outbound"
+    utilization:
+      total_count: 4800
+      dimension_breakdown:
+        operation: { create: 1800, update: 2500, delete: 500 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 4600
+      dimension_breakdown:
+        action: { role-created: 1100, role-updated: 2200, permission-assigned: 1300 }
+        role_type: { application: 3000, organization: 1600 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 6200
+      dimension_breakdown:
+        action: { api-resource-registered: 1400, scope-defined: 3000, policy-created: 1800 }
+
+  - code: "is.customization.webhooks"
+    utilization:
+      total_count: 28000
+      dimension_breakdown:
+        event_type: { login: 12000, user-update: 8000, registration: 5000, user-delete: 3000 }
+        action: { triggered: 27000, failed: 1000 }
+
+  - code: "is.customization.service-extensions"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        extension_type: { pre-issue-access-token: 900, pre-update-profile: 600, post-login: 300 }
+        action: { invoked: 1750, failed: 50 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 5200
+      dimension_breakdown:
+        action: { account-locked: 4800, account-unlocked: 350, policy-configured: 50 }
+
+  - code: "is.governance.bot-detection"
+    utilization:
+      total_count: 8800
+      dimension_breakdown:
+        action: { triggered: 8500, enabled: 200, disabled: 100 }
+
+  - code: "is.governance.session-management"
+    utilization:
+      total_count: 560
+      dimension_breakdown:
+        action: { policy-configured: 260, session-terminated-admin: 300 }
+
+  - code: "is.governance.password-policy"
+    utilization:
+      total_count: 72
+      dimension_breakdown:
+        action: { configured: 30, updated: 42 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 125
+      dimension_breakdown:
+        scope: { organization: 80, application: 45 }
+        customization_type: { theme: 48, logo: 42, color-palette: 35 }
+
+  - code: "is.branding.email-templates"
+    utilization:
+      total_count: 96
+      dimension_breakdown:
+        template_type: { password-reset: 35, account-verification: 28, otp: 22, account-lock: 11 }
+        action: { customized: 96 }
+
+  - code: "is.user-management.admin-onboard"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        method: { scim-api: 2000, admin-api: 600, console: 200 }
+
+  - code: "is.app-management.dcr"
+    utilization:
+      total_count: 620
+      dimension_breakdown:
+        action: { register: 320, update: 260, delete: 40 }

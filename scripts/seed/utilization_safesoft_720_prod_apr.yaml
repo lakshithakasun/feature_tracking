@@ -1,0 +1,63 @@
+# SafeSoft Technologies — Core, US East, v7.2.0 Production
+# Follow-up month: light but improving usage.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "safesoft-prod-us"
+  customer_id: "safesoft"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 5200
+      dimension_breakdown:
+        grant_type: { authorization-code: 4700, client-credentials: 500 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 1600
+      dimension_breakdown:
+        binding_type: { http-post: 1300, http-redirect: 300 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 980
+      dimension_breakdown:
+        action: { verify: 920, enroll: 50, verify-failed: 10 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 1700
+      dimension_breakdown:
+        action: { account-locked: 1560, account-unlocked: 120, policy-configured: 20 }
+
+  - code: "is.governance.bot-detection"
+    utilization:
+      total_count: 920
+      dimension_breakdown:
+        action: { triggered: 870, enabled: 40, disabled: 10 }
+
+  - code: "is.self-service.profile-management"
+    utilization:
+      total_count: 420
+      dimension_breakdown:
+        action: { view-profile: 260, update-profile: 140, change-password: 20 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 24
+      dimension_breakdown:
+        customization_type: { logo: 10, theme: 8, color-palette: 6 }
+
+  - code: "is.branding.email-templates"
+    utilization:
+      total_count: 16
+      dimension_breakdown:
+        action: { customized: 16 }

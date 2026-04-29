@@ -1,0 +1,55 @@
+# Initech Systems — v7.2.0 Staging (lower volume, same features)
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "initech-staging-ap"
+  customer_id: "initech"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 3800
+      dimension_breakdown:
+        grant_type: { authorization-code: 2500, client-credentials: 1300 }
+        response_type: { code: 3500, token: 300 }
+
+  - code: "is.provisioning.inbound-scim"
+    utilization:
+      total_count: 1200
+      dimension_breakdown:
+        operation: { create: 500, update: 550, delete: 100, bulk: 50 }
+
+  - code: "is.user-management.bulk-import"
+    utilization:
+      total_count: 8
+      dimension_breakdown:
+        import_method: { scim-bulk: 5, csv-upload: 3 }
+        outcome: { success: 7, partial: 1, failed: 0 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 280
+      dimension_breakdown:
+        action: { account-locked: 240, account-unlocked: 35, policy-configured: 5 }
+
+  - code: "is.governance.session-management"
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 920
+      dimension_breakdown:
+        action: { verify: 880, enroll: 35, verify-failed: 5 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 110
+      dimension_breakdown:
+        action: { role-created: 25, role-updated: 50, permission-assigned: 35 }
+        role_type: { application: 70, organization: 40 }

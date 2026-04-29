@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Team Report — identity-server v7.3.0</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; }
+    .page-header {
+      background: linear-gradient(135deg, #2a1a4a 0%, #4a2d7a 100%);
+      color: white; padding: 2.5rem 0 2rem;
+    }
+    .page-header .subtitle { opacity: .7; font-size: .95rem; }
+    .stat-card {
+      background: white; border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07); height: 100%;
+    }
+    .stat-card .value  { font-size: 1.9rem; font-weight: 700; line-height: 1.1; }
+    .stat-card .label  { color: #6c757d; font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }
+    .stat-card .sub    { font-size: .78rem; color: #6c757d; margin-top: .3rem; }
+    .section-card {
+      background: white; border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 1.5rem;
+    }
+    .section-card .card-header {
+      background: none; border-bottom: 1px solid #e9ecef;
+      padding: 1rem 1.4rem; font-weight: 600; font-size: .95rem;
+    }
+    .section-card .card-body { padding: 1.4rem; }
+    table thead th {
+      background: #f8f9fa; font-size: .76rem; text-transform: uppercase;
+      letter-spacing: .04em; color: #6c757d; border-bottom: 2px solid #dee2e6;
+    }
+    table tbody td { vertical-align: middle; }
+    code { background: #f0f4ff; color: #4a2d7a; padding: .1em .35em; border-radius: 4px; }
+    .heatmap-table td, .heatmap-table th { padding: .2rem; }
+    .heatmap-legend { display: inline-flex; align-items: center; gap: 5px; font-size: .74rem; color: #6c757d; }
+    .dim-chart-box { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: .6rem; }
+    .footer { color: #6c757d; font-size: .8rem; padding: 1.5rem 0 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.35rem .8rem;font-size:.78rem;letter-spacing:.06em">
+        PRODUCT TEAM VIEW
+      </div>
+      <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:.35rem .8rem;font-size:.78rem">
+        identity-server v7.3.0
+      </div>
+    </div>
+    <h1 class="mb-1" style="font-size:1.9rem;font-weight:700">Feature Utilization — Product Team Report</h1>
+    <div class="subtitle">
+      Generated 2026-04-20 10:07
+      &nbsp;·&nbsp; 4 customers
+      &nbsp;·&nbsp; 43 / 80 features utilized
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+
+
+<!-- ── SCORECARD ── -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value text-primary">4</div>
+      <div class="label">Customers</div>
+      <div class="sub">5 deployments</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#E07B54">371,200</div>
+      <div class="label">Feature Events</div>
+      <div class="sub">5 reports</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#5AB08E">53.8%</div>
+      <div class="label">Feature Adoption</div>
+      <div class="sub">43 of 80 used</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#A06EC9">37</div>
+      <div class="label">Zero-Adoption</div>
+      <div class="sub">features never used</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value" style="color:#E8B84B">3</div>
+      <div class="label">Staging Pipeline</div>
+      <div class="sub">features not yet in prod</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-2">
+    <div class="stat-card">
+      <div class="value text-muted" style="font-size:1.4rem">N/A</div>
+      <div class="label">MoM Event Change</div>
+      <div class="sub" style="color:#aaa">multi-month data needed</div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <div class="section-card" style="margin-bottom:0">
+      <div class="card-header" style="padding:.7rem 1.2rem">Events by Category</div>
+      <div class="card-body" style="padding:.8rem 1.2rem">
+        <div style="position:relative;height:160px"><canvas id="catChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('catChart'), {
+  type: 'bar',
+  data: { labels: ["Single Sign-On (SSO)", "Adaptive / Conditional Authentication", "Customization & Extensions", "Multi-Factor Authentication (MFA)", "Organization Management (B2B)", "Enterprise Login", "User Provisioning", "Social Login", "Identity Governance", "Authorization", "User Management", "User Self-Service", "Application Management", "Branding & UX"], datasets: [{ data: [108400, 47950, 42300, 40600, 27265, 22400, 20500, 18280, 17962, 17430, 4350, 2900, 620, 243], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E", "#A06EC9", "#E8B84B", "#4BC0C0", "#E66A9A", "#7B9E3C", "#C76B6B", "#6B8EC7", "#D4A050", "#8E6BC7", "#4F86C6", "#E07B54"], borderRadius: 4 }] },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 9 } } },
+      y: { ticks: { font: { size: 9 } } }
+    }
+  }
+});
+</script>
+
+<!-- ── A. FEATURE ADOPTION RANKING ── -->
+<div class="section-card mb-4">
+  <div class="card-header">
+    📊 Section A — Feature Adoption Ranking
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — top 20 features by event volume</span>
+  </div>
+  <div class="card-body">
+    <div class="mb-2"><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#4F86C6;display:inline-block"></span>Adaptive / Conditional Authentication</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#E07B54;display:inline-block"></span>Application Management</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#5AB08E;display:inline-block"></span>Authorization</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#A06EC9;display:inline-block"></span>Branding & UX</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#E8B84B;display:inline-block"></span>Customization & Extensions</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#4BC0C0;display:inline-block"></span>Enterprise Login</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#E66A9A;display:inline-block"></span>Identity Governance</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#7B9E3C;display:inline-block"></span>Multi-Factor Authentication (MFA)</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#C76B6B;display:inline-block"></span>Organization Management (B2B)</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#6B8EC7;display:inline-block"></span>Single Sign-On (SSO)</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#D4A050;display:inline-block"></span>Social Login</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#8E6BC7;display:inline-block"></span>User Management</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#4F86C6;display:inline-block"></span>User Provisioning</span><span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px;font-size:.75rem"><span style="width:10px;height:10px;border-radius:2px;background:#E07B54;display:inline-block"></span>User Self-Service</span></div>
+    <div style="position:relative;height:560px">
+      <canvas id="adoptChart"></canvas>
+    </div>
+  </div>
+</div>
+<div class="section-card mb-4">
+  <div class="card-header">Feature Adoption — Detail Table
+    <span class="text-muted fw-normal" style="font-size:.82rem">
+     — sorted by event volume · breadth = % of customers · weighted breadth = enterprise×3, premium×2, core×1
+    </span>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3" style="width:28px">#</th>
+        <th>Feature</th><th>Category</th><th>Tier</th>
+        <th class="text-end">Total Events</th>
+        <th>Customer Breadth</th>
+        <th title="enterprise×3, premium×2, core×1">Weighted Breadth</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">1</td>
+          <td><strong style="font-size:.88rem">OpenID Connect / OAuth 2.0 SSO</strong>
+              <div><code style="font-size:.7rem">is.sso.oidc</code></div></td>
+          <td><span style="background:#6B8EC720;color:#6B8EC7;border:1px solid #6B8EC740;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Single Sign-On (SSO)</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">93,300</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:100%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">4/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:100%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">8/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">2</td>
+          <td><strong style="font-size:.88rem">Conditional Authentication</strong>
+              <div><code style="font-size:.7rem">is.adaptive-auth.conditional-auth</code></div></td>
+          <td><span style="background:#4F86C620;color:#4F86C6;border:1px solid #4F86C640;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Adaptive / Conditional Authentication</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">40,400</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">3/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:88%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">7/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">3</td>
+          <td><strong style="font-size:.88rem">Webhooks</strong>
+              <div><code style="font-size:.7rem">is.customization.webhooks</code></div></td>
+          <td><span style="background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Customization & Extensions</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">36,900</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">4/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">4</td>
+          <td><strong style="font-size:.88rem">B2B Organization Login</strong>
+              <div><code style="font-size:.7rem">is.org-management.b2b-login</code></div></td>
+          <td><span style="background:#C76B6B20;color:#C76B6B;border:1px solid #C76B6B40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Organization Management (B2B)</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">20,300</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">5</td>
+          <td><strong style="font-size:.88rem">TOTP (Authenticator App)</strong>
+              <div><code style="font-size:.7rem">is.mfa.totp</code></div></td>
+          <td><span style="background:#7B9E3C20;color:#7B9E3C;border:1px solid #7B9E3C40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Multi-Factor Authentication (MFA)</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">19,400</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:100%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">4/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:100%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">8/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">6</td>
+          <td><strong style="font-size:.88rem">SAML 2.0 SSO</strong>
+              <div><code style="font-size:.7rem">is.sso.saml</code></div></td>
+          <td><span style="background:#6B8EC720;color:#6B8EC7;border:1px solid #6B8EC740;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Single Sign-On (SSO)</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">15,100</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:62%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">5/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">7</td>
+          <td><strong style="font-size:.88rem">Passkey / FIDO2 (WebAuthn)</strong>
+              <div><code style="font-size:.7rem">is.mfa.passkey</code></div></td>
+          <td><span style="background:#7B9E3C20;color:#7B9E3C;border:1px solid #7B9E3C40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Multi-Factor Authentication (MFA)</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">14,300</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:62%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">5/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">8</td>
+          <td><strong style="font-size:.88rem">Inbound SCIM 2.0 Provisioning</strong>
+              <div><code style="font-size:.7rem">is.provisioning.inbound-scim</code></div></td>
+          <td><span style="background:#4F86C620;color:#4F86C6;border:1px solid #4F86C640;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">User Provisioning</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">12,500</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">9</td>
+          <td><strong style="font-size:.88rem">Google Social Login</strong>
+              <div><code style="font-size:.7rem">is.social-login.google</code></div></td>
+          <td><span style="background:#D4A05020;color:#D4A050;border:1px solid #D4A05040;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Social Login</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">12,500</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">3/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">6/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">10</td>
+          <td><strong style="font-size:.88rem">API Authorization (RBAC)</strong>
+              <div><code style="font-size:.7rem">is.authorization.api-authorization</code></div></td>
+          <td><span style="background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Authorization</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">9,600</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">4/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">11</td>
+          <td><strong style="font-size:.88rem">Microsoft 365 Login</strong>
+              <div><code style="font-size:.7rem">is.enterprise-login.microsoft-365</code></div></td>
+          <td><span style="background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C040;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Enterprise Login</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">9,400</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">12</td>
+          <td><strong style="font-size:.88rem">Bot Detection</strong>
+              <div><code style="font-size:.7rem">is.governance.bot-detection</code></div></td>
+          <td><span style="background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Identity Governance</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">8,800</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">13</td>
+          <td><strong style="font-size:.88rem">SAML Enterprise IdP</strong>
+              <div><code style="font-size:.7rem">is.enterprise-login.saml-idp</code></div></td>
+          <td><span style="background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C040;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Enterprise Login</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">7,800</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">14</td>
+          <td><strong style="font-size:.88rem">AI-Driven Step-Up Authentication</strong>
+              <div><code style="font-size:.7rem">is.adaptive-auth.ai-step-up</code></div></td>
+          <td><span style="background:#4F86C620;color:#4F86C6;border:1px solid #4F86C640;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Adaptive / Conditional Authentication</span></td>
+          <td><span class="badge bg-danger">enterprise</span></td>
+          <td class="text-end fw-semibold">7,550</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">3/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:88%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">7/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">15</td>
+          <td><strong style="font-size:.88rem">Email OTP</strong>
+              <div><code style="font-size:.7rem">is.mfa.email-otp</code></div></td>
+          <td><span style="background:#7B9E3C20;color:#7B9E3C;border:1px solid #7B9E3C40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Multi-Factor Authentication (MFA)</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">6,900</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:62%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">5/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">16</td>
+          <td><strong style="font-size:.88rem">Role & Permission Management</strong>
+              <div><code style="font-size:.7rem">is.authorization.role-management</code></div></td>
+          <td><span style="background:#5AB08E20;color:#5AB08E;border:1px solid #5AB08E40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Authorization</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">6,700</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">4/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">17</td>
+          <td><strong style="font-size:.88rem">Service Extensions (Actions)</strong>
+              <div><code style="font-size:.7rem">is.customization.service-extensions</code></div></td>
+          <td><span style="background:#E8B84B20;color:#E8B84B;border:1px solid #E8B84B40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Customization & Extensions</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">5,400</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">2/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">4/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">18</td>
+          <td><strong style="font-size:.88rem">OIDC Enterprise IdP</strong>
+              <div><code style="font-size:.7rem">is.enterprise-login.oidc-idp</code></div></td>
+          <td><span style="background:#4BC0C020;color:#4BC0C0;border:1px solid #4BC0C040;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Enterprise Login</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">5,200</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">19</td>
+          <td><strong style="font-size:.88rem">Login Attempt Security</strong>
+              <div><code style="font-size:.7rem">is.governance.login-attempts</code></div></td>
+          <td><span style="background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Identity Governance</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">5,200</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">20</td>
+          <td><strong style="font-size:.88rem">Outbound User Provisioning</strong>
+              <div><code style="font-size:.7rem">is.provisioning.outbound</code></div></td>
+          <td><span style="background:#4F86C620;color:#4F86C6;border:1px solid #4F86C640;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">User Provisioning</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">4,800</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">21</td>
+          <td><strong style="font-size:.88rem">Continuous Access Evaluation (CAE)</strong>
+              <div><code style="font-size:.7rem">is.governance.continuous-access-eval</code></div></td>
+          <td><span style="background:#E66A9A20;color:#E66A9A;border:1px solid #E66A9A40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Identity Governance</span></td>
+          <td><span class="badge bg-danger">enterprise</span></td>
+          <td class="text-end fw-semibold">3,330</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">3/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:88%;background:#5AB08E;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">7/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">22</td>
+          <td><strong style="font-size:.88rem">Organization Role Management</strong>
+              <div><code style="font-size:.7rem">is.org-management.org-roles</code></div></td>
+          <td><span style="background:#C76B6B20;color:#C76B6B;border:1px solid #C76B6B40;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Organization Management (B2B)</span></td>
+          <td><span class="badge bg-warning text-dark">premium</span></td>
+          <td class="text-end fw-semibold">3,200</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">23</td>
+          <td><strong style="font-size:.88rem">Just-in-Time (JIT) Provisioning</strong>
+              <div><code style="font-size:.7rem">is.provisioning.jit</code></div></td>
+          <td><span style="background:#4F86C620;color:#4F86C6;border:1px solid #4F86C640;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">User Provisioning</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">3,200</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">24</td>
+          <td><strong style="font-size:.88rem">Apple Social Login</strong>
+              <div><code style="font-size:.7rem">is.social-login.apple</code></div></td>
+          <td><span style="background:#D4A05020;color:#D4A050;border:1px solid #D4A05040;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">Social Login</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">2,800</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="ps-3 text-muted" style="font-size:.8rem;width:28px">25</td>
+          <td><strong style="font-size:.88rem">Admin User Onboarding</strong>
+              <div><code style="font-size:.7rem">is.user-management.admin-onboard</code></div></td>
+          <td><span style="background:#8E6BC720;color:#8E6BC7;border:1px solid #8E6BC740;padding:.15rem .45rem;border-radius:10px;font-size:.72rem;white-space:nowrap">User Management</span></td>
+          <td><span class="badge bg-secondary">core</span></td>
+          <td class="text-end fw-semibold">2,800</td>
+          <td style="min-width:130px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap">1/4</span>
+            </div>
+          </td>
+          <td style="min-width:110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:5px;border-radius:3px">
+                <div class="progress-bar" style="width:25%;background:#E07B54;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.75rem;white-space:nowrap" title="enterprise×3, premium×2, core×1">2/8</span>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('adoptChart'), {
+  type: 'bar',
+  data: { labels: ["OpenID Connect / OAuth 2.0 SSO", "Conditional Authentication", "Webhooks", "B2B Organization Login", "TOTP (Authenticator App)", "SAML 2.0 SSO", "Passkey / FIDO2 (WebAuthn)", "Inbound SCIM 2.0 Provisioning", "Google Social Login", "API Authorization (RBAC)", "Microsoft 365 Login", "Bot Detection", "SAML Enterprise IdP", "AI-Driven Step-Up Authentication", "Email OTP", "Role & Permission Management", "Service Extensions (Actions)", "OIDC Enterprise IdP", "Login Attempt Security", "Outbound User Provisioning"], datasets: [{ data: [93300, 40400, 36900, 20300, 19400, 15100, 14300, 12500, 12500, 9600, 9400, 8800, 7800, 7550, 6900, 6700, 5400, 5200, 5200, 4800], backgroundColor: ["#6B8EC7", "#4F86C6", "#E8B84B", "#C76B6B", "#7B9E3C", "#6B8EC7", "#7B9E3C", "#4F86C6", "#D4A050", "#5AB08E", "#4BC0C0", "#E66A9A", "#4BC0C0", "#4F86C6", "#7B9E3C", "#5AB08E", "#E8B84B", "#4BC0C0", "#E66A9A", "#4F86C6"], borderRadius: 3 }] },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 } } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+
+<!-- ── B. HEATMAP ── -->
+<div class="section-card mb-4">
+  <div class="card-header d-flex align-items-center gap-3 flex-wrap">
+    🔥 Section B — Feature × Customer Heatmap
+    <span class="heatmap-legend">
+      <span style="width:11px;height:11px;background:#e8f5e9;border:1px solid #ccc;display:inline-block;border-radius:2px"></span> low
+      <span style="width:11px;height:11px;background:#388e3c;display:inline-block;border-radius:2px;margin-left:4px"></span> high
+      <span style="width:11px;height:11px;background:#f5f5f5;border:1px solid #ddd;display:inline-block;border-radius:2px;margin-left:4px"></span> none
+    </span>
+    <span class="text-muted fw-normal" style="font-size:.78rem">color scale is per-row (each feature scaled independently)</span>
+  </div>
+  <div class="card-body p-0" style="overflow-x:auto">
+    <table class="table table-sm mb-0 heatmap-table">
+      <thead><tr>
+        <th class="ps-2" style="min-width:180px">Feature</th>
+        <th style="min-width:70px;font-size:.72rem">Adoption</th>
+        <th class="text-end" style="font-size:.72rem;min-width:52px">Events</th>
+        <th style="font-size:.65rem;writing-mode:vertical-rl;white-space:nowrap;max-width:22px;padding:.4rem .15rem;text-align:left">Acme Corporation</th><th style="font-size:.65rem;writing-mode:vertical-rl;white-space:nowrap;max-width:22px;padding:.4rem .15rem;text-align:left">Cyberdyne Systems</th><th style="font-size:.65rem;writing-mode:vertical-rl;white-space:nowrap;max-width:22px;padding:.4rem .15rem;text-align:left">Zephyr Logistics</th><th style="font-size:.65rem;writing-mode:vertical-rl;white-space:nowrap;max-width:22px;padding:.4rem .15rem;text-align:left">Umbrella Corp</th>
+      </tr></thead>
+      <tbody><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Adaptive / Conditional Authentication</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.adaptive-auth.conditional-auth</code></div><div class="text-muted" style="font-size:.7rem">Conditional Authentication</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:2px"></div></div><span style="color:#666">3/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">40k</td><td style="background:#6d9a70;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 9,500">10k</td><td style="background:#26662b;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 15,000">15k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 15,900">16k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.adaptive-auth.ai-step-up</code></div><div class="text-muted" style="font-size:.7rem">AI-Driven Step-Up Authentication</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:2px"></div></div><span style="color:#666">3/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">8k</td><td style="background:#8eb291;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 2,100">2k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 4,800">5k</td><td style="background:#cce0cd;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 650">650</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Application Management</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.app-management.dcr</code></div><div class="text-muted" style="font-size:.7rem">Dynamic Client Registration</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">620</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 620">620</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Authorization</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.authorization.api-authorization</code></div><div class="text-muted" style="font-size:.7rem">API Authorization (RBAC)</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">10k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#77a27a;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 3,400">3k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 6,200">6k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.authorization.role-management</code></div><div class="text-muted" style="font-size:.7rem">Role & Permission Management</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">7k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#8ab08d;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 2,100">2k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 4,600">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.authorization.rich-authorization-requests</code></div><div class="text-muted" style="font-size:.7rem">Rich Authorization Requests (RAR)</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">950</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 950">950</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.authorization.user-impersonation</code></div><div class="text-muted" style="font-size:.7rem">User Impersonation</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">180</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 180">180</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Branding & UX</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.branding.ui-branding</code></div><div class="text-muted" style="font-size:.7rem">UI Branding</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">147</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 125">125</td><td style="background:#c3dac5;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 22">22</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.branding.email-templates</code></div><div class="text-muted" style="font-size:.7rem">Email Template Customization</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">96</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 96">96</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Customization & Extensions</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.customization.webhooks</code></div><div class="text-muted" style="font-size:.7rem">Webhooks</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">37k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#a6c5a9;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 8,900">9k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 28,000">28k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.customization.service-extensions</code></div><div class="text-muted" style="font-size:.7rem">Service Extensions (Actions)</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 3,600">4k</td><td style="background:#81a984;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 1,800">2k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Enterprise Login</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.enterprise-login.microsoft-365</code></div><div class="text-muted" style="font-size:.7rem">Microsoft 365 Login</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">9k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 9,400">9k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.enterprise-login.saml-idp</code></div><div class="text-muted" style="font-size:.7rem">SAML Enterprise IdP</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">8k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 7,800">8k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.enterprise-login.oidc-idp</code></div><div class="text-muted" style="font-size:.7rem">OIDC Enterprise IdP</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 5,200">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Identity Governance</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.governance.bot-detection</code></div><div class="text-muted" style="font-size:.7rem">Bot Detection</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">9k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 8,800">9k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.governance.login-attempts</code></div><div class="text-muted" style="font-size:.7rem">Login Attempt Security</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 5,200">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.governance.continuous-access-eval</code></div><div class="text-muted" style="font-size:.7rem">Continuous Access Evaluation (CAE)</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:2px"></div></div><span style="color:#666">3/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">3k</td><td style="background:#98ba9b;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 850">850</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 2,200">2k</td><td style="background:#cde1cf;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 280">280</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.governance.session-management</code></div><div class="text-muted" style="font-size:.7rem">Admin Session Management</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">560</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 560">560</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.governance.password-policy</code></div><div class="text-muted" style="font-size:.7rem">Password Policy Configuration</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">72</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 72">72</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Multi-Factor Authentication (MFA)</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.mfa.totp</code></div><div class="text-muted" style="font-size:.7rem">TOTP (Authenticator App)</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:100%;background:#5AB08E;border-radius:2px"></div></div><span style="color:#666">4/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">19k</td><td style="background:#4d8251;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 6,200">6k</td><td style="background:#98ba9a;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 3,200">3k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 8,200">8k</td><td style="background:#bbd3bc;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 1,800">2k</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.mfa.passkey</code></div><div class="text-muted" style="font-size:.7rem">Passkey / FIDO2 (WebAuthn)</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">14k</td><td style="background:#b6d0b8;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 2,800">3k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 11,500">12k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.mfa.email-otp</code></div><div class="text-muted" style="font-size:.7rem">Email OTP</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">7k</td><td style="background:#afcbb1;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 1,500">2k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 5,400">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Organization Management (B2B)</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.org-management.b2b-login</code></div><div class="text-muted" style="font-size:.7rem">B2B Organization Login</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">20k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 20,300">20k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.org-management.org-roles</code></div><div class="text-muted" style="font-size:.7rem">Organization Role Management</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 3,200">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.org-management.create-organization</code></div><div class="text-muted" style="font-size:.7rem">B2B Organization Creation</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">2k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#e1f0e3;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 65">65</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 2,200">2k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.org-management.org-audit-log</code></div><div class="text-muted" style="font-size:.7rem">Organization Audit Log</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">600</td><td style="background:#90b492;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 180">180</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 420">420</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.org-management.org-branding</code></div><div class="text-muted" style="font-size:.7rem">Organization-Level Branding</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">480</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 480">480</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.org-management.org-discovery</code></div><div class="text-muted" style="font-size:.7rem">Organization Discovery</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">420</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 420">420</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Single Sign-On (SSO)</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.sso.oidc</code></div><div class="text-muted" style="font-size:.7rem">OpenID Connect / OAuth 2.0 SSO</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:100%;background:#5AB08E;border-radius:2px"></div></div><span style="color:#666">4/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">93k</td><td style="background:#88ae8b;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 18,000">18k</td><td style="background:#548857;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 28,000">28k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 38,800">39k</td><td style="background:#bbd3bc;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 8,500">8k</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.sso.saml</code></div><div class="text-muted" style="font-size:.7rem">SAML 2.0 SSO</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">15k</td><td style="background:#9bbc9e;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 4,100">4k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 11,000">11k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">Social Login</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.social-login.google</code></div><div class="text-muted" style="font-size:.7rem">Google Social Login</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:75%;background:#5AB08E;border-radius:2px"></div></div><span style="color:#666">3/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">12k</td><td style="background:#7fa882;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 2,800">3k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 5,500">6k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#4b814f;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 4,200">4k</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.social-login.apple</code></div><div class="text-muted" style="font-size:.7rem">Apple Social Login</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: 2,800">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.social-login.microsoft</code></div><div class="text-muted" style="font-size:.7rem">Microsoft Social Login</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">2k</td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 1,200">1k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#739f77;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 680">680</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.social-login.github</code></div><div class="text-muted" style="font-size:.7rem">GitHub Social Login</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">1k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 1,100">1k</td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">User Management</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.user-management.admin-onboard</code></div><div class="text-muted" style="font-size:.7rem">Admin User Onboarding</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 2,800">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.user-management.self-registration</code></div><div class="text-muted" style="font-size:.7rem">User Self-Registration</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:50%;background:#E8B84B;border-radius:2px"></div></div><span style="color:#666">2/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">1k</td><td style="background:#8fb392;color:#1b5e20;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: 410">410</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 950">950</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.user-management.account-recovery</code></div><div class="text-muted" style="font-size:.7rem">Account Recovery</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">190</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 190">190</td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">User Provisioning</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.provisioning.inbound-scim</code></div><div class="text-muted" style="font-size:.7rem">Inbound SCIM 2.0 Provisioning</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">12k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 12,500">12k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.provisioning.outbound</code></div><div class="text-muted" style="font-size:.7rem">Outbound User Provisioning</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 4,800">5k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.provisioning.jit</code></div><div class="text-muted" style="font-size:.7rem">Just-in-Time (JIT) Provisioning</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: 3,200">3k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: no usage"></td></tr><tr style="background:#f0f4ff"><td colspan="7" class="small fw-bold text-primary ps-2 py-1">User Self-Service</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.self-service.profile-management</code></div><div class="text-muted" style="font-size:.7rem">Self-Service Profile Management</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">2k</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 2,100">2k</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.self-service.consent-management</code></div><div class="text-muted" style="font-size:.7rem">Self-Service Consent Management</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">480</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 480">480</td></tr><tr><td class="ps-2" style="white-space:nowrap;min-width:180px;vertical-align:middle"><div style="font-size:.72rem"><code>is.self-service.session-management</code></div><div class="text-muted" style="font-size:.7rem">Self-Service Session Management</div></td><td style="font-size:.72rem;white-space:nowrap;vertical-align:middle;padding:.2rem .4rem"><div class="progress" style="height:4px;width:50px;border-radius:2px"><div class="progress-bar" style="width:25%;background:#E07B54;border-radius:2px"></div></div><span style="color:#666">1/4</span></td><td class="text-end" style="font-size:.72rem;vertical-align:middle;padding:.2rem .4rem;white-space:nowrap">320</td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Acme Corporation: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Cyberdyne Systems: no usage"></td><td style="background:#f5f5f5;color:#bbb;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Zephyr Logistics: no usage"></td><td style="background:#1b5e20;color:white;font-size:.7rem;text-align:center;padding:.2rem .25rem;min-width:46px" title="Umbrella Corp: 320">320</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── C. DIMENSION BREAKDOWN ── -->
+<div class="section-card mb-4">
+  <div class="card-header">
+    📐 Section C — Dimension Breakdown
+    <span class="text-muted fw-normal" style="font-size:.82rem">
+     — HOW each feature is used · top 15 by volume · failure bars shown in red
+    </span>
+  </div>
+  <div class="card-body">
+    
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.sso.oidc</code>
+                <strong style="font-size:.9rem">OpenID Connect / OAuth 2.0 SSO</strong>
+                <span class="badge bg-light text-dark border">Single Sign-On (SSO)</span>
+                <span class="text-muted" style="font-size:.8rem">93,300 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">grant_type</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_0_grant_type"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">response_type</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_0_response_type"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.adaptive-auth.conditional-auth</code>
+                <strong style="font-size:.9rem">Conditional Authentication</strong>
+                <span class="badge bg-light text-dark border">Adaptive / Conditional Authentication</span>
+                <span class="text-muted" style="font-size:.8rem">40,400 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">outcome</span><span class="badge bg-danger ms-1" style="font-size:.68rem">3.1% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_1_outcome"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">template</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_1_template"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.customization.webhooks</code>
+                <strong style="font-size:.9rem">Webhooks</strong>
+                <span class="badge bg-light text-dark border">Customization & Extensions</span>
+                <span class="text-muted" style="font-size:.8rem">36,900 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">3.8% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_2_action"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">event_type</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_2_event_type"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.org-management.b2b-login</code>
+                <strong style="font-size:.9rem">B2B Organization Login</strong>
+                <span class="badge bg-light text-dark border">Organization Management (B2B)</span>
+                <span class="text-muted" style="font-size:.8rem">20,300 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">3.8% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_3_action"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">org_type</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_3_org_type"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.mfa.totp</code>
+                <strong style="font-size:.9rem">TOTP (Authenticator App)</strong>
+                <span class="badge bg-light text-dark border">Multi-Factor Authentication (MFA)</span>
+                <span class="text-muted" style="font-size:.8rem">19,400 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">0.6% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_4_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.sso.saml</code>
+                <strong style="font-size:.9rem">SAML 2.0 SSO</strong>
+                <span class="badge bg-light text-dark border">Single Sign-On (SSO)</span>
+                <span class="text-muted" style="font-size:.8rem">15,100 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">binding_type</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_5_binding_type"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">assertion_encryption</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_5_assertion_encryption"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.mfa.passkey</code>
+                <strong style="font-size:.9rem">Passkey / FIDO2 (WebAuthn)</strong>
+                <span class="badge bg-light text-dark border">Multi-Factor Authentication (MFA)</span>
+                <span class="text-muted" style="font-size:.8rem">14,300 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">0.8% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_6_action"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">authenticator_type</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_6_authenticator_type"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.social-login.google</code>
+                <strong style="font-size:.9rem">Google Social Login</strong>
+                <span class="badge bg-light text-dark border">Social Login</span>
+                <span class="text-muted" style="font-size:.8rem">12,500 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">3.4% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_7_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.provisioning.inbound-scim</code>
+                <strong style="font-size:.9rem">Inbound SCIM 2.0 Provisioning</strong>
+                <span class="badge bg-light text-dark border">User Provisioning</span>
+                <span class="text-muted" style="font-size:.8rem">12,500 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">operation</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_8_operation"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.authorization.api-authorization</code>
+                <strong style="font-size:.9rem">API Authorization (RBAC)</strong>
+                <span class="badge bg-light text-dark border">Authorization</span>
+                <span class="text-muted" style="font-size:.8rem">9,600 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_9_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.enterprise-login.microsoft-365</code>
+                <strong style="font-size:.9rem">Microsoft 365 Login</strong>
+                <span class="badge bg-light text-dark border">Enterprise Login</span>
+                <span class="text-muted" style="font-size:.8rem">9,400 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">2.1% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_10_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.governance.bot-detection</code>
+                <strong style="font-size:.9rem">Bot Detection</strong>
+                <span class="badge bg-light text-dark border">Identity Governance</span>
+                <span class="text-muted" style="font-size:.8rem">8,800 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_11_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.enterprise-login.saml-idp</code>
+                <strong style="font-size:.9rem">SAML Enterprise IdP</strong>
+                <span class="badge bg-light text-dark border">Enterprise Login</span>
+                <span class="text-muted" style="font-size:.8rem">7,800 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">3.8% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_12_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.adaptive-auth.ai-step-up</code>
+                <strong style="font-size:.9rem">AI-Driven Step-Up Authentication</strong>
+                <span class="badge bg-light text-dark border">Adaptive / Conditional Authentication</span>
+                <span class="text-muted" style="font-size:.8rem">7,550 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">outcome</span><span class="badge bg-danger ms-1" style="font-size:.68rem">2.0% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_13_outcome"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">risk_level</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_13_risk_level"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_13_action"></canvas></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">risk_signal</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_13_risk_signal"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <code style="font-size:.8rem">is.mfa.email-otp</code>
+                <strong style="font-size:.9rem">Email OTP</strong>
+                <span class="badge bg-light text-dark border">Multi-Factor Authentication (MFA)</span>
+                <span class="text-muted" style="font-size:.8rem">6,900 events</span>
+              </div>
+              <div class="row g-2">
+            <div class="col-sm-6 col-md-4 mb-2">
+              <div class="dim-chart-box">
+                <div class="d-flex align-items-center gap-1 mb-1">
+                  <span class="small text-muted fw-semibold">action</span><span class="badge bg-danger ms-1" style="font-size:.68rem">2.0% failure rate</span>
+                </div>
+                <div style="position:relative;height:120px"><canvas id="dim_14_action"></canvas></div>
+              </div>
+            </div></div>
+            </div>
+  </div>
+</div>
+<script>
+new Chart(document.getElementById('dim_0_grant_type'), {
+  type: 'bar',
+  data: { labels: ["authorization-code", "client-credentials"], datasets: [{ data: [70300, 23000], backgroundColor: ["#4F86C6", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_0_response_type'), {
+  type: 'bar',
+  data: { labels: ["code", "token", "id-token"], datasets: [{ data: [86700, 1300, 5300], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_1_outcome'), {
+  type: 'bar',
+  data: { labels: ["access-denied", "step-up-triggered", "step-up-not-triggered"], datasets: [{ data: [1250, 15500, 23650], backgroundColor: ["#E07B54", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_1_template'), {
+  type: 'bar',
+  data: { labels: ["ip-based", "role-based", "new-device-based"], datasets: [{ data: [16100, 9800, 14500], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_2_action'), {
+  type: 'bar',
+  data: { labels: ["failed", "triggered"], datasets: [{ data: [1400, 35500], backgroundColor: ["#E07B54", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_2_event_type'), {
+  type: 'bar',
+  data: { labels: ["login", "user-delete", "user-update", "registration"], datasets: [{ data: [17000, 3400, 9500, 7000], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E", "#A06EC9"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_3_action'), {
+  type: 'bar',
+  data: { labels: ["login-failed", "login-success"], datasets: [{ data: [780, 19520], backgroundColor: ["#E07B54", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_3_org_type'), {
+  type: 'bar',
+  data: { labels: ["root", "sub-org"], datasets: [{ data: [4900, 15400], backgroundColor: ["#4F86C6", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_4_action'), {
+  type: 'bar',
+  data: { labels: ["enroll", "verify", "verify-failed"], datasets: [{ data: [790, 18500, 110], backgroundColor: ["#4F86C6", "#E07B54", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_5_binding_type'), {
+  type: 'bar',
+  data: { labels: ["http-post", "http-redirect"], datasets: [{ data: [12000, 3100], backgroundColor: ["#4F86C6", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_5_assertion_encryption'), {
+  type: 'bar',
+  data: { labels: ["true"], datasets: [{ data: [11000], backgroundColor: ["#4F86C6"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_6_action'), {
+  type: 'bar',
+  data: { labels: ["enroll", "auth-failed", "authenticate"], datasets: [{ data: [780, 120, 13400], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_6_authenticator_type'), {
+  type: 'bar',
+  data: { labels: ["platform", "cross-platform"], datasets: [{ data: [11900, 2400], backgroundColor: ["#4F86C6", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_7_action'), {
+  type: 'bar',
+  data: { labels: ["login-failed", "login-success"], datasets: [{ data: [430, 12070], backgroundColor: ["#E07B54", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_8_operation'), {
+  type: 'bar',
+  data: { labels: ["bulk", "create", "delete", "update"], datasets: [{ data: [200, 4500, 1300, 6500], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E", "#A06EC9"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_9_action'), {
+  type: 'bar',
+  data: { labels: ["scope-defined", "policy-created", "api-resource-registered"], datasets: [{ data: [4500, 2900, 2200], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_10_action'), {
+  type: 'bar',
+  data: { labels: ["login-failed", "login-success"], datasets: [{ data: [200, 9200], backgroundColor: ["#E07B54", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_11_action'), {
+  type: 'bar',
+  data: { labels: ["enabled", "disabled", "triggered"], datasets: [{ data: [200, 100, 8500], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_12_action'), {
+  type: 'bar',
+  data: { labels: ["login-failed", "login-success"], datasets: [{ data: [300, 7500], backgroundColor: ["#E07B54", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_13_outcome'), {
+  type: 'bar',
+  data: { labels: ["denied", "allowed", "step-up-triggered"], datasets: [{ data: [140, 4400, 2360], backgroundColor: ["#E07B54", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_13_risk_level'), {
+  type: 'bar',
+  data: { labels: ["low", "high", "medium", "critical"], datasets: [{ data: [4400, 680, 1700, 120], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E", "#A06EC9"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_13_action'), {
+  type: 'bar',
+  data: { labels: ["evaluated", "step-up-triggered", "step-up-not-triggered"], datasets: [{ data: [650, 180, 470], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_13_risk_signal'), {
+  type: 'bar',
+  data: { labels: ["new-device", "unusual-location", "behaviour-anomaly"], datasets: [{ data: [240, 210, 200], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});
+new Chart(document.getElementById('dim_14_action'), {
+  type: 'bar',
+  data: { labels: ["sent", "expired", "verified", "verify-failed"], datasets: [{ data: [6900, 50, 6620, 230], backgroundColor: ["#4F86C6", "#E07B54", "#5AB08E", "#E07B54"], borderRadius: 3 }] },
+  options: {
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: ctx => ctx.parsed.y.toLocaleString()
+    } } },
+    scales: {
+      x: { ticks: { font: { size: 8 }, maxRotation: 30 } },
+      y: { ticks: { font: { size: 8 } } }
+    }
+  }
+});</script>
+
+<!-- ── D. STAGING PIPELINE ── -->
+<div class="section-card mb-4">
+  <div class="card-header d-flex align-items-center gap-2 flex-wrap">
+    🔬 Section D — Staging → Production Pipeline
+    <span class="badge bg-warning text-dark">3 features</span>
+    <span class="text-muted fw-normal" style="font-size:.82rem">
+     — features being tested in staging but not yet live in production
+    </span>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Feature Code</th>
+        <th>Feature Name</th>
+        <th>Category</th>
+        <th class="text-center">Customers Testing</th>
+        <th>Signal Strength</th>
+        <th class="text-end">Staging Events</th>
+        <th>Testing Customers</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="ps-3"><code style="font-size:.8rem">is.adaptive-auth.ai-step-up</code></td>
+          <td><strong style="font-size:.88rem">AI-Driven Step-Up Authentication</strong></td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Adaptive / Conditional Authentication</span></td>
+          <td class="text-center">1</td>
+          <td><span class="badge bg-secondary">early</span></td>
+          <td class="text-end">650</td>
+          <td><span class="badge bg-light text-dark border me-1" style="font-size:.72rem">Zephyr Logistics</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><code style="font-size:.8rem">is.org-management.org-discovery</code></td>
+          <td><strong style="font-size:.88rem">Organization Discovery</strong></td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Organization Management (B2B)</span></td>
+          <td class="text-center">1</td>
+          <td><span class="badge bg-secondary">early</span></td>
+          <td class="text-end">420</td>
+          <td><span class="badge bg-light text-dark border me-1" style="font-size:.72rem">Zephyr Logistics</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><code style="font-size:.8rem">is.governance.continuous-access-eval</code></td>
+          <td><strong style="font-size:.88rem">Continuous Access Evaluation (CAE)</strong></td>
+          <td><span class="badge bg-light text-dark border" style="font-size:.75rem">Identity Governance</span></td>
+          <td class="text-center">1</td>
+          <td><span class="badge bg-secondary">early</span></td>
+          <td class="text-end">280</td>
+          <td><span class="badge bg-light text-dark border me-1" style="font-size:.72rem">Zephyr Logistics</span></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── E. ZERO ADOPTION ── -->
+<div class="section-card mb-4">
+  <div class="card-header d-flex align-items-center gap-2 flex-wrap">
+    ⬜ Section E — Zero-Adoption Features
+    <span class="badge bg-secondary">37 features</span>
+    <span class="badge bg-danger">8 enterprise</span>
+    <span class="badge bg-warning text-dark">12 premium</span>
+    <span class="text-muted fw-normal" style="font-size:.82rem"> — never used by any customer</span>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Feature Code</th>
+        <th>Feature Name</th>
+        <th>Tier</th>
+        <th>Status</th>
+        <th class="text-center" title="Months since feature version was released">Age</th>
+      </tr></thead>
+      <tbody><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Adaptive / Conditional Authentication</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.adaptive-auth.app-native-auth</code></td><td style="font-size:.85rem">App-Native Authentication</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Application Management</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.app-management.fapi-app</code></td><td style="font-size:.85rem">FAPI-Compliant Application</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.app-management.app-discovery</code></td><td style="font-size:.85rem">Application Discovery</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.app-management.create-application</code></td><td style="font-size:.85rem">Application Registration</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Branding & UX</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.branding.branding-ai</code></td><td style="font-size:.85rem">Branding AI</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.branding.custom-text</code></td><td style="font-size:.85rem">Custom Text & Localization</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.branding.sms-templates</code></td><td style="font-size:.85rem">SMS Template Customization</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Customization & Extensions</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.customization.identity-verification</code></td><td style="font-size:.85rem">Identity Verification</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.customization.elk-analytics</code></td><td style="font-size:.85rem">ELK Analytics Integration</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Enterprise Login</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.enterprise-login.iwa</code></td><td style="font-size:.85rem">Integrated Windows Authentication (IWA)</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.enterprise-login.ws-federation-idp</code></td><td style="font-size:.85rem">WS-Federation Enterprise IdP</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.enterprise-login.adfs</code></td><td style="font-size:.85rem">AD FS Login</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Identity Governance</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.governance.account-disabling</code></td><td style="font-size:.85rem">Account Disabling</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.governance.notification-settings</code></td><td style="font-size:.85rem">Notification Settings</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Multi-Factor Authentication (MFA)</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">5</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.mfa.x509</code></td><td style="font-size:.85rem">X.509 Certificate Authentication</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.mfa.push-notification</code></td><td style="font-size:.85rem">Push Notification Authentication</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.mfa.backup-codes</code></td><td style="font-size:.85rem">Backup Codes</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.mfa.magic-link</code></td><td style="font-size:.85rem">Magic Link (Passwordless Email)</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.mfa.sms-otp</code></td><td style="font-size:.85rem">SMS OTP</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Organization Management (B2B)</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">4</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.org-management.delegated-admin</code></td><td style="font-size:.85rem">Delegated Organization Administration</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.org-management.app-sharing</code></td><td style="font-size:.85rem">Organization Application Sharing</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.org-management.org-sso</code></td><td style="font-size:.85rem">Organization SSO</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.org-management.org-user-management</code></td><td style="font-size:.85rem">Organization User Management</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Single Sign-On (SSO)</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.sso.ws-federation</code></td><td style="font-size:.85rem">WS-Federation SSO</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">Social Login</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">2</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.social-login.facebook</code></td><td style="font-size:.85rem">Facebook Social Login</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.social-login.x</code></td><td style="font-size:.85rem">X (Twitter) Social Login</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">User Management</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">4</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.user-management.bulk-import</code></td><td style="font-size:.85rem">Bulk User Import</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.user-management.group-management</code></td><td style="font-size:.85rem">Group Management</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.user-management.invite-user</code></td><td style="font-size:.85rem">Invitation-Based User Onboarding</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.user-management.user-attributes</code></td><td style="font-size:.85rem">User Attribute Configuration</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">User Self-Service</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.self-service.workflow-approvals</code></td><td style="font-size:.85rem">Workflow Approvals</td><td><span class="badge bg-warning text-dark">premium</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.self-service.linked-accounts</code></td><td style="font-size:.85rem">Linked Social Accounts</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.self-service.mfa-enrollment</code></td><td style="font-size:.85rem">Self-Service MFA Enrollment</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">User Stores</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">1</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.user-stores.configure</code></td><td style="font-size:.85rem">User Store Configuration</td><td><span class="badge bg-secondary">core</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr class="table-light"><td colspan="5" class="ps-3 py-1"><strong style="font-size:.82rem">eID Login</strong><span class="badge bg-secondary ms-1" style="font-size:.7rem">3</span></td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.eid-login.franceconnect</code></td><td style="font-size:.85rem">FranceConnect eID Login</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.eid-login.signicat</code></td><td style="font-size:.85rem">Signicat eID Login</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr><tr><td class="ps-4"><code style="font-size:.78rem">is.eid-login.swissid</code></td><td style="font-size:.85rem">SwissID eID Login</td><td><span class="badge bg-danger">enterprise</span><span class="badge bg-info text-dark ms-1" style="font-size:.68rem">stable</span></td><td class="text-muted" style="font-size:.8rem">stable</td><td class="text-muted text-center" style="font-size:.8rem"     title="introduced in v7.2.0">7 mo</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── F. VERSION COMPARISON ── -->
+<div class="section-card mb-4">
+  <div class="card-header">📦 Section F — Version Comparison</div>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Product</th><th>Version</th>
+        <th class="text-center">Customers</th>
+        <th class="text-end">Total Events</th>
+        <th>Feature Coverage</th>
+      </tr></thead>
+      <tbody>
+        <tr >
+          <td class="ps-3"><span class="badge bg-primary">identity-server</span></td>
+          <td><strong>7.2.0</strong></td>
+          <td class="text-center">6</td>
+          <td class="text-end">613,502</td>
+          <td style="min-width:160px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:7px;border-radius:3px">
+                <div class="progress-bar" style="width:67.5%;background:#adb5bd;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.8rem;white-space:nowrap">54 / 80 (67.5%)</span>
+            </div>
+          </td>
+        </tr>
+        <tr class="table-primary">
+          <td class="ps-3"><span class="badge bg-primary">identity-server</span></td>
+          <td><strong>7.3.0</strong></td>
+          <td class="text-center">4</td>
+          <td class="text-end">371,200</td>
+          <td style="min-width:160px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:7px;border-radius:3px">
+                <div class="progress-bar" style="width:53.8%;background:#4F86C6;border-radius:3px"></div>
+              </div>
+              <span style="font-size:.8rem;white-space:nowrap">43 / 80 (53.8%)</span>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── G. DEPRECATION PANEL ── -->
+<div class="section-card mb-4">
+  <div class="card-header">🗑 Section G — Deprecation Decision Panel</div>
+  <div class="card-body"><p class="text-muted mb-0">No deprecated or experimental features in this catalog version.</p></div>
+</div>
+
+<!-- ── H. SECURITY ADVISORY ── -->
+<div class="section-card mb-4">
+  <div class="card-header d-flex align-items-center gap-2 flex-wrap">
+    🛡 Section H — Security Advisory Distribution
+    <span class="badge bg-primary">43 features</span>
+    <span class="text-muted fw-normal" style="font-size:.82rem">
+     — select a feature to see which customers would be affected by a security advisory
+    </span>
+  </div>
+  <div class="card-body">
+    <div class="mb-3 d-flex align-items-center gap-3 flex-wrap">
+      <label class="fw-semibold" style="font-size:.88rem" for="advisorySelect">Affected Feature:</label>
+      <select id="advisorySelect" class="form-select" style="max-width:480px;font-size:.85rem">
+        <option value="">— select a feature —</option>
+        <option value="is.adaptive-auth.ai-step-up">AI-Driven Step-Up Authentication (is.adaptive-auth.ai-step-up)</option><option value="is.authorization.api-authorization">API Authorization (RBAC) (is.authorization.api-authorization)</option><option value="is.user-management.account-recovery">Account Recovery (is.user-management.account-recovery)</option><option value="is.governance.session-management">Admin Session Management (is.governance.session-management)</option><option value="is.user-management.admin-onboard">Admin User Onboarding (is.user-management.admin-onboard)</option><option value="is.social-login.apple">Apple Social Login (is.social-login.apple)</option><option value="is.org-management.create-organization">B2B Organization Creation (is.org-management.create-organization)</option><option value="is.org-management.b2b-login">B2B Organization Login (is.org-management.b2b-login)</option><option value="is.governance.bot-detection">Bot Detection (is.governance.bot-detection)</option><option value="is.adaptive-auth.conditional-auth">Conditional Authentication (is.adaptive-auth.conditional-auth)</option><option value="is.governance.continuous-access-eval">Continuous Access Evaluation (CAE) (is.governance.continuous-access-eval)</option><option value="is.app-management.dcr">Dynamic Client Registration (is.app-management.dcr)</option><option value="is.mfa.email-otp">Email OTP (is.mfa.email-otp)</option><option value="is.branding.email-templates">Email Template Customization (is.branding.email-templates)</option><option value="is.social-login.github">GitHub Social Login (is.social-login.github)</option><option value="is.social-login.google">Google Social Login (is.social-login.google)</option><option value="is.provisioning.inbound-scim">Inbound SCIM 2.0 Provisioning (is.provisioning.inbound-scim)</option><option value="is.provisioning.jit">Just-in-Time (JIT) Provisioning (is.provisioning.jit)</option><option value="is.governance.login-attempts">Login Attempt Security (is.governance.login-attempts)</option><option value="is.enterprise-login.microsoft-365">Microsoft 365 Login (is.enterprise-login.microsoft-365)</option><option value="is.social-login.microsoft">Microsoft Social Login (is.social-login.microsoft)</option><option value="is.enterprise-login.oidc-idp">OIDC Enterprise IdP (is.enterprise-login.oidc-idp)</option><option value="is.sso.oidc">OpenID Connect / OAuth 2.0 SSO (is.sso.oidc)</option><option value="is.org-management.org-audit-log">Organization Audit Log (is.org-management.org-audit-log)</option><option value="is.org-management.org-discovery">Organization Discovery (is.org-management.org-discovery)</option><option value="is.org-management.org-roles">Organization Role Management (is.org-management.org-roles)</option><option value="is.org-management.org-branding">Organization-Level Branding (is.org-management.org-branding)</option><option value="is.provisioning.outbound">Outbound User Provisioning (is.provisioning.outbound)</option><option value="is.mfa.passkey">Passkey / FIDO2 (WebAuthn) (is.mfa.passkey)</option><option value="is.governance.password-policy">Password Policy Configuration (is.governance.password-policy)</option><option value="is.authorization.rich-authorization-requests">Rich Authorization Requests (RAR) (is.authorization.rich-authorization-requests)</option><option value="is.authorization.role-management">Role & Permission Management (is.authorization.role-management)</option><option value="is.sso.saml">SAML 2.0 SSO (is.sso.saml)</option><option value="is.enterprise-login.saml-idp">SAML Enterprise IdP (is.enterprise-login.saml-idp)</option><option value="is.self-service.consent-management">Self-Service Consent Management (is.self-service.consent-management)</option><option value="is.self-service.profile-management">Self-Service Profile Management (is.self-service.profile-management)</option><option value="is.self-service.session-management">Self-Service Session Management (is.self-service.session-management)</option><option value="is.customization.service-extensions">Service Extensions (Actions) (is.customization.service-extensions)</option><option value="is.mfa.totp">TOTP (Authenticator App) (is.mfa.totp)</option><option value="is.branding.ui-branding">UI Branding (is.branding.ui-branding)</option><option value="is.authorization.user-impersonation">User Impersonation (is.authorization.user-impersonation)</option><option value="is.user-management.self-registration">User Self-Registration (is.user-management.self-registration)</option><option value="is.customization.webhooks">Webhooks (is.customization.webhooks)</option>
+      </select>
+    </div>
+    <div id="advisoryResult" style="display:none">
+      <div class="d-flex align-items-center gap-2 mb-2 flex-wrap" id="advisoryHeader"></div>
+      <table class="table table-sm table-hover" id="advisoryTable" style="max-width:600px">
+        <thead><tr>
+          <th>Customer</th>
+          <th>Tier</th>
+          <th class="text-end">Usage (events)</th>
+        </tr></thead>
+        <tbody id="advisoryTbody"></tbody>
+      </table>
+      <div class="text-muted" id="advisorySummary" style="font-size:.82rem"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+  const ADVISORY = {"is.adaptive-auth.ai-step-up": {"name": "AI-Driven Step-Up Authentication", "tier": "enterprise", "status": "beta", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 4800}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 2100}, {"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 650}]}, "is.adaptive-auth.conditional-auth": {"name": "Conditional Authentication", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 15900}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 15000}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 9500}]}, "is.app-management.dcr": {"name": "Dynamic Client Registration", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 620}]}, "is.authorization.api-authorization": {"name": "API Authorization (RBAC)", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 6200}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 3400}]}, "is.authorization.rich-authorization-requests": {"name": "Rich Authorization Requests (RAR)", "tier": "enterprise", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 950}]}, "is.authorization.role-management": {"name": "Role & Permission Management", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 4600}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 2100}]}, "is.authorization.user-impersonation": {"name": "User Impersonation", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 180}]}, "is.branding.email-templates": {"name": "Email Template Customization", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 96}]}, "is.branding.ui-branding": {"name": "UI Branding", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 125}, {"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 22}]}, "is.customization.service-extensions": {"name": "Service Extensions (Actions)", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 3600}, {"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 1800}]}, "is.customization.webhooks": {"name": "Webhooks", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 28000}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 8900}]}, "is.enterprise-login.microsoft-365": {"name": "Microsoft 365 Login", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 9400}]}, "is.enterprise-login.oidc-idp": {"name": "OIDC Enterprise IdP", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 5200}]}, "is.enterprise-login.saml-idp": {"name": "SAML Enterprise IdP", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 7800}]}, "is.governance.session-management": {"name": "Admin Session Management", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 560}]}, "is.governance.bot-detection": {"name": "Bot Detection", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 8800}]}, "is.governance.continuous-access-eval": {"name": "Continuous Access Evaluation (CAE)", "tier": "enterprise", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 2200}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 850}, {"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 280}]}, "is.governance.login-attempts": {"name": "Login Attempt Security", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 5200}]}, "is.governance.password-policy": {"name": "Password Policy Configuration", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 72}]}, "is.mfa.email-otp": {"name": "Email OTP", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 5400}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 1500}]}, "is.mfa.passkey": {"name": "Passkey / FIDO2 (WebAuthn)", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 11500}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 2800}]}, "is.mfa.totp": {"name": "TOTP (Authenticator App)", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 8200}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 6200}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 3200}, {"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 1800}]}, "is.org-management.create-organization": {"name": "B2B Organization Creation", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 2200}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 65}]}, "is.org-management.b2b-login": {"name": "B2B Organization Login", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 20300}]}, "is.org-management.org-audit-log": {"name": "Organization Audit Log", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 420}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 180}]}, "is.org-management.org-discovery": {"name": "Organization Discovery", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 420}]}, "is.org-management.org-roles": {"name": "Organization Role Management", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 3200}]}, "is.org-management.org-branding": {"name": "Organization-Level Branding", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 480}]}, "is.sso.oidc": {"name": "OpenID Connect / OAuth 2.0 SSO", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 38800}, {"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 28000}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 18000}, {"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 8500}]}, "is.sso.saml": {"name": "SAML 2.0 SSO", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 11000}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 4100}]}, "is.social-login.apple": {"name": "Apple Social Login", "tier": "core", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 2800}]}, "is.social-login.github": {"name": "GitHub Social Login", "tier": "core", "status": "stable", "customers": [{"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 1100}]}, "is.social-login.google": {"name": "Google Social Login", "tier": "core", "status": "stable", "customers": [{"customer_name": "Cyberdyne Systems", "customer_tier": "premium", "total_count": 5500}, {"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 4200}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 2800}]}, "is.social-login.microsoft": {"name": "Microsoft Social Login", "tier": "core", "status": "stable", "customers": [{"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 1200}, {"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 680}]}, "is.user-management.account-recovery": {"name": "Account Recovery", "tier": "core", "status": "stable", "customers": [{"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 190}]}, "is.user-management.admin-onboard": {"name": "Admin User Onboarding", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 2800}]}, "is.user-management.self-registration": {"name": "User Self-Registration", "tier": "core", "status": "stable", "customers": [{"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 950}, {"customer_name": "Acme Corporation", "customer_tier": "enterprise", "total_count": 410}]}, "is.provisioning.inbound-scim": {"name": "Inbound SCIM 2.0 Provisioning", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 12500}]}, "is.provisioning.jit": {"name": "Just-in-Time (JIT) Provisioning", "tier": "core", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 3200}]}, "is.provisioning.outbound": {"name": "Outbound User Provisioning", "tier": "premium", "status": "stable", "customers": [{"customer_name": "Zephyr Logistics", "customer_tier": "premium", "total_count": 4800}]}, "is.self-service.consent-management": {"name": "Self-Service Consent Management", "tier": "core", "status": "stable", "customers": [{"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 480}]}, "is.self-service.profile-management": {"name": "Self-Service Profile Management", "tier": "core", "status": "stable", "customers": [{"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 2100}]}, "is.self-service.session-management": {"name": "Self-Service Session Management", "tier": "core", "status": "stable", "customers": [{"customer_name": "Umbrella Corp", "customer_tier": "core", "total_count": 320}]}};
+  const TIER_COLORS = {"enterprise": "#dc3545", "premium": "#ffc107", "core": "#6c757d"};
+
+  const sel    = document.getElementById('advisorySelect');
+  const result = document.getElementById('advisoryResult');
+  const header = document.getElementById('advisoryHeader');
+  const tbody  = document.getElementById('advisoryTbody');
+  const summary = document.getElementById('advisorySummary');
+
+  sel.addEventListener('change', function() {
+    const code = this.value;
+    if (!code || !ADVISORY[code]) { result.style.display = 'none'; return; }
+
+    const feat = ADVISORY[code];
+    result.style.display = '';
+
+    // Header
+    const tierColor = TIER_COLORS[feat.tier] || '#6c757d';
+    header.innerHTML =
+      '<code style="font-size:.85rem">' + code + '</code>' +
+      '<strong style="font-size:.95rem">' + feat.name + '</strong>' +
+      '<span class="badge" style="background:' + tierColor + '">' + feat.tier + '</span>' +
+      (feat.status ? '<span class="badge bg-secondary">' + feat.status + '</span>' : '');
+
+    // Table rows
+    let rows = '';
+    let totalEvents = 0;
+    feat.customers.forEach(function(c) {
+      const tc = TIER_COLORS[c.customer_tier] || '#6c757d';
+      rows += '<tr>' +
+        '<td>' + c.customer_name + '</td>' +
+        '<td><span class="badge" style="background:' + tc + ';font-size:.7rem">' + c.customer_tier + '</span></td>' +
+        '<td class="text-end">' + c.total_count.toLocaleString() + '</td>' +
+        '</tr>';
+      totalEvents += c.total_count;
+    });
+    tbody.innerHTML = rows;
+
+    summary.textContent =
+      feat.customers.length + ' customer' + (feat.customers.length !== 1 ? 's' : '') +
+      ' affected · ' + totalEvents.toLocaleString() + ' total events at risk';
+  });
+})();
+</script>
+
+<!-- ── I. NEW FEATURES ADOPTION ── -->
+<div class="section-card mb-4">
+  <div class="card-header d-flex align-items-center gap-2 flex-wrap">
+    🆕 Section I — New Features Adoption (v7.3.0)
+    <span class="badge" style="background:#5AB08E">100% adopted</span>
+    <span class="badge bg-success">3 in use</span>
+    <span class="badge bg-secondary">0 not yet used</span>
+    <span class="text-muted fw-normal" style="font-size:.82rem">
+     — features first introduced in v7.3.0
+    </span>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-hover mb-0">
+      <thead><tr>
+        <th class="ps-3">Feature Code</th>
+        <th>Feature Name</th>
+        <th>Tier</th>
+        <th>Adoption</th>
+        <th class="text-center">Customers Using</th>
+      </tr></thead>
+      <tbody><tr><td class="ps-3"><code style="font-size:.78rem">is.adaptive-auth.ai-step-up</code></td><td style="font-size:.85rem">AI-Driven Step-Up Authentication</td><td><span class="badge bg-danger">enterprise</span></td><td><span class="badge bg-success">adopted</span></td><td class="text-center text-muted" style="font-size:.85rem">3</td></tr><tr><td class="ps-3"><code style="font-size:.78rem">is.governance.continuous-access-eval</code></td><td style="font-size:.85rem">Continuous Access Evaluation (CAE)</td><td><span class="badge bg-danger">enterprise</span></td><td><span class="badge bg-success">adopted</span></td><td class="text-center text-muted" style="font-size:.85rem">3</td></tr><tr><td class="ps-3"><code style="font-size:.78rem">is.org-management.org-audit-log</code></td><td style="font-size:.85rem">Organization Audit Log</td><td><span class="badge bg-warning text-dark">premium</span></td><td><span class="badge bg-success">adopted</span></td><td class="text-center text-muted" style="font-size:.85rem">2</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<div class="footer container">
+  WSO2 Feature Utilization — Product Team Report
+  &nbsp;·&nbsp; identity-server v7.3.0
+  &nbsp;·&nbsp; Generated 2026-04-20 10:07
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

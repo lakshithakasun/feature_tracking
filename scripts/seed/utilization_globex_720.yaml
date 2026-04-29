@@ -1,0 +1,111 @@
+# Globex Corporation — B2B enterprise, EU West, v7.2.0
+# Profile: Heavy federation + org management + enterprise IdP
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "globex-prod-eu"
+  customer_id: "globex"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 22000
+      dimension_breakdown:
+        grant_type: { authorization-code: 18000, client-credentials: 4000 }
+        response_type: { code: 20000, token: 2000 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 9500
+      dimension_breakdown:
+        binding_type: { http-post: 8000, http-redirect: 1500 }
+
+  - code: "is.enterprise-login.saml-idp"
+    utilization:
+      total_count: 7800
+      dimension_breakdown:
+        action: { login-success: 7400, login-failed: 400 }
+
+  - code: "is.enterprise-login.oidc-idp"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        action: { login-success: 4000, login-failed: 200 }
+
+  - code: "is.enterprise-login.microsoft-365"
+    utilization:
+      total_count: 3100
+      dimension_breakdown:
+        action: { login-success: 3000, login-failed: 100 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 6500
+      dimension_breakdown:
+        action: { sent: 6500, verified: 6200, verify-failed: 250, expired: 50 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 4100
+      dimension_breakdown:
+        action: { verify: 3900, enroll: 180, verify-failed: 20 }
+
+  - code: "is.org-management.create-organization"
+    utilization:
+      total_count: 48
+      dimension_breakdown:
+        onboarding_type: { sales-led: 40, self-service: 8 }
+
+  - code: "is.org-management.app-sharing"
+    utilization:
+      total_count: 120
+      dimension_breakdown:
+        action: { shared: 100, unshared: 20 }
+
+  - code: "is.org-management.org-sso"
+    utilization:
+      total_count: 95
+      dimension_breakdown:
+        idp_protocol: { saml: 60, oidc: 35 }
+
+  - code: "is.org-management.delegated-admin"
+    utilization:
+      total_count: 210
+      dimension_breakdown:
+        action: { admin-created: 90, admin-removed: 30, portal-configured: 90 }
+
+  - code: "is.org-management.org-branding"
+    utilization:
+      total_count: 85
+      dimension_breakdown:
+        action: { branding-customized: 50, email-template-customized: 35 }
+
+  - code: "is.org-management.b2b-login"
+
+  - code: "is.provisioning.jit"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        idp_protocol: { saml: 2000, oidc: 1000, social: 200 }
+        outcome: { provisioned: 2800, existing-user-linked: 350, failed: 50 }
+
+  - code: "is.branding.ui-branding"
+    utilization:
+      total_count: 65
+      dimension_breakdown:
+        scope: { organization: 50, application: 15 }
+        customization_type: { theme: 25, logo: 20, color-palette: 20 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 340
+      dimension_breakdown:
+        action: { role-created: 80, role-updated: 150, permission-assigned: 110 }
+        role_type: { application: 220, organization: 120 }

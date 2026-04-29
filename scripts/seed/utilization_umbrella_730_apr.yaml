@@ -1,0 +1,40 @@
+# Umbrella Corp — Core tier, US West, v7.3.0
+# Follow-up month: adoption contracted to basic authentication only.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "umbrella-prod-us"
+  customer_id: "umbrella"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 2200
+      dimension_breakdown:
+        grant_type: { authorization-code: 2000, client-credentials: 200 }
+        response_type: { code: 2140, token: 60 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 260
+      dimension_breakdown:
+        binding_type: { http-post: 220, http-redirect: 40 }
+
+  - code: "is.social-login.google"
+  - code: "is.social-login.github"
+  - code: "is.social-login.microsoft"
+  - code: "is.mfa.totp"
+  - code: "is.mfa.email-otp"
+  - code: "is.user-management.self-registration"
+  - code: "is.self-service.profile-management"
+  - code: "is.self-service.consent-management"
+  - code: "is.self-service.session-management"
+  - code: "is.user-management.account-recovery"
+  - code: "is.branding.ui-branding"

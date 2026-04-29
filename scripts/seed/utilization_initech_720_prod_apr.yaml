@@ -1,0 +1,71 @@
+# Initech Systems — Enterprise, AP Southeast, v7.2.0 Production
+# Follow-up month: modest growth but still narrow breadth.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "initech-prod-ap"
+  customer_id: "initech"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 25500
+      dimension_breakdown:
+        grant_type: { authorization-code: 20400, client-credentials: 5100 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 4200
+      dimension_breakdown:
+        binding_type: { http-post: 3440, http-redirect: 760 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 3900
+      dimension_breakdown:
+        action: { verify: 3730, enroll: 150, verify-failed: 20 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 1500
+      dimension_breakdown:
+        action: { sent: 1500, verified: 1420, verify-failed: 70, expired: 10 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 4700
+      dimension_breakdown:
+        outcome: { step-up-not-triggered: 2820, step-up-triggered: 1780, access-denied: 100 }
+
+  - code: "is.governance.login-attempts"
+    utilization:
+      total_count: 5400
+      dimension_breakdown:
+        action: { account-locked: 5000, account-unlocked: 340, policy-configured: 60 }
+
+  - code: "is.governance.admin-session-management"
+    utilization:
+      total_count: 460
+      dimension_breakdown:
+        action: { viewed: 270, terminated: 170, policy-updated: 20 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 620
+      dimension_breakdown:
+        action: { role-created: 140, role-updated: 280, permission-assigned: 200 }
+
+  - code: "is.user-management.admin-onboarding"
+    utilization:
+      total_count: 195
+      dimension_breakdown:
+        outcome: { success: 174, failed: 12, pending: 9 }
+
+  - code: "is.org-management.b2b-login"

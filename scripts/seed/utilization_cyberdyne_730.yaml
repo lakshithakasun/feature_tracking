@@ -1,0 +1,123 @@
+# Cyberdyne Systems — Premium tier, EU Central, v7.3.0
+# Profile: Heavy authorization + passkey adoption + new 7.3.0 features
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "cyberdyne-prod-eu"
+  customer_id: "cyberdyne"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 28000
+      dimension_breakdown:
+        grant_type: { authorization-code: 20000, client-credentials: 8000 }
+        response_type: { code: 26000, id-token: 2000 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 11500
+      dimension_breakdown:
+        action: { authenticate: 10800, enroll: 600, auth-failed: 100 }
+        authenticator_type: { platform: 9500, cross-platform: 2000 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        action: { verify: 3000, enroll: 180, verify-failed: 20 }
+
+  - code: "is.adaptive-auth.ai-step-up"
+    utilization:
+      total_count: 4800
+      dimension_breakdown:
+        risk_level: { low: 3000, medium: 1200, high: 500, critical: 100 }
+        outcome: { allowed: 3000, step-up-triggered: 1700, denied: 100 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 15000
+      dimension_breakdown:
+        template: { ip-based: 6000, new-device-based: 5000, role-based: 4000 }
+        outcome: { step-up-triggered: 6000, step-up-not-triggered: 8500, access-denied: 500 }
+
+  - code: "is.authorization.api-authorization"
+    utilization:
+      total_count: 3400
+      dimension_breakdown:
+        action: { api-resource-registered: 800, scope-defined: 1500, policy-created: 1100 }
+
+  - code: "is.authorization.role-management"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        action: { role-created: 400, role-updated: 900, permission-assigned: 800 }
+        role_type: { application: 1500, organization: 600 }
+
+  - code: "is.authorization.user-impersonation"
+    utilization:
+      total_count: 180
+      dimension_breakdown:
+        scope: { console: 120, business-app: 60 }
+        action: { impersonation-started: 90, impersonation-ended: 90 }
+
+  - code: "is.authorization.rich-authorization-requests"
+    utilization:
+      total_count: 950
+      dimension_breakdown:
+        action: { configured: 50, request-processed: 900 }
+
+  - code: "is.governance.continuous-access-eval"
+    utilization:
+      total_count: 2200
+      dimension_breakdown:
+        trigger: { ip-change: 1000, password-change: 600, account-disabled: 400, role-change: 200 }
+        action: { session-revoked: 1500, token-invalidated: 700 }
+
+  - code: "is.org-management.create-organization"
+    utilization:
+      total_count: 65
+      dimension_breakdown:
+        onboarding_type: { sales-led: 50, self-service: 15 }
+
+  - code: "is.org-management.org-audit-log"
+    utilization:
+      total_count: 420
+      dimension_breakdown:
+        action: { viewed: 300, exported: 100, filtered: 20 }
+        export_format: { csv: 70, json: 30 }
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 5500
+      dimension_breakdown:
+        action: { login-success: 5300, login-failed: 200 }
+
+  - code: "is.social-login.apple"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { login-success: 2700, login-failed: 100 }
+
+  - code: "is.customization.identity-verification"
+
+  - code: "is.customization.webhooks"
+    utilization:
+      total_count: 8900
+      dimension_breakdown:
+        event_type: { login: 5000, registration: 2000, user-update: 1500, user-delete: 400 }
+        action: { triggered: 8500, failed: 400 }
+
+  - code: "is.customization.service-extensions"
+    utilization:
+      total_count: 3600
+      dimension_breakdown:
+        extension_point: { pre-issue-access-token: 2500, pre-update-password: 800, pre-registration: 300 }
+        action: { invoked: 3600 }

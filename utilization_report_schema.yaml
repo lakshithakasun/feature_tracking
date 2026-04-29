@@ -1,0 +1,191 @@
+# =============================================================================
+# WSO2 Feature Utilization Report — Common Schema Definition
+# =============================================================================
+# Version  : 1.0.0
+# Purpose  : Authoritative template for submitting feature utilization reports
+#            for any WSO2 product deployment. Every utilization YAML must
+#            conform to this structure.
+#
+# Submission endpoint : POST /utilization/reports  (multipart file upload)
+# Ingestion response  : UtilizationReportResponse
+#                         { id, deployment_id, customer_id, product_id,
+#                           version, report_from, report_to, features_recorded }
+#
+# Pre-requisites (must exist in DB before submitting):
+#   1. Product taxonomy ingested  → POST /catalog/releases
+#   2. Customer registered        → POST /customers
+#   3. Deployment registered      → POST /deployments
+#
+# Ingestion pipeline:
+#   product block    → resolves product_release record (lookup, not inserted)
+#   deployment block → resolves deployment record; cross-validates customer_id
+#   report block     → creates one utilization_report row
+#   features list    → creates one feature_utilization row per matched entry
+#                      unrecognised feature codes are silently skipped
+#
+# Field notation used in comments:
+#   [required]   — must be present; ingestion fails (HTTP 400) without it
+#   [optional]   — may be omitted; system applies the stated default
+#   [lookup]     — value must match an existing record in the database
+#   type(...)    — expected YAML scalar or structure type
+#   enum(...)    — value must be one of the listed options
+#   pattern(...) — value must match the given regex
+#   maps-to      — the DB table / column this field is stored in
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# PRODUCT
+# Identifies which WSO2 product and release version this report belongs to.
+# The parser resolves product_id + version to an existing product_release row.
+# If no matching release is found ingestion fails with HTTP 400.
+# maps-to → product_release table (lookup only — no row is created)
+# -----------------------------------------------------------------------------
+
+product:
+
+  # [required] [lookup] type(string) pattern(^[a-z][a-z0-9-]*$)
+  # Machine-friendly product slug. Must exactly match the product_id of an
+  # already-ingested taxonomy release (POST /catalog/releases).
+  # Also validated to match the product registered against the deployment.
+  # maps-to → product_release.product_id
+  id: "<product-id>"
+
+  # [optional] type(string)
+  # Human-readable product name. Stored for display purposes only.
+  # Not validated against the catalog — any string is accepted.
+  # maps-to → product_release.name (informational, not used for lookup)
+  name: "<Product Display Name>"
+
+  # [required] [lookup] type(string) pattern(^\d+\.\d+\.\d+$)
+  # Semantic version of the product release this report covers.
+  # Must match: (a) an ingested taxonomy release AND
+  #             (b) the version registered on the deployment record.
+  # Mismatch on either check causes HTTP 400.
+  # maps-to → product_release.version
+  version: "<major.minor.patch>"
+
+
+# -----------------------------------------------------------------------------
+# DEPLOYMENT
+# Identifies the specific customer installation that generated this report.
+# The parser looks up the deployment by id and validates ownership.
+# maps-to → deployment table (lookup only — no row is created)
+# -----------------------------------------------------------------------------
+
+deployment:
+
+  # [required] [lookup] type(string)
+  # Unique deployment identifier. Must match the id of a pre-registered
+  # deployment (POST /deployments). If not found, ingestion fails with HTTP 400.
+  # Convention: "<customer-id>-<environment>-<region>"
+  # maps-to → deployment.id
+  id: "<deployment-id>"
+
+  # [required] [lookup] type(string)
+  # The customer that owns this deployment. Cross-validated against the
+  # customer_id stored on the deployment record in the DB.
+  # Mismatch causes HTTP 400 — prevents a customer from submitting reports
+  # for another customer's deployment.
+  # maps-to → deployment.customer_id (validation only)
+  customer_id: "<customer-id>"
+
+
+# -----------------------------------------------------------------------------
+# REPORT
+# Defines the time window this utilization data covers.
+# One YAML submission creates exactly one utilization_report row.
+# There is no deduplication — submitting the same deployment + period twice
+# will create two separate report rows and double-count all events.
+# maps-to → utilization_report table (new row inserted per submission)
+# -----------------------------------------------------------------------------
+
+report:
+
+  # [required] type(string) pattern(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$)
+  # ISO 8601 UTC datetime marking the inclusive start of the reporting period.
+  # Parsed into a Python datetime object via Pydantic alias "from" → period_from.
+  # maps-to → utilization_report.report_from
+  from: "<YYYY-MM-DDT00:00:00Z>"
+
+  # [required] type(string) pattern(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$)
+  # ISO 8601 UTC datetime marking the inclusive end of the reporting period.
+  # Parsed into a Python datetime object via Pydantic alias "to" → period_to.
+  # Recommended convention: last second of the final day (T23:59:59Z).
+  # maps-to → utilization_report.report_to
+  to: "<YYYY-MM-DDT23:59:59Z>"
+
+
+# -----------------------------------------------------------------------------
+# FEATURES
+# List of features that recorded usage during the reporting period.
+# Only include features with actual activity — omitting a feature is the correct
+# way to represent zero usage (no row inserted ≠ total_count: 0 row inserted).
+#
+# Each entry creates one feature_utilization row when:
+#   • the code matches a catalog_feature for this product + version, AND
+#   • a utilization block is present with total_count > 0
+#
+# Entries where the code is not found in the catalog are silently skipped.
+# The API response field features_recorded tells you how many entries were saved.
+# maps-to → feature_utilization table (one row per matched entry)
+# -----------------------------------------------------------------------------
+
+features:
+
+  - # [required] [lookup] type(string)
+    #   pattern(^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)*$)
+    # Dotted-path feature code. Must exactly match a catalog_feature.code for
+    # this product release. Lookup is case-sensitive. Unmatched codes are
+    # silently skipped — check features_recorded in the response to detect drops.
+    # Convention: <product-id>.<category-id>.<action>
+    # maps-to → feature_utilization.feature_code (FK → catalog_feature.code)
+    code: "<product-id>.<category-id>.<feature-action>"
+
+    # [optional] — omit this block entirely to represent a feature with no usage.
+    # When present, total_count is required; dimension_breakdown is optional.
+    # maps-to → feature_utilization row (skipped if block is absent)
+    utilization:
+
+      # [required when utilization block is present] type(integer) min(0)
+      # Total number of event occurrences for this feature in the report period.
+      # This is the primary metric consumed by all reports, dashboards, and
+      # heatmaps. A value of 0 is valid and creates a row recording confirmed
+      # zero usage (differs semantically from an absent utilization block).
+      # maps-to → feature_utilization.total_count
+      total_count: <integer>
+
+      # [optional] type(map of maps)
+      # Contextual breakdown of usage across one or more named dimensions.
+      # Stored as a JSONB column — any valid YAML map is accepted.
+      #
+      # Structure:
+      #   dimension_breakdown:
+      #     <dimension_name>:          ← should match tracking.dimensions[].name
+      #       <dimension_value>: <n>   ← count of events with this value
+      #       <dimension_value>: <n>
+      #     <dimension_name>:
+      #       <dimension_value>: <n>
+      #
+      # Rules:
+      #   • Dimension names should match the dimension names declared in the
+      #     feature's tracking.dimensions list in the taxonomy. Undeclared names
+      #     are stored in JSONB but will not appear in Section C dimension charts.
+      #   • Dimension value counts do not need to sum exactly to total_count.
+      #     A single event may contribute to multiple dimensions simultaneously.
+      #   • Values matching FAILURE_KEYS (verify-failed, login-failed, failed,
+      #     auth-failed, access-denied, expired, denied) are highlighted in red
+      #     in the Product Team report's Dimension Breakdown section.
+      #   • Both block and inline YAML map syntax are valid:
+      #       block:  grant_type:\n  authorization-code: 100
+      #       inline: grant_type: { authorization-code: 100 }
+      # maps-to → feature_utilization.dimension_breakdown (JSONB)
+      dimension_breakdown:
+
+        # Each key is a dimension name. Value is a map of string → integer.
+        <dimension_name_1>:
+          <dimension_value_1a>: <count>
+          <dimension_value_1b>: <count>
+
+        <dimension_name_2>:
+          <dimension_value_2a>: <count>

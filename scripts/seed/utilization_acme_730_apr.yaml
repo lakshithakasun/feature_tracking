@@ -1,0 +1,83 @@
+# Acme Corporation — Enterprise, US East, v7.3.0
+# Follow-up month: solid core usage, slightly softer advanced feature activity.
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.3.0"
+
+deployment:
+  id: "acme-corp-prod-us-73"
+  customer_id: "acme-corp"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 18000
+      dimension_breakdown:
+        grant_type: { authorization-code: 12600, client-credentials: 3600 }
+
+  - code: "is.sso.saml"
+    utilization:
+      total_count: 4000
+      dimension_breakdown:
+        binding_type: { http-post: 3100, http-redirect: 500 }
+
+  - code: "is.mfa.totp"
+    utilization:
+      total_count: 5900
+      dimension_breakdown:
+        action: { verify: 5350, enroll: 220, verify-failed: 30 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 2500
+      dimension_breakdown:
+        action: { authenticate: 2230, enroll: 150, auth-failed: 20 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 1200
+      dimension_breakdown:
+        action: { sent: 1100, verified: 1040, verify-failed: 50, expired: 10 }
+
+  - code: "is.adaptive-auth.ai-step-up"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        outcome: { allowed: 1110, step-up-triggered: 510, denied: 30 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 8700
+      dimension_breakdown:
+        outcome: { step-up-not-triggered: 4680, step-up-triggered: 3240, access-denied: 180 }
+
+  - code: "is.social-login.google"
+    utilization:
+      total_count: 2600
+      dimension_breakdown:
+        action: { login-success: 2430, login-failed: 70 }
+
+  - code: "is.social-login.microsoft"
+    utilization:
+      total_count: 1000
+      dimension_breakdown:
+        action: { login-success: 950, login-failed: 30 }
+
+  - code: "is.user-management.self-registration"
+    utilization:
+      total_count: 380
+      dimension_breakdown:
+        outcome: { success: 332, failed: 18, pending-verification: 10 }
+
+  - code: "is.org-management.org-audit-log"
+    utilization:
+      total_count: 160
+      dimension_breakdown:
+        action: { viewed: 110, exported: 25, filtered: 5 }
+
+  - code: "is.mfa.magic-link"

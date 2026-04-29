@@ -1,0 +1,51 @@
+# SafeSoft Technologies — v7.2.0 Staging
+# Features being trialled: passkey, email OTP, conditional auth, branding AI
+# All staging-only — not live in prod yet → clear pipeline signals for the AM
+product:
+  id: "identity-server"
+  name: "WSO2 Identity Server"
+  version: "7.2.0"
+
+deployment:
+  id: "safesoft-staging-us"
+  customer_id: "safesoft"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "is.sso.oidc"
+    utilization:
+      total_count: 520
+      dimension_breakdown:
+        grant_type: { authorization-code: 450, client-credentials: 70 }
+        response_type: { code: 500, token: 20 }
+
+  - code: "is.mfa.passkey"
+    utilization:
+      total_count: 120
+      dimension_breakdown:
+        action: { authenticate: 100, enroll: 18, auth-failed: 2 }
+        authenticator_type: { platform: 110, cross-platform: 10 }
+
+  - code: "is.mfa.email-otp"
+    utilization:
+      total_count: 380
+      dimension_breakdown:
+        action: { sent: 380, verified: 360, verify-failed: 15, expired: 5 }
+
+  - code: "is.adaptive-auth.conditional-auth"
+    utilization:
+      total_count: 220
+      dimension_breakdown:
+        template: { new-device-based: 120, ip-based: 100 }
+        outcome: { step-up-not-triggered: 130, step-up-triggered: 80, access-denied: 10 }
+
+  - code: "is.branding.branding-ai"
+    utilization:
+      total_count: 8
+      dimension_breakdown:
+        action: { generated: 5, applied: 2, discarded: 1 }
+
+  - code: "is.customization.webhooks"
