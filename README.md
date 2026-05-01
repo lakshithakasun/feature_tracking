@@ -76,51 +76,62 @@ http://127.0.0.1:8001/views
 ### Fastest Setup
 
 1. Clone the repository
-2. Create a local database
-3. Run the setup script:
+2. Run the bootstrap script:
 
 ```bash
-bash scripts/setup_local.sh
+bash scripts/bootstrap_local.sh
 ```
 
-4. Export your database connection string:
+3. Export your database connection string if you are not using the default local values:
 
 ```bash
 export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/feature_tracking"
 ```
 
-5. Start the API:
+4. Start the API:
 
 ```bash
 bash scripts/run_local.sh
 ```
 
-6. In another terminal, seed demo data:
+5. In another terminal, seed demo data:
 
 ```bash
 bash scripts/00_seed_test_data.sh
 ```
 
-7. Open the explorer:
+6. Open the explorer:
 
 ```text
 http://127.0.0.1:8001/views/feature-utilization
 ```
 
-8. Open the stakeholder launcher when needed:
+7. Open the stakeholder launcher when needed:
 
 ```text
 http://127.0.0.1:8001/views
 ```
 
+### PostgreSQL Setup Notes
+
+If you prefer to create the database manually, the typical local commands are:
+
+```bash
+createdb -U postgres feature_tracking
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/feature_tracking"
+```
+
+If your local PostgreSQL server uses a different user, password, host, or port, adjust the `DATABASE_URL` accordingly.
+
 ## Manual Setup
 
-If you prefer not to use the setup script:
+If you prefer not to use the bootstrap script:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/pip install -r requirements.txt
+createdb -U postgres feature_tracking
 export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/feature_tracking"
 .venv/bin/uvicorn app.main:app --reload --port 8001
 ```
@@ -141,6 +152,12 @@ Common variables:
 
 ```bash
 bash scripts/run_local.sh
+```
+
+### Bootstrap local setup
+
+```bash
+bash scripts/bootstrap_local.sh
 ```
 
 ### Clear and reseed demo data
@@ -253,6 +270,14 @@ Use the setup script first, or run:
 
 ```bash
 .venv/bin/uvicorn app.main:app --reload --port 8001
+```
+
+### `psql: command not found` or `createdb: command not found`
+
+Install PostgreSQL client tools first, or create the database another way and then export:
+
+```bash
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/feature_tracking"
 ```
 
 ### `Address already in use`
