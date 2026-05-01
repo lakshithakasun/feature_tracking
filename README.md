@@ -40,7 +40,7 @@ The project exposes two ways to inspect the data:
 Primary landing view:
 
 ```text
-http://127.0.0.1:8001/views
+http://127.0.0.1:8001/views/feature-utilization
 ```
 
 The explorer supports:
@@ -57,7 +57,13 @@ The explorer supports:
 - Regional Managers
 - Technical Owner
 
-These remain available both from the launcher and via direct routes.
+These remain available from the stakeholder launcher and via direct routes.
+
+Stakeholder launcher:
+
+```text
+http://127.0.0.1:8001/views
+```
 
 ## Quick Start
 
@@ -95,7 +101,13 @@ bash scripts/run_local.sh
 bash scripts/00_seed_test_data.sh
 ```
 
-7. Open the launcher:
+7. Open the explorer:
+
+```text
+http://127.0.0.1:8001/views/feature-utilization
+```
+
+8. Open the stakeholder launcher when needed:
 
 ```text
 http://127.0.0.1:8001/views
@@ -180,19 +192,25 @@ python3 scripts/07_generate_schema_diagram.py
 
 ## Web Routes
 
-Launcher:
+Stakeholder launcher:
 
 ```text
 http://127.0.0.1:8001/views
 ```
 
-Explorer:
+Primary explorer:
 
 ```text
 http://127.0.0.1:8001/views/feature-utilization
 http://127.0.0.1:8001/views/feature-utilization?product_id=identity-server
 http://127.0.0.1:8001/views/feature-utilization?product_id=__all__
 ```
+
+Behavior notes:
+
+- `/views/feature-utilization` is the primary landing page and owns its own filters for product, version, and customer scope
+- `/views` is a separate stakeholder launcher for Product Development, Customer Success, Regional Managers, and Technical Owner views
+- the launcher product selector applies only to stakeholder views that support product-specific scope
 
 Direct stakeholder routes:
 

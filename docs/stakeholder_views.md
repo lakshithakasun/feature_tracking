@@ -9,11 +9,15 @@
 This document defines what each stakeholder view should display, how existing data should be visualized for each audience, and what practical data additions would make each view more useful. All data comes from this system — no external CRM or data source integration is needed.
 
 The current repository now exposes:
-- a launcher page at `/views`
-- a unified feature explorer at `/views/feature-utilization`
+- a primary feature explorer at `/views/feature-utilization`
+- a separate stakeholder launcher at `/views`
 - stakeholder-specific HTML views for Product, Customer Success, Regional, and Technical audiences
 
-This document remains the design reference for those views.
+The intended navigation is:
+- start in the feature explorer for filter-driven analysis
+- move to the stakeholder launcher when you want one of the narrative stakeholder summaries
+
+This document remains the design reference for those stakeholder-specific views. The explorer is the common landing layer, but the sections below describe the specialized stakeholder summaries.
 
 ---
 

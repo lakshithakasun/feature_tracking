@@ -1,3 +1,5 @@
+import json
+
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse
 from sqlalchemy import text
@@ -6,6 +8,10 @@ from sqlalchemy.orm import Session
 from app import models
 from app.database import Base, engine, get_session
 from app.report_views import (
+    ALL_PRODUCTS,
+    available_customers,
+    available_products,
+    available_versions,
     render_customer_success,
     render_feature_detail,
     render_feature_utilization,
@@ -74,15 +80,17 @@ def health():
 
 @app.get("/views", response_class=HTMLResponse)
 def report_launcher(request: Request, db: Session = Depends(get_session)):
+    products = available_products(db)
     customers = customer_list(db)
     regions_payload = regional_summary(db)
     regions = sorted(region["region"] for region in regions_payload.get("regions", []))
-    dashboard = dashboard_summary(db, product_id="identity-server")
-    versions = sorted({
-        row["version"]
-        for row in dashboard.get("by_version", [])
-        if row.get("product_id") == "identity-server"
-    })
+
+    product_options = "\n".join(
+        [f'<option value="{ALL_PRODUCTS}">All Products</option>'] + [
+            f'<option value="{product["id"]}">{product["name"]}</option>'
+            for product in products
+        ]
+    )
 
     customer_options = "\n".join(
         f'<option value="{c.id}"{" selected" if i == 0 else ""}>{c.name} ({c.id})</option>'
@@ -92,10 +100,16 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
         f'<option value="{region}">{region}</option>'
         for region in regions
     )
-    version_options = "\n".join(
-        f'<option value="{version}">v{version}</option>'
-        for version in versions
-    )
+    all_versions = sorted({version for product in products for version in available_versions(db, product["id"])})
+    version_options = "\n".join(f'<option value="{version}">v{version}</option>' for version in all_versions)
+    version_map = {
+        ALL_PRODUCTS: all_versions,
+        **{product["id"]: available_versions(db, product["id"]) for product in products},
+    }
+    customer_map = {
+        ALL_PRODUCTS: [{"id": c.id, "name": c.name} for c in customers],
+        **{product["id"]: available_customers(db, product["id"]) for product in products},
+    }
     default_view = "about:blank"
 
     return f"""<!DOCTYPE html>
@@ -126,6 +140,8 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
     .panel {{ background: var(--surface); border-right: 1px solid var(--line); padding: 1.2rem; overflow: auto; }}
     .viewer {{ padding: 1rem; }}
     .card {{ background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border: 1px solid var(--line); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 12px 28px rgba(11, 58, 103, .05); }}
+    .scope-card {{ background: linear-gradient(180deg, #fff7f0 0%, #ffffff 100%); border-color: #ffd2b1; }}
+    .section-label {{ margin: 0 0 .75rem; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); }}
     .card h2 {{ font-size: 1rem; margin: 0 0 .8rem; }}
     .hint {{ color: var(--muted); font-size: .84rem; line-height: 1.5; margin-bottom: .8rem; }}
     label {{ display: block; font-size: .8rem; color: var(--muted); margin: .6rem 0 .35rem; }}
@@ -160,11 +176,28 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
   </div>
   <div class="layout">
     <div class="panel">
+      <div class="section-label">Primary Explorer</div>
+      <div class="card">
+        <h2>Feature Utilization Explorer</h2>
+        <div class="hint">Open the filter-driven explorer for product, version, and customer analysis. This page has its own filters inside, so it does not use the launcher product selection.</div>
+        <button type="button" onclick="openExplorer()">Open Feature Utilization Explorer</button>
+      </div>
+
+      <div class="section-label">Stakeholder Views</div>
+      <div class="card scope-card">
+        <h2>Stakeholder Scope</h2>
+        <div class="hint">Choose the product scope for stakeholder views that support product-specific behavior, including Product Development and Technical Owner.</div>
+        <label for="launcher-product">Product</label>
+        <select id="launcher-product">
+          {product_options}
+        </select>
+      </div>
+
       <div class="card">
         <h2>Product Development</h2>
         <div class="hint">Use the all-versions report for roadmap comparison, or pick a specific release for a focused product version view.</div>
         <div class="top-actions">
-          <button type="button" onclick="openReport('/views/product-dev?product_id=identity-server')">Open All Versions</button>
+          <button type="button" onclick="openProductAllVersions()">Open All Versions</button>
         </div>
         <label for="pd-version">Version-specific view</label>
         <select id="pd-version">
@@ -207,26 +240,54 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
 
     <div class="viewer">
       <div class="card" style="margin-bottom:1rem">
-        <h2>Feature Utilization Explorer</h2>
-        <div class="hint">Use the filter-driven explorer as the primary interactive landing page for product, version, and customer analysis.</div>
-        <button type="button" onclick="window.location='/views/feature-utilization'">Open Feature Utilization Explorer</button>
-      </div>
-      <div class="card" style="margin-bottom:1rem">
         <h2>Stakeholder Report Viewer</h2>
-        <div class="hint">Choose one of the stakeholder views from the left to load it here.</div>
+        <div class="hint">Choose one of the stakeholder views from the left to load it here. The product scope selector belongs to the stakeholder-view group only; the Feature Utilization Explorer opens with its own filters.</div>
       </div>
       <iframe id="reportFrame" src="{default_view}" title="Report Viewer"></iframe>
     </div>
   </div>
 
   <script>
+    const ALL_PRODUCTS = {json.dumps(ALL_PRODUCTS)};
+    const versionsByProduct = {json.dumps(version_map)};
+    const customersByProduct = {json.dumps(customer_map)};
+
     function openReport(path) {{
       document.getElementById('reportFrame').src = path;
     }}
+    function selectedProduct() {{
+      return document.getElementById('launcher-product').value || ALL_PRODUCTS;
+    }}
+    function populateVersionOptions() {{
+      const select = document.getElementById('pd-version');
+      const product = selectedProduct();
+      const versions = versionsByProduct[product] || [];
+      const current = select.value;
+      select.innerHTML = '<option value="">Select version</option>' + versions.map(v => `<option value="${{v}}">v${{v}}</option>`).join('');
+      if (versions.includes(current)) select.value = current;
+    }}
+    function populateCustomerOptions() {{
+      const select = document.getElementById('customer');
+      const product = selectedProduct();
+      const customers = customersByProduct[product] || [];
+      select.innerHTML = customers.map((c, index) => `<option value="${{c.id}}"${{index === 0 ? ' selected' : ''}}>${{c.name}} (${{c.id}})</option>`).join('');
+    }}
+    function openExplorer() {{
+      window.location = '/views/feature-utilization';
+    }}
+    function openProductAllVersions() {{
+      const product = selectedProduct();
+      if (product === ALL_PRODUCTS) {{
+        alert('Select a specific product first for Product Development.');
+        return;
+      }}
+      openReport('/views/product-dev?product_id=' + encodeURIComponent(product));
+    }}
     function openProductVersion() {{
       const version = document.getElementById('pd-version').value;
-      if (!version) return;
-      openReport('/views/product-dev?product_id=identity-server&version=' + encodeURIComponent(version));
+      const product = selectedProduct();
+      if (!version || product === ALL_PRODUCTS) return;
+      openReport('/views/product-dev?product_id=' + encodeURIComponent(product) + '&version=' + encodeURIComponent(version));
     }}
     function openRegion() {{
       const region = document.getElementById('region').value;
@@ -239,8 +300,18 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
         alert('Select a customer first to open the Technical Owner view.');
         return;
       }}
-      openReport('/views/technical-owner?customer_id=' + encodeURIComponent(customer));
+      const product = selectedProduct();
+      const path = product === ALL_PRODUCTS
+        ? '/views/technical-owner?customer_id=' + encodeURIComponent(customer)
+        : '/views/technical-owner?customer_id=' + encodeURIComponent(customer) + '&product_id=' + encodeURIComponent(product);
+      openReport(path);
     }}
+    document.getElementById('launcher-product').addEventListener('change', () => {{
+      populateVersionOptions();
+      populateCustomerOptions();
+    }});
+    populateVersionOptions();
+    populateCustomerOptions();
   </script>
 </body>
 </html>"""

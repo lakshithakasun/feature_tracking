@@ -526,6 +526,11 @@ def render_feature_utilization(
             f"Showing {len(rows)} features for customer scope <strong>{escape(selected_customer)}</strong> "
             f"across <strong>{escape(scope_product_names)}</strong>."
         )
+    elif selected_product == ALL_PRODUCTS:
+        summary_text = (
+            f"Showing {len(rows)} features across <strong>{data['scope_customer_count']}</strong> customers "
+            f"and <strong>all tracked products</strong>."
+        )
     else:
         summary_text = f"Showing {len(rows)} features across <strong>{data['scope_customer_count']}</strong> customers in scope."
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -575,6 +580,15 @@ def render_feature_utilization(
         scope_products_html = (
             f'<div class="scope-note"><strong>Customer product scope:</strong> '
             f'This customer currently has {len(scope_products)} {noun} in the seeded data. {chips}</div>'
+        )
+    elif selected_product == ALL_PRODUCTS:
+        chips = "".join(
+            f'<span class="scope-chip">{escape(product["name"])}</span>'
+            for product in data.get("products", [])
+        )
+        scope_products_html = (
+            f'<div class="scope-note"><strong>All Products scope:</strong> '
+            f'The explorer is currently combining every tracked product in the repository. The table includes a Product column so you can distinguish feature rows. {chips}</div>'
         )
     deprecation_candidates = [
         row for row in sorted(rows, key=lambda item: (item["total_usage"], item["adoption_pct"], item["name"].lower()))
@@ -704,6 +718,9 @@ def render_feature_utilization(
 </head>
 <body>
   <div class="hero">
+    <div style="margin-bottom:.7rem">
+      <a href="{base_url}/views" style="display:inline-block;padding:.38rem .78rem;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;text-decoration:none;font-weight:600;font-size:.84rem">← Back to Stakeholder Launcher</a>
+    </div>
     <h1>Feature Utilization Explorer</h1>
     <p>Filter by product, version, and customer, then click any feature row for a detailed summary.</p>
   </div>
