@@ -1,0 +1,58 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.2.0"
+
+deployment:
+  id: "northbridge-bank-apim-prod-us"
+  customer_id: "northbridge-bank"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 26000
+      dimension_breakdown:
+        grant_type: { authorization-code: 18000, client-credentials: 5000, refresh-token: 3000 }
+
+  - code: "apim.security.jwt-validation"
+    utilization:
+      total_count: 19000
+      dimension_breakdown:
+        outcome: { accepted: 18600, rejected: 260, expired: 140 }
+
+  - code: "apim.security.mtls"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        handshake_result: { success: 2740, failure: 60 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 21000
+      dimension_breakdown:
+        policy: { application: 12000, subscription: 5000, api: 4000 }
+
+  - code: "apim.gateway.request-transformation"
+    utilization:
+      total_count: 1300
+      dimension_breakdown:
+        transform_type: { header: 900, payload: 320, query-param: 80 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 900
+      dimension_breakdown:
+        view: { overview: 450, latency: 250, consumer: 120, usage: 80 }
+
+  - code: "apim.lifecycle.revision-deployment"
+    utilization:
+      total_count: 60
+      dimension_breakdown:
+        environment: { prod: 50, staging: 10 }
+
+  - code: "apim.gateway.response-caching"
+

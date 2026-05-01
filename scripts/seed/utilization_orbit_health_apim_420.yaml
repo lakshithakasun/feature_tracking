@@ -1,0 +1,42 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.2.0"
+
+deployment:
+  id: "orbit-health-apim-prod-ap"
+  customer_id: "orbit-health"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 14000
+      dimension_breakdown:
+        grant_type: { authorization-code: 10000, client-credentials: 2500, refresh-token: 1500 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 12500
+      dimension_breakdown:
+        policy: { application: 7000, subscription: 3500, api: 2000 }
+
+  - code: "apim.portal.portal-subscriptions"
+    utilization:
+      total_count: 1200
+      dimension_breakdown:
+        action: { created: 260, updated: 900, removed: 40 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 80
+      dimension_breakdown:
+        view: { overview: 40, usage: 20, latency: 20 }
+
+  - code: "apim.security.mtls"
+  - code: "apim.gateway.response-caching"
+  - code: "apim.monetization.subscription-plans"
+

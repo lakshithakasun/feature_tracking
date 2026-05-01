@@ -1,0 +1,78 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.3.0"
+
+deployment:
+  id: "bluegrid-tech-apim-prod-us"
+  customer_id: "bluegrid-tech"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 31000
+      dimension_breakdown:
+        grant_type: { authorization-code: 21000, client-credentials: 6500, refresh-token: 3500 }
+
+  - code: "apim.security.jwt-validation"
+    utilization:
+      total_count: 24000
+      dimension_breakdown:
+        outcome: { accepted: 23650, rejected: 220, expired: 130 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 24500
+      dimension_breakdown:
+        policy: { application: 13600, subscription: 6300, api: 4600 }
+
+  - code: "apim.gateway.request-transformation"
+    utilization:
+      total_count: 2500
+      dimension_breakdown:
+        transform_type: { header: 1500, payload: 760, query-param: 240 }
+
+  - code: "apim.gateway.response-caching"
+    utilization:
+      total_count: 1800
+      dimension_breakdown:
+        cache_result: { hit: 1320, miss: 420, refresh: 60 }
+
+  - code: "apim.portal.portal-subscriptions"
+    utilization:
+      total_count: 3600
+      dimension_breakdown:
+        action: { created: 760, updated: 2710, removed: 130 }
+
+  - code: "apim.portal.application-management"
+    utilization:
+      total_count: 2100
+      dimension_breakdown:
+        action: { create: 230, update: 920, token-generate: 920, delete: 30 }
+
+  - code: "apim.lifecycle.version-publishing"
+    utilization:
+      total_count: 180
+      dimension_breakdown:
+        stage: { created: 60, published: 110, deprecated: 10 }
+
+  - code: "apim.lifecycle.revision-deployment"
+    utilization:
+      total_count: 260
+      dimension_breakdown:
+        environment: { prod: 180, staging: 80 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 2200
+      dimension_breakdown:
+        view: { overview: 900, usage: 600, latency: 380, consumer: 320 }
+
+  - code: "apim.analytics.alerting"
+
+  - code: "apim.monetization.subscription-plans"
+

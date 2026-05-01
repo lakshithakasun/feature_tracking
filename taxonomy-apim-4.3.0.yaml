@@ -1,0 +1,332 @@
+schema:
+  version: "1.0.0"
+  id: "https://wso2.com/schemas/feature-taxonomy/v1"
+
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.3.0"
+  description: "API management platform for securing, publishing, operating, and monetizing APIs."
+  team_owner: "apim-engineering"
+  category: "api-management"
+  is_active: true
+
+categories:
+  - id: "security"
+    name: "API Security"
+    description: "Authentication, authorization, transport security, and token validation."
+
+  - id: "gateway"
+    name: "Gateway Traffic"
+    description: "Traffic control, transformations, and runtime gateway behavior."
+
+  - id: "portal"
+    name: "Developer Portal"
+    description: "Consumer application onboarding, subscriptions, and developer experience."
+
+  - id: "lifecycle"
+    name: "API Lifecycle"
+    description: "Publishing, versioning, revisions, and release orchestration."
+
+  - id: "analytics"
+    name: "Analytics & Observability"
+    description: "Usage reporting, monitoring, alerting, and operational analytics."
+
+  - id: "monetization"
+    name: "Monetization"
+    description: "Plans, billing, and commercial API packaging."
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    name: "OAuth2 Token Issuance"
+    description: "Issue and validate OAuth2 access tokens for subscribed applications."
+    category: "security"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.security.oauth2-token-issuance"
+      event_category: "engagement"
+      platforms: ["api", "web"]
+      dimensions:
+        - name: "grant_type"
+          type: "enum"
+          required: true
+          values: ["authorization-code", "client-credentials", "refresh-token", "password"]
+      aggregations:
+        - type: "count"
+          label: "Token Issuance Count"
+
+  - code: "apim.security.jwt-validation"
+    name: "JWT Validation"
+    description: "Gateway validation of self-contained JWT access tokens."
+    category: "security"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.security.jwt-validation"
+      event_category: "engagement"
+      platforms: ["api"]
+      dimensions:
+        - name: "outcome"
+          type: "enum"
+          required: true
+          values: ["accepted", "rejected", "expired"]
+      aggregations:
+        - type: "count"
+          label: "JWT Validation Calls"
+
+  - code: "apim.security.mtls"
+    name: "mTLS"
+    description: "Mutual TLS authentication between clients and the API gateway."
+    category: "security"
+    tier: "enterprise"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.security.mtls"
+      event_category: "engagement"
+      platforms: ["api"]
+      dimensions:
+        - name: "handshake_result"
+          type: "enum"
+          required: true
+          values: ["success", "failure"]
+      aggregations:
+        - type: "count"
+          label: "mTLS Requests"
+
+  - code: "apim.gateway.rate-limiting"
+    name: "Rate Limiting"
+    description: "Runtime throttling and rate limiting policies applied at the gateway."
+    category: "gateway"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.gateway.rate-limiting"
+      event_category: "engagement"
+      platforms: ["api"]
+      dimensions:
+        - name: "policy"
+          type: "enum"
+          required: true
+          values: ["application", "subscription", "resource", "api"]
+      aggregations:
+        - type: "count"
+          label: "Rate Limited Requests"
+
+  - code: "apim.gateway.request-transformation"
+    name: "Request Transformation"
+    description: "Modify request payloads and headers before forwarding traffic."
+    category: "gateway"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.gateway.request-transformation"
+      event_category: "engagement"
+      platforms: ["api"]
+      dimensions:
+        - name: "transform_type"
+          type: "enum"
+          required: true
+          values: ["header", "payload", "query-param"]
+      aggregations:
+        - type: "count"
+          label: "Request Transformations"
+
+  - code: "apim.gateway.response-caching"
+    name: "Response Caching"
+    description: "Cache API responses at the gateway for repeated requests."
+    category: "gateway"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.gateway.response-caching"
+      event_category: "engagement"
+      platforms: ["api"]
+      dimensions:
+        - name: "cache_result"
+          type: "enum"
+          required: true
+          values: ["hit", "miss", "refresh"]
+      aggregations:
+        - type: "count"
+          label: "Gateway Cache Events"
+
+  - code: "apim.portal.portal-subscriptions"
+    name: "Portal Subscriptions"
+    description: "Subscriptions created and managed through the developer portal."
+    category: "portal"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.portal.portal-subscriptions"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          required: true
+          values: ["created", "updated", "removed"]
+      aggregations:
+        - type: "count"
+          label: "Portal Subscription Actions"
+
+  - code: "apim.portal.application-management"
+    name: "Application Management"
+    description: "Create and manage consumer applications in the portal."
+    category: "portal"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.portal.application-management"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "action"
+          type: "enum"
+          required: true
+          values: ["create", "update", "delete", "token-generate"]
+      aggregations:
+        - type: "count"
+          label: "Application Management Actions"
+
+  - code: "apim.lifecycle.version-publishing"
+    name: "Version Publishing"
+    description: "Publish new API versions to the gateway and portal."
+    category: "lifecycle"
+    tier: "core"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.lifecycle.version-publishing"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "stage"
+          type: "enum"
+          required: true
+          values: ["created", "published", "deprecated"]
+      aggregations:
+        - type: "count"
+          label: "Version Publishing Events"
+
+  - code: "apim.lifecycle.revision-deployment"
+    name: "Revision Deployment"
+    description: "Deploy API revisions across runtime environments."
+    category: "lifecycle"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.lifecycle.revision-deployment"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "environment"
+          type: "enum"
+          required: true
+          values: ["dev", "staging", "prod"]
+      aggregations:
+        - type: "count"
+          label: "Revision Deployments"
+
+  - code: "apim.analytics.api-analytics"
+    name: "API Analytics"
+    description: "API-level usage analytics and consumer insights."
+    category: "analytics"
+    tier: "premium"
+    status: "stable"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.analytics.api-analytics"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "view"
+          type: "enum"
+          required: true
+          values: ["overview", "latency", "consumer", "usage"]
+      aggregations:
+        - type: "count"
+          label: "Analytics Views"
+
+  - code: "apim.analytics.alerting"
+    name: "Alerting"
+    description: "Operational alerting based on API traffic and policy conditions."
+    category: "analytics"
+    tier: "premium"
+    status: "beta"
+    availability:
+      introduced_in: "4.3.0"
+    tracking:
+      event_name: "apim.analytics.alerting"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "alert_type"
+          type: "enum"
+          required: true
+          values: ["traffic-spike", "latency", "error-rate"]
+      aggregations:
+        - type: "count"
+          label: "Alerting Events"
+
+  - code: "apim.monetization.subscription-plans"
+    name: "Subscription Plans"
+    description: "Commercial subscription plans for APIs."
+    category: "monetization"
+    tier: "enterprise"
+    status: "beta"
+    availability:
+      introduced_in: "4.2.0"
+    tracking:
+      event_name: "apim.monetization.subscription-plans"
+      event_category: "engagement"
+      platforms: ["web"]
+      dimensions:
+        - name: "plan_action"
+          type: "enum"
+          required: true
+          values: ["created", "updated", "assigned"]
+      aggregations:
+        - type: "count"
+          label: "Subscription Plan Actions"
+
+  - code: "apim.monetization.billing-integration"
+    name: "Billing Integration"
+    description: "Billing connector integration for paid API plans."
+    category: "monetization"
+    tier: "enterprise"
+    status: "experimental"
+    availability:
+      introduced_in: "4.3.0"
+    tracking:
+      event_name: "apim.monetization.billing-integration"
+      event_category: "engagement"
+      platforms: ["web", "api"]
+      dimensions:
+        - name: "billing_action"
+          type: "enum"
+          required: true
+          values: ["configured", "invoice-sent", "payment-failed"]
+      aggregations:
+        - type: "count"
+          label: "Billing Integration Events"

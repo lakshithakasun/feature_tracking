@@ -1,0 +1,52 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.2.0"
+
+deployment:
+  id: "luna-retail-apim-prod-eu"
+  customer_id: "luna-retail"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 22000
+      dimension_breakdown:
+        grant_type: { authorization-code: 16000, client-credentials: 4000, refresh-token: 2000 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 18500
+      dimension_breakdown:
+        policy: { application: 11000, subscription: 4500, api: 3000 }
+
+  - code: "apim.portal.portal-subscriptions"
+    utilization:
+      total_count: 3200
+      dimension_breakdown:
+        action: { created: 700, updated: 2400, removed: 100 }
+
+  - code: "apim.portal.application-management"
+    utilization:
+      total_count: 1600
+      dimension_breakdown:
+        action: { create: 180, update: 840, token-generate: 560, delete: 20 }
+
+  - code: "apim.lifecycle.version-publishing"
+    utilization:
+      total_count: 110
+      dimension_breakdown:
+        stage: { created: 40, published: 65, deprecated: 5 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 420
+      dimension_breakdown:
+        view: { overview: 230, usage: 120, latency: 70 }
+
+  - code: "apim.gateway.response-caching"
+

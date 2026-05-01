@@ -1,0 +1,61 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.3.0"
+
+deployment:
+  id: "acme-corp-apim-prod-us"
+  customer_id: "acme-corp"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 26500
+      dimension_breakdown:
+        grant_type: { authorization-code: 18000, client-credentials: 6000, refresh-token: 2500 }
+
+  - code: "apim.security.jwt-validation"
+    utilization:
+      total_count: 18200
+      dimension_breakdown:
+        outcome: { accepted: 17920, rejected: 180, expired: 100 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 21400
+      dimension_breakdown:
+        policy: { application: 12500, subscription: 5200, api: 3700 }
+
+  - code: "apim.gateway.response-caching"
+
+  - code: "apim.portal.portal-subscriptions"
+    utilization:
+      total_count: 2800
+      dimension_breakdown:
+        action: { created: 620, updated: 2060, removed: 120 }
+
+  - code: "apim.portal.application-management"
+    utilization:
+      total_count: 1750
+      dimension_breakdown:
+        action: { create: 190, update: 730, token-generate: 800, delete: 30 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 1450
+      dimension_breakdown:
+        view: { overview: 610, usage: 420, latency: 250, consumer: 170 }
+
+  - code: "apim.analytics.alerting"
+
+  - code: "apim.lifecycle.revision-deployment"
+    utilization:
+      total_count: 160
+      dimension_breakdown:
+        environment: { prod: 120, staging: 40 }
+
+  - code: "apim.monetization.subscription-plans"

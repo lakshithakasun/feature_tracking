@@ -3,12 +3,14 @@
 # Seed script — loads all test data in order
 #
 # Creates:
-#   Catalogs  : identity-server v7.2.0, v7.3.0
+#   Catalogs  : identity-server v7.2.0, v7.3.0, apim v4.2.0, v4.3.0
 #   Customers : acme-corp, globex, initech, umbrella, cyberdyne,
-#               nova-finance, safesoft, pinnacle, meridian, zephyr
+#               nova-finance, safesoft, pinnacle, meridian, zephyr,
+#               luna-retail, northbridge-bank, orbit-health, vertex-logistics,
+#               bluegrid-tech, summit-pay
 #   Deployments (per customer + version):
-#     acme-corp     → v7.2.0 prod, v7.3.0 prod
-#     globex        → v7.2.0 prod
+#     acme-corp     → IS v7.2.0 prod, IS v7.3.0 prod, APIM v4.3.0 prod
+#     globex        → IS v7.2.0 prod, APIM v4.2.0 prod
 #     initech       → v7.2.0 prod + v7.2.0 staging
 #     umbrella      → v7.3.0 prod
 #     cyberdyne     → v7.3.0 prod
@@ -71,6 +73,8 @@ section() { echo ""; echo "── $1 ──────────────�
 section "Product Catalogs"
 post_file "/catalog/releases" "$ROOT_DIR/taxonomy-7.2.yaml"
 post_file "/catalog/releases" "$ROOT_DIR/taxonomy-7.3.0.yaml"
+post_file "/catalog/releases" "$ROOT_DIR/taxonomy-apim-4.2.0.yaml"
+post_file "/catalog/releases" "$ROOT_DIR/taxonomy-apim-4.3.0.yaml"
 
 # ── 2. CUSTOMERS ──────────────────────────────────────────────────────────────
 
@@ -85,13 +89,21 @@ post_json "/customers" '{"id":"safesoft",      "name":"SafeSoft Technologies",  
 post_json "/customers" '{"id":"pinnacle",      "name":"Pinnacle Healthcare",        "region":"ap-south",    "tier":"premium"}'
 post_json "/customers" '{"id":"meridian",      "name":"Meridian Retail",            "region":"us-west",     "tier":"core"}'
 post_json "/customers" '{"id":"zephyr",        "name":"Zephyr Logistics",           "region":"eu-central",  "tier":"premium"}'
+post_json "/customers" '{"id":"luna-retail",       "name":"Luna Retail",               "region":"eu-west",     "tier":"mid-market"}'
+post_json "/customers" '{"id":"northbridge-bank",  "name":"Northbridge Bank",         "region":"us-east",     "tier":"enterprise"}'
+post_json "/customers" '{"id":"orbit-health",      "name":"Orbit Health",             "region":"ap-southeast","tier":"enterprise"}'
+post_json "/customers" '{"id":"vertex-logistics",  "name":"Vertex Logistics",         "region":"eu-central",  "tier":"mid-market"}'
+post_json "/customers" '{"id":"bluegrid-tech",     "name":"BlueGrid Tech",            "region":"us-west",     "tier":"enterprise"}'
+post_json "/customers" '{"id":"summit-pay",        "name":"Summit Pay",               "region":"ap-south",    "tier":"premium"}'
 
 # ── 3. DEPLOYMENTS ────────────────────────────────────────────────────────────
 
 section "Deployments"
 post_json "/deployments" '{"id":"acme-corp-prod-us",      "customer_id":"acme-corp",    "product_id":"identity-server","version":"7.2.0","environment":"prod"}'
 post_json "/deployments" '{"id":"acme-corp-prod-us-73",   "customer_id":"acme-corp",    "product_id":"identity-server","version":"7.3.0","environment":"prod"}'
+post_json "/deployments" '{"id":"acme-corp-apim-prod-us", "customer_id":"acme-corp",    "product_id":"apim","version":"4.3.0","environment":"prod"}'
 post_json "/deployments" '{"id":"globex-prod-eu",         "customer_id":"globex",       "product_id":"identity-server","version":"7.2.0","environment":"prod"}'
+post_json "/deployments" '{"id":"globex-apim-prod-eu",    "customer_id":"globex",       "product_id":"apim","version":"4.2.0","environment":"prod"}'
 post_json "/deployments" '{"id":"initech-prod-ap",        "customer_id":"initech",      "product_id":"identity-server","version":"7.2.0","environment":"prod"}'
 post_json "/deployments" '{"id":"initech-staging-ap",     "customer_id":"initech",      "product_id":"identity-server","version":"7.2.0","environment":"staging"}'
 post_json "/deployments" '{"id":"umbrella-prod-us",       "customer_id":"umbrella",     "product_id":"identity-server","version":"7.3.0","environment":"prod"}'
@@ -104,6 +116,12 @@ post_json "/deployments" '{"id":"pinnacle-prod-ap",       "customer_id":"pinnacl
 post_json "/deployments" '{"id":"meridian-prod-us",       "customer_id":"meridian",     "product_id":"identity-server","version":"7.2.0","environment":"prod"}'
 post_json "/deployments" '{"id":"zephyr-prod-eu",         "customer_id":"zephyr",       "product_id":"identity-server","version":"7.3.0","environment":"prod"}'
 post_json "/deployments" '{"id":"zephyr-staging-eu",      "customer_id":"zephyr",       "product_id":"identity-server","version":"7.3.0","environment":"staging"}'
+post_json "/deployments" '{"id":"luna-retail-apim-prod-eu",      "customer_id":"luna-retail",      "product_id":"apim","version":"4.2.0","environment":"prod"}'
+post_json "/deployments" '{"id":"northbridge-bank-apim-prod-us", "customer_id":"northbridge-bank", "product_id":"apim","version":"4.2.0","environment":"prod"}'
+post_json "/deployments" '{"id":"orbit-health-apim-prod-ap",     "customer_id":"orbit-health",     "product_id":"apim","version":"4.2.0","environment":"prod"}'
+post_json "/deployments" '{"id":"vertex-logistics-apim-prod-eu", "customer_id":"vertex-logistics", "product_id":"apim","version":"4.3.0","environment":"prod"}'
+post_json "/deployments" '{"id":"bluegrid-tech-apim-prod-us",    "customer_id":"bluegrid-tech",    "product_id":"apim","version":"4.3.0","environment":"prod"}'
+post_json "/deployments" '{"id":"summit-pay-apim-prod-ap",       "customer_id":"summit-pay",       "product_id":"apim","version":"4.3.0","environment":"prod"}'
 
 # ── 4. UTILIZATION REPORTS ────────────────────────────────────────────────────
 
@@ -111,6 +129,8 @@ section "Utilization Reports"
 post_file "/utilization/reports" "$ROOT_DIR/scripts/sample_utilization_report.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_globex_720.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_globex_720_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_globex_apim_420.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_globex_apim_420_apr.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_initech_720_prod.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_initech_720_prod_apr.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_initech_720_staging.yaml"
@@ -119,6 +139,8 @@ post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_cyberdyne_730.yam
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_cyberdyne_730_apr.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_acme_730.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_acme_730_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_acme_apim_430.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_acme_apim_430_apr.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_nova_finance_720_prod.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_nova_finance_720_prod_apr.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_nova_finance_720_staging.yaml"
@@ -133,6 +155,18 @@ post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_zephyr_730_prod.y
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_zephyr_730_prod_apr.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_zephyr_730_staging.yaml"
 post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_umbrella_730_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_luna_retail_apim_420.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_luna_retail_apim_420_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_northbridge_bank_apim_420.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_northbridge_bank_apim_420_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_orbit_health_apim_420.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_orbit_health_apim_420_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_vertex_logistics_apim_430.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_vertex_logistics_apim_430_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_bluegrid_tech_apim_430.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_bluegrid_tech_apim_430_apr.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_summit_pay_apim_430.yaml"
+post_file "/utilization/reports" "$SCRIPT_DIR/seed/utilization_summit_pay_apim_430_apr.yaml"
 
 # ── SUMMARY ───────────────────────────────────────────────────────────────────
 

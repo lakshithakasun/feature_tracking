@@ -1,0 +1,51 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.2.0"
+
+deployment:
+  id: "globex-apim-prod-eu"
+  customer_id: "globex"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 16500
+      dimension_breakdown:
+        grant_type: { authorization-code: 11500, client-credentials: 3400, refresh-token: 1600 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 14400
+      dimension_breakdown:
+        policy: { application: 8200, subscription: 3600, api: 2600 }
+
+  - code: "apim.portal.portal-subscriptions"
+    utilization:
+      total_count: 1940
+      dimension_breakdown:
+        action: { created: 380, updated: 1490, removed: 70 }
+
+  - code: "apim.portal.application-management"
+    utilization:
+      total_count: 760
+      dimension_breakdown:
+        action: { create: 95, update: 345, token-generate: 305, delete: 15 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 620
+      dimension_breakdown:
+        view: { overview: 280, usage: 205, latency: 135 }
+
+  - code: "apim.gateway.response-caching"
+    utilization:
+      total_count: 280
+      dimension_breakdown:
+        cache_result: { hit: 200, miss: 70, refresh: 10 }
+
+  - code: "apim.security.mtls"

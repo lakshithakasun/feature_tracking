@@ -1,0 +1,47 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.3.0"
+
+deployment:
+  id: "summit-pay-apim-prod-ap"
+  customer_id: "summit-pay"
+
+report:
+  from: "2026-03-01T00:00:00Z"
+  to: "2026-03-31T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 20500
+      dimension_breakdown:
+        grant_type: { authorization-code: 14300, client-credentials: 4100, refresh-token: 2100 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 19200
+      dimension_breakdown:
+        policy: { application: 10600, subscription: 5000, api: 3600 }
+
+  - code: "apim.portal.portal-subscriptions"
+    utilization:
+      total_count: 2500
+      dimension_breakdown:
+        action: { created: 520, updated: 1890, removed: 90 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 680
+      dimension_breakdown:
+        view: { overview: 330, usage: 180, latency: 110, consumer: 60 }
+
+  - code: "apim.monetization.subscription-plans"
+    utilization:
+      total_count: 18
+      dimension_breakdown:
+        plan_action: { created: 5, updated: 8, assigned: 5 }
+
+  - code: "apim.monetization.billing-integration"
+  - code: "apim.analytics.alerting"
+

@@ -236,7 +236,7 @@ def usage_metric(feature: dict) -> str:
     return f"{fmt_int(feature['total_count'])} events"
 
 
-def load_account_data(api_base: str, customer_id: str) -> dict:
+def load_account_data(api_base: str, customer_id: str, product_id: str | None = None) -> dict:
     customers = fetch(api_base, "/customers") or []
     customer = next((item for item in customers if item["id"] == customer_id), None)
     if not customer:
@@ -246,6 +246,9 @@ def load_account_data(api_base: str, customer_id: str) -> dict:
     portfolio_item = next((item for item in portfolio if item["customer_id"] == customer_id), None)
     rows = fetch(api_base, f"/reports/customers/{customer_id}/features") or []
 
+    if product_id:
+        rows = [row for row in rows if row.get("product_id") == product_id]
+
     latest_prod_rows, previous_prod_rows, latest_prod_to, previous_prod_to = latest_period_rows(rows, is_prod)
     latest_staging_rows, _, latest_staging_to, _ = latest_period_rows(rows, is_staging)
 
@@ -253,15 +256,20 @@ def load_account_data(api_base: str, customer_id: str) -> dict:
     previous_prod = summarize_snapshot(previous_prod_rows)
     latest_staging = summarize_snapshot(latest_staging_rows)
 
-    product_id = "identity-server"
+    resolved_product_id = product_id or "identity-server"
     version = ""
     if latest_prod_rows:
-        product_id = latest_prod_rows[0]["product_id"]
+        resolved_product_id = latest_prod_rows[0]["product_id"]
         version = latest_prod_rows[0]["version"]
     elif portfolio_item and portfolio_item.get("deployments"):
-        version = portfolio_item["deployments"][0]["version"]
+        deployments = portfolio_item["deployments"]
+        if product_id:
+            deployments = [deployment for deployment in deployments if deployment.get("product_id") == product_id]
+        if deployments:
+            resolved_product_id = deployments[0].get("product_id") or resolved_product_id
+            version = deployments[0]["version"]
 
-    coverage = fetch(api_base, f"/reports/catalog/coverage?product_id={product_id}&version={version}") or []
+    coverage = fetch(api_base, f"/reports/catalog/coverage?product_id={resolved_product_id}&version={version}") or []
     catalog = {row["feature_code"]: row for row in coverage}
 
     return {
@@ -276,7 +284,7 @@ def load_account_data(api_base: str, customer_id: str) -> dict:
         "latest_staging_to": latest_staging_to,
         "catalog": catalog,
         "coverage": coverage,
-        "product_id": product_id,
+        "product_id": resolved_product_id,
         "version": version,
     }
 
@@ -1058,8 +1066,8 @@ def render_alignment(data: dict, model: dict) -> str:
 """
 
 
-def build_html(api_base: str, customer_id: str) -> str:
-    data = load_account_data(api_base, customer_id)
+def build_html(api_base: str, customer_id: str, product_id: str | None = None) -> str:
+    data = load_account_data(api_base, customer_id, product_id=product_id)
     model = build_model(data)
 
     customer = data["customer"]
@@ -1083,7 +1091,7 @@ def build_html(api_base: str, customer_id: str) -> str:
       <span class="eyebrow">Technical Owner Dashboard</span>
       <h1>{customer['name']}</h1>
       <div class="subtitle">
-        Customer ID: <strong>{customer['id']}</strong> · Region: <strong>{customer.get('region') or '—'}</strong> · Tier: <strong>{customer.get('tier') or '—'}</strong> · Version: <strong>{data['version'] or '—'}</strong>
+        Customer ID: <strong>{customer['id']}</strong> · Product: <strong>{data['product_id'] or '—'}</strong> · Region: <strong>{customer.get('region') or '—'}</strong> · Tier: <strong>{customer.get('tier') or '—'}</strong> · Version: <strong>{data['version'] or '—'}</strong>
       </div>
       <div class="subtitle" style="margin-top:.45rem">
         Environments: <strong>{envs}</strong> · Latest prod report: <strong>{latest_report}</strong> · Previous prod report: <strong>{prev_report}</strong> · Generated {generated_at}
@@ -1118,6 +1126,7 @@ def main():
     )
     parser.add_argument("--api", default="http://127.0.0.1:8001", help="API base URL")
     parser.add_argument("--customer", help="Customer ID to generate the technical owner report for")
+    parser.add_argument("--product", default=None, help="Optional product ID to scope the technical owner report")
     parser.add_argument("--customers", nargs="+", default=None, help="Deprecated alias for --customer; only the first customer will be used")
     parser.add_argument("--out", default=None, help="Output HTML path")
     parser.add_argument("--list-customers", action="store_true", help="List customers and exit")
@@ -1144,7 +1153,7 @@ def main():
     if not customer_id:
         parser.error("--customer is required (or use --list-customers)")
 
-    html = build_html(args.api, customer_id)
+    html = build_html(args.api, customer_id, product_id=args.product)
     outfile = args.out or f"reports/technical_owner_{customer_id.replace('-', '_')}.html"
     Path(outfile).write_text(html, encoding="utf-8")
     print(f"\nReport saved → {Path(outfile).resolve()}")

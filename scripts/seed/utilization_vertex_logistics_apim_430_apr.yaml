@@ -1,0 +1,52 @@
+product:
+  id: "apim"
+  name: "WSO2 API Manager"
+  version: "4.3.0"
+
+deployment:
+  id: "vertex-logistics-apim-prod-eu"
+  customer_id: "vertex-logistics"
+
+report:
+  from: "2026-04-01T00:00:00Z"
+  to: "2026-04-30T23:59:59Z"
+
+features:
+  - code: "apim.security.oauth2-token-issuance"
+    utilization:
+      total_count: 18800
+      dimension_breakdown:
+        grant_type: { authorization-code: 13500, client-credentials: 3300, refresh-token: 2000 }
+
+  - code: "apim.security.jwt-validation"
+    utilization:
+      total_count: 10800
+      dimension_breakdown:
+        outcome: { accepted: 10580, rejected: 140, expired: 80 }
+
+  - code: "apim.gateway.rate-limiting"
+    utilization:
+      total_count: 17100
+      dimension_breakdown:
+        policy: { application: 9900, subscription: 4300, api: 2900 }
+
+  - code: "apim.analytics.api-analytics"
+    utilization:
+      total_count: 2500
+      dimension_breakdown:
+        view: { overview: 1100, usage: 720, latency: 420, consumer: 260 }
+
+  - code: "apim.lifecycle.revision-deployment"
+    utilization:
+      total_count: 340
+      dimension_breakdown:
+        environment: { prod: 260, staging: 80 }
+
+  - code: "apim.analytics.alerting"
+    utilization:
+      total_count: 190
+      dimension_breakdown:
+        alert_type: { traffic-spike: 90, latency: 65, error-rate: 35 }
+
+  - code: "apim.gateway.response-caching"
+

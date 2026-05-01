@@ -7,6 +7,8 @@ from app import models
 from app.database import Base, engine, get_session
 from app.report_views import (
     render_customer_success,
+    render_feature_detail,
+    render_feature_utilization,
     render_product_dev,
     render_regional,
     render_technical_owner,
@@ -94,7 +96,7 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
         f'<option value="{version}">v{version}</option>'
         for version in versions
     )
-    default_product_dev = f"{_api_base_from_request(request)}/views/product-dev?product_id=identity-server"
+    default_view = f"{_api_base_from_request(request)}/views/feature-utilization"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -151,6 +153,12 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
   <div class="layout">
     <div class="panel">
       <div class="card">
+        <h2>Feature Utilization Explorer</h2>
+        <div class="hint">Use one filtered view for product, version, and customer scope, then click a feature row to open a deeper feature summary.</div>
+        <button type="button" onclick="openReport('/views/feature-utilization')">Open Feature Utilization Explorer</button>
+      </div>
+
+      <div class="card">
         <h2>Product Development</h2>
         <div class="hint">Use the all-versions report for roadmap comparison, or pick a specific release for a focused product version view.</div>
         <div class="top-actions">
@@ -196,7 +204,7 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
     </div>
 
     <div class="viewer">
-      <iframe id="reportFrame" src="{default_product_dev}" title="Report Viewer"></iframe>
+      <iframe id="reportFrame" src="{default_view}" title="Report Viewer"></iframe>
     </div>
   </div>
 
@@ -548,6 +556,42 @@ def view_product_dev(request: Request, product_id: str = "identity-server", vers
     return render_product_dev(_api_base_from_request(request), product_id=product_id, version=version)
 
 
+@app.get("/views/feature-utilization", response_class=HTMLResponse)
+def view_feature_utilization(
+    request: Request,
+    product_id: str = None,
+    version: str = None,
+    customer_id: str = None,
+    db: Session = Depends(get_session),
+):
+    return render_feature_utilization(
+        db,
+        _api_base_from_request(request),
+        product_id=product_id,
+        version=version,
+        customer_id=customer_id,
+    )
+
+
+@app.get("/views/feature-utilization/detail", response_class=HTMLResponse)
+def view_feature_utilization_detail(
+    request: Request,
+    product_id: str,
+    feature_code: str,
+    version: str = None,
+    customer_id: str = None,
+    db: Session = Depends(get_session),
+):
+    return render_feature_detail(
+        db,
+        _api_base_from_request(request),
+        product_id=product_id,
+        feature_code=feature_code,
+        version=version,
+        customer_id=customer_id,
+    )
+
+
 @app.get("/views/customer-success", response_class=HTMLResponse)
 def view_customer_success(request: Request):
     return render_customer_success(_api_base_from_request(request))
@@ -559,8 +603,8 @@ def view_regional(request: Request, region: str = None):
 
 
 @app.get("/views/technical-owner", response_class=HTMLResponse)
-def view_technical_owner(request: Request, customer_id: str):
-    return render_technical_owner(_api_base_from_request(request), customer_id)
+def view_technical_owner(request: Request, customer_id: str, product_id: str | None = None):
+    return render_technical_owner(_api_base_from_request(request), customer_id, product_id=product_id)
 
 
 # ── REAL-TIME EVENTS ──────────────────────────────────────────────────────────

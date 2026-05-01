@@ -623,11 +623,17 @@ def dimension_breakdown_all(db: Session, product_id: str, version: str):
     return sorted(result, key=lambda x: x["category"])
 
 
-def feature_customer_breakdown(db: Session, feature_code: str):
+def feature_customer_breakdown(
+    db: Session,
+    feature_code: str,
+    product_id: str = None,
+    version: str = None,
+    customer_id: str = None,
+):
     """
     For a specific feature, show usage counts per customer with dimension breakdown.
     """
-    return (
+    q = (
         db.query(
             models.Customer.id.label("customer_id"),
             models.Customer.name.label("customer_name"),
@@ -637,6 +643,7 @@ def feature_customer_breakdown(db: Session, feature_code: str):
             models.ProductRelease.version,
             models.UtilizationReport.report_from,
             models.UtilizationReport.report_to,
+            models.FeatureUtilization.is_enabled,
             models.FeatureUtilization.total_count,
             models.FeatureUtilization.dimension_breakdown,
         )
@@ -646,6 +653,12 @@ def feature_customer_breakdown(db: Session, feature_code: str):
         .join(models.CatalogFeature, models.CatalogFeature.id == models.FeatureUtilization.catalog_feature_id)
         .join(models.ProductRelease, models.ProductRelease.id == models.CatalogFeature.product_release_id)
         .filter(models.CatalogFeature.code == feature_code)
-        .order_by(models.FeatureUtilization.total_count.desc())
-        .all()
     )
+    if product_id:
+        q = q.filter(models.ProductRelease.product_id == product_id)
+    if version:
+        q = q.filter(models.ProductRelease.version == version)
+    if customer_id:
+        q = q.filter(models.Customer.id == customer_id)
+
+    return q.order_by(models.FeatureUtilization.total_count.desc()).all()
