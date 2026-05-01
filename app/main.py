@@ -96,7 +96,7 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
         f'<option value="{version}">v{version}</option>'
         for version in versions
     )
-    default_view = f"{_api_base_from_request(request)}/views/feature-utilization"
+    default_view = "about:blank"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -161,12 +161,6 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
   <div class="layout">
     <div class="panel">
       <div class="card">
-        <h2>Feature Utilization Explorer</h2>
-        <div class="hint">Use one filtered view for product, version, and customer scope, then click a feature row to open a deeper feature summary.</div>
-        <button type="button" onclick="openReport('/views/feature-utilization')">Open Feature Utilization Explorer</button>
-      </div>
-
-      <div class="card">
         <h2>Product Development</h2>
         <div class="hint">Use the all-versions report for roadmap comparison, or pick a specific release for a focused product version view.</div>
         <div class="top-actions">
@@ -212,6 +206,15 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
     </div>
 
     <div class="viewer">
+      <div class="card" style="margin-bottom:1rem">
+        <h2>Feature Utilization Explorer</h2>
+        <div class="hint">Use the filter-driven explorer as the primary interactive landing page for product, version, and customer analysis.</div>
+        <button type="button" onclick="window.location='/views/feature-utilization'">Open Feature Utilization Explorer</button>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <h2>Stakeholder Report Viewer</h2>
+        <div class="hint">Choose one of the stakeholder views from the left to load it here.</div>
+      </div>
       <iframe id="reportFrame" src="{default_view}" title="Report Viewer"></iframe>
     </div>
   </div>
