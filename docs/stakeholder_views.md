@@ -1,12 +1,19 @@
 # WSO2 Feature Utilization — Stakeholder Views
-**Document version:** 2.0  
-**Status:** For review and sign-off before implementation
+**Document version:** 2.1  
+**Status:** Updated to reflect the current repository implementation
 
 ---
 
 ## Purpose
 
 This document defines what each stakeholder view should display, how existing data should be visualized for each audience, and what practical data additions would make each view more useful. All data comes from this system — no external CRM or data source integration is needed.
+
+The current repository now exposes:
+- a launcher page at `/views`
+- a unified feature explorer at `/views/feature-utilization`
+- stakeholder-specific HTML views for Product, Customer Success, Regional, and Technical audiences
+
+This document remains the design reference for those views.
 
 ---
 

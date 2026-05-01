@@ -733,30 +733,31 @@ def build_html(data: dict, product_id: str) -> str:
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {{
-      --brand-dark:  #2a1a4a;
-      --brand-mid:   #4a2d7a;
+      --brand-dark:  #0b3a67;
+      --brand-mid:   #15528d;
+      --brand-accent:#ff7300;
       --high-text:   #166534; --high-bg: #dcfce7; --high-border: #86efac;
-      --mid-text:    #92400e; --mid-bg:  #fef3c7; --mid-border:  #fcd34d;
+      --mid-text:    #9a4300; --mid-bg:  #fff1e6; --mid-border:  #f0a96b;
       --low-text:    #991b1b; --low-bg:  #fee2e2; --low-border:  #fca5a5;
       --zero-text:   #374151; --zero-bg: #f3f4f6; --zero-border: #d1d5db;
     }}
-    body {{ font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; color: #1f2937; }}
+    body {{ font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fb; color: #16233a; }}
     .page-header {{
-      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 58%, var(--brand-accent) 100%);
       color: white; padding: 2.5rem 0 2rem;
     }}
     .page-header .subtitle {{ opacity: .72; font-size: .92rem; }}
     .tag-pill {{ background: rgba(255,255,255,.15); border-radius: 6px; padding: .3rem .75rem; font-size: .75rem; letter-spacing: .05em; }}
-    .stat-card {{ background: white; border-radius: 12px; padding: 1.2rem 1.4rem; box-shadow: 0 1px 4px rgba(0,0,0,.07); height: 100%; }}
+    .stat-card {{ background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius: 12px; padding: 1.2rem 1.4rem; box-shadow: 0 12px 30px rgba(11,58,103,.06); height: 100%; }}
     .stat-card .value {{ font-size: 2rem; font-weight: 700; line-height: 1.1; }}
     .stat-card .label {{ color: #6c757d; font-size: .73rem; text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }}
     .stat-card .sub   {{ font-size: .77rem; color: #6c757d; margin-top: .35rem; }}
-    .section-card {{ background: white; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 1.75rem; }}
+    .section-card {{ background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius: 12px; box-shadow: 0 12px 30px rgba(11,58,103,.06); margin-bottom: 1.75rem; }}
     .section-card .card-header {{ background: none; border-bottom: 1px solid #e9ecef; padding: 1rem 1.4rem; font-weight: 600; font-size: .95rem; display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }}
     .section-card .card-body {{ padding: 1.4rem; }}
     table thead th {{ background: #f8f9fa; font-size: .73rem; text-transform: uppercase; letter-spacing: .04em; color: #6c757d; border-bottom: 2px solid #dee2e6; white-space: nowrap; }}
     table tbody td {{ vertical-align: middle; }}
-    code {{ background: #f0f4ff; color: var(--brand-mid); padding: .1em .35em; border-radius: 4px; font-size: .78em; }}
+    code {{ background: #fff1e6; color: #9a4300; padding: .1em .35em; border-radius: 4px; font-size: .78em; }}
     .tier-high  {{ background: var(--high-bg); color: var(--high-text); border: 1px solid var(--high-border); padding: .2rem .55rem; border-radius: 20px; font-size: .74rem; font-weight: 600; white-space: nowrap; }}
     .tier-mid   {{ background: var(--mid-bg);  color: var(--mid-text);  border: 1px solid var(--mid-border);  padding: .2rem .55rem; border-radius: 20px; font-size: .74rem; font-weight: 600; white-space: nowrap; }}
     .tier-low   {{ background: var(--low-bg);  color: var(--low-text);  border: 1px solid var(--low-border);  padding: .2rem .55rem; border-radius: 20px; font-size: .74rem; font-weight: 600; white-space: nowrap; }}
@@ -766,8 +767,8 @@ def build_html(data: dict, product_id: str) -> str:
     .ft-enterprise {{ background: #fee2e2; color: #991b1b; border-radius: 4px; padding: .1rem .4rem; font-size: .7rem; }}
     .pbar {{ background: #e5e7eb; border-radius: 3px; height: 6px; overflow: hidden; }}
     .pbar-fill {{ height: 100%; border-radius: 3px; }}
-    .insight-box {{ background: #f0f4ff; border-left: 3px solid var(--brand-mid); border-radius: 0 8px 8px 0; padding: .7rem 1rem; font-size: .82rem; color: #374151; margin-top: 1rem; }}
-    .insight-box strong {{ color: var(--brand-mid); }}
+    .insight-box {{ background: #fff7f0; border-left: 3px solid var(--brand-accent); border-radius: 0 8px 8px 0; padding: .7rem 1rem; font-size: .82rem; color: #374151; margin-top: 1rem; }}
+    .insight-box strong {{ color: #9a4300; }}
     .vm-cell {{ border-radius: 5px; padding: .25rem .4rem; font-weight: 600; min-width: 46px; display: inline-block; font-size: .78rem; }}
     .ver-matrix td, .ver-matrix th {{ padding: .35rem .5rem; text-align: center; }}
     .ver-matrix th {{ background: #f8f9fa; font-size: .73rem; }}
@@ -775,7 +776,7 @@ def build_html(data: dict, product_id: str) -> str:
     .combo-row:last-child {{ border-bottom: none; }}
     .combo-pct {{ font-size: 1.25rem; font-weight: 700; min-width: 52px; }}
     .filter-btn {{ font-size: .78rem; padding: .3rem .75rem; border-radius: 20px; border: 1px solid #dee2e6; background: white; color: #6c757d; cursor: pointer; transition: all .15s; }}
-    .filter-btn.active, .filter-btn:hover {{ border-color: var(--brand-mid); color: var(--brand-mid); background: #f0f4ff; }}
+    .filter-btn.active, .filter-btn:hover {{ border-color: var(--brand-accent); color: #9a4300; background: #fff1e6; }}
     .filter-btn.f-high.active  {{ border-color: var(--high-border); color: var(--high-text); background: var(--high-bg); }}
     .filter-btn.f-mid.active   {{ border-color: var(--mid-border);  color: var(--mid-text);  background: var(--mid-bg); }}
     .filter-btn.f-low.active   {{ border-color: var(--low-border);  color: var(--low-text);  background: var(--low-bg); }}
@@ -783,9 +784,9 @@ def build_html(data: dict, product_id: str) -> str:
     tr.drop-critical td {{ background: #fff5f5; }}
     tr.drop-warn td     {{ background: #fffbeb; }}
     .footer {{ color: #9ca3af; font-size: .78rem; padding: 1.5rem 0 2rem; text-align: center; }}
-    .ver-filter-bar {{ background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.07); padding: .65rem 1rem; display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }}
+    .ver-filter-bar {{ background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius: 10px; box-shadow: 0 12px 30px rgba(11,58,103,.06); padding: .65rem 1rem; display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }}
     .ver-btn {{ font-size: .8rem; padding: .3rem .9rem; border-radius: 20px; border: 1px solid #dee2e6; background: white; color: #6c757d; cursor: pointer; transition: all .15s; font-weight: 500; }}
-    .ver-btn.active {{ border-color: var(--brand-mid); color: var(--brand-mid); background: #f0f4ff; font-weight: 600; }}
+    .ver-btn.active {{ border-color: var(--brand-accent); color: #9a4300; background: #fff1e6; font-weight: 600; }}
     .cust-expand-btn {{ background: none; border: none; padding: 0 0 0 .3rem; font-size: .71rem; color: #6366f1; cursor: pointer; white-space: nowrap; }}
     .cust-expand-btn:hover {{ text-decoration: underline; }}
     .cust-names-row {{ background: #f8f9ff !important; }}

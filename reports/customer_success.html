@@ -8,12 +8,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --brand-dark: #173b45;
-      --brand-mid: #2d6a73;
+      --brand-dark: #0b3a67;
+      --brand-mid: #15528d;
+      --brand-accent: #ff7300;
     }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#1f2937; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#16233a; }
     .page-header {
-      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 58%, var(--brand-accent) 100%);
       color: white; padding: 2.4rem 0 2rem;
     }
     .page-header .subtitle { opacity:.78; font-size:.94rem; }
@@ -22,14 +23,14 @@
       padding:.35rem .8rem; font-size:.76rem; letter-spacing:.05em;
     }
     .stat-card {
-      background:white; border-radius:14px; padding:1.2rem 1.3rem;
-      box-shadow:0 2px 10px rgba(15,23,42,.06); height:100%;
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius:14px; padding:1.2rem 1.3rem;
+      box-shadow:0 12px 30px rgba(11,58,103,.06); height:100%;
     }
     .stat-card .value { font-size:1.9rem; font-weight:700; line-height:1; }
     .stat-card .label { color:#64748b; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; margin-top:.35rem; }
     .stat-card .sub { color:#64748b; font-size:.79rem; margin-top:.3rem; }
     .section-card {
-      background:white; border-radius:14px; box-shadow:0 2px 10px rgba(15,23,42,.06);
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius:14px; box-shadow:0 12px 30px rgba(11,58,103,.06);
       margin-bottom:1.5rem; overflow:hidden;
     }
     .section-card .card-header {
@@ -50,12 +51,12 @@
     }
     table tbody td { vertical-align:middle; }
     code {
-      background:#eff6ff; color:#1d4ed8; padding:.1em .35em; border-radius:4px; font-size:.78em;
+      background:#fff1e6; color:#9a4300; padding:.1em .35em; border-radius:4px; font-size:.78em;
     }
     .status-pill {
       display:inline-block; padding:.18rem .55rem; border-radius:999px; font-size:.73rem; font-weight:600;
     }
-    .footer { color:#94a3b8; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }
+    .footer { color:#7b8798; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }
   </style>
 </head>
 <body>
@@ -68,7 +69,7 @@
     </div>
     <h1 class="mb-1" style="font-size:1.95rem;font-weight:700">Customer Success Management Dashboard</h1>
     <div class="subtitle">
-      Generated 2026-04-29 08:23
+      Generated 2026-05-01 13:09
       &nbsp;·&nbsp; objective: retention, growth, and customer value realization
     </div>
   </div>
@@ -79,42 +80,42 @@
 <div class="row g-3 mb-4">
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value text-primary">10</div>
+      <div class="value text-primary">16</div>
       <div class="label">Customers</div>
       <div class="sub">managed accounts</div>
     </div>
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#15803d">2</div>
+      <div class="value" style="color:#15803d">0</div>
       <div class="label">Healthy</div>
       <div class="sub">score ≥ 70%</div>
     </div>
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#b45309">7</div>
+      <div class="value" style="color:#b45309">4</div>
       <div class="label">Moderate</div>
       <div class="sub">score 40-69%</div>
     </div>
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#b91c1c">2</div>
+      <div class="value" style="color:#b91c1c">13</div>
       <div class="label">Risk Signals</div>
       <div class="sub">needs CSM attention</div>
     </div>
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#1d4ed8">54%</div>
+      <div class="value" style="color:#1d4ed8">23%</div>
       <div class="label">Avg Adoption</div>
       <div class="sub">health score</div>
     </div>
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#7c3aed">2</div>
+      <div class="value" style="color:#7c3aed">3</div>
       <div class="label">Declining</div>
       <div class="sub">trend signal</div>
     </div>
@@ -133,7 +134,7 @@
       <div class="card-body" style="padding:1rem 1.2rem">
         <div style="font-size:.92rem;color:#374151;line-height:1.6">
           This dashboard focuses on customer value, adoption breadth, underused capabilities,
-          and early churn signals. Average current production event volume per customer is <strong>82.9k</strong>.
+          and early churn signals. Average current production event volume per customer is <strong>80.5k</strong>.
         </div>
         <div class="text-muted mt-2" style="font-size:.82rem;line-height:1.6">
           Healthy / Moderate come from the adoption score in Section 1.
@@ -150,7 +151,7 @@ new Chart(document.getElementById('healthDistChart'), {
   type: 'doughnut',
   data: {
     labels: ["Healthy", "Moderate", "At Risk"],
-    datasets: [{ data: [2, 7, 1], backgroundColor: ["#15803d", "#b45309", "#b91c1c"], borderWidth: 0 }]
+    datasets: [{ data: [0, 4, 12], backgroundColor: ["#15803d", "#b45309", "#b91c1c"], borderWidth: 0 }]
   },
   options: {
     cutout: '62%',
@@ -183,6 +184,54 @@ new Chart(document.getElementById('healthDistChart'), {
       </thead>
       <tbody>
         <tr>
+          <td class="ps-3"><strong>BlueGrid Tech</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
+          <td>Beginner</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:0%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">0/0</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Luna Retail</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#f3f4f6;color:#6b7280">mid-market</span></td>
+          <td>Beginner</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:0%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">0/0</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Northbridge Bank</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
+          <td>Beginner</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:0%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">0/0</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Orbit Health</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
+          <td>Beginner</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:0%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">0/0</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Summit Pay</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
+          <td>Beginner</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:0%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">0/0</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Vertex Logistics</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#f3f4f6;color:#6b7280">mid-market</span></td>
+          <td>Beginner</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:0%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">0/0</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
           <td class="ps-3"><strong>Umbrella Corp</strong></td>
           <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#e5e7eb;color:#374151">core</span></td>
           <td>Beginner</td>
@@ -191,33 +240,65 @@ new Chart(document.getElementById('healthDistChart'), {
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Acme Corporation</strong></td>
-          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
-          <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:44%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">7/16</span></div></td>
-          <td class="text-center"><strong style="color:#b45309">44%</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-        </tr>
-        <tr>
           <td class="ps-3"><strong>Initech Systems</strong></td>
           <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
           <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:44%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">7/16</span></div></td>
-          <td class="text-center"><strong style="color:#b45309">44%</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:31%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">5/16</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">31%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Nova Financial Services</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
+          <td>Advanced</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:31%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">5/16</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">31%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
           <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
           <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:47%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">7/15</span></div></td>
-          <td class="text-center"><strong style="color:#b45309">47%</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:33%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">5/15</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">33%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
+          <td>Advanced</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:33%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">5/15</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">33%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Acme Corporation</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
+          <td>Advanced</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:38%;background:#b91c1c"></div></div><span style="font-size:.76rem;white-space:nowrap">6/16</span></div></td>
+          <td class="text-center"><strong style="color:#b91c1c">38%</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Globex Corporation</strong></td>
           <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
           <td>Intermediate</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:40%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">6/15</span></div></td>
+          <td class="text-center"><strong style="color:#b45309">40%</strong></td>
+          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#e5e7eb;color:#374151">core</span></td>
+          <td>Advanced</td>
+          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:45%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">5/11</span></div></td>
+          <td class="text-center"><strong style="color:#b45309">45%</strong></td>
+          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
+          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
+          <td>Advanced</td>
           <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:47%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">7/15</span></div></td>
           <td class="text-center"><strong style="color:#b45309">47%</strong></td>
           <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
@@ -229,38 +310,6 @@ new Chart(document.getElementById('healthDistChart'), {
           <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:64%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">7/11</span></div></td>
           <td class="text-center"><strong style="color:#b45309">64%</strong></td>
           <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
-          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#e5e7eb;color:#374151">core</span></td>
-          <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:64%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">7/11</span></div></td>
-          <td class="text-center"><strong style="color:#b45309">64%</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Nova Financial Services</strong></td>
-          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fee2e2;color:#991b1b">enterprise</span></td>
-          <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:69%;background:#b45309"></div></div><span style="font-size:.76rem;white-space:nowrap">11/16</span></div></td>
-          <td class="text-center"><strong style="color:#b45309">69%</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
-          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
-          <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:73%;background:#15803d"></div></div><span style="font-size:.76rem;white-space:nowrap">11/15</span></div></td>
-          <td class="text-center"><strong style="color:#15803d">73%</strong></td>
-          <td><span class="status-pill" style="background:#dcfce7;color:#15803d">Healthy</span></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
-          <td><span style="padding:.15rem .45rem;border-radius:999px;font-size:.72rem;background:#fef3c7;color:#92400e">premium</span></td>
-          <td>Advanced</td>
-          <td style="min-width:160px"><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;border-radius:999px;background:#e5e7eb"><div class="progress-bar" style="width:80%;background:#15803d"></div></div><span style="font-size:.76rem;white-space:nowrap">12/15</span></div></td>
-          <td class="text-center"><strong style="color:#15803d">80%</strong></td>
-          <td><span class="status-pill" style="background:#dcfce7;color:#15803d">Healthy</span></td>
         </tr></tbody>
     </table>
   </div>
@@ -296,7 +345,14 @@ new Chart(document.getElementById('healthDistChart'), {
           <tbody>
         <tr>
           <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
-          <td>User Management</td>
+          <td>Organization Management (B2B)</td>
+          <td class="text-center">10</td>
+          <td class="text-center">0</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Acme Corporation</strong></td>
+          <td>Identity Governance</td>
           <td class="text-center">7</td>
           <td class="text-center">0</td>
           <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
@@ -330,8 +386,15 @@ new Chart(document.getElementById('healthDistChart'), {
           <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Acme Corporation</strong></td>
-          <td>Enterprise Login</td>
+          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
+          <td>User Management</td>
+          <td class="text-center">7</td>
+          <td class="text-center">0</td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
+          <td>Social Login</td>
           <td class="text-center">6</td>
           <td class="text-center">0</td>
           <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
@@ -345,13 +408,6 @@ new Chart(document.getElementById('healthDistChart'), {
         </tr>
         <tr>
           <td class="ps-3"><strong>Umbrella Corp</strong></td>
-          <td>Social Login</td>
-          <td class="text-center">6</td>
-          <td class="text-center">0</td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
           <td>Social Login</td>
           <td class="text-center">6</td>
           <td class="text-center">0</td>
@@ -365,13 +421,6 @@ new Chart(document.getElementById('healthDistChart'), {
           <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
-          <td>Application Management</td>
-          <td class="text-center">2</td>
-          <td class="text-center">0</td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
-        </tr>
-        <tr>
           <td class="ps-3"><strong>Acme Corporation</strong></td>
           <td>Organization Management (B2B)</td>
           <td class="text-center">10</td>
@@ -379,53 +428,53 @@ new Chart(document.getElementById('healthDistChart'), {
           <td class="text-center"><strong style="color:#b91c1c">10%</strong></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Nova Financial Services</strong></td>
-          <td>User Management</td>
-          <td class="text-center">7</td>
-          <td class="text-center">1</td>
-          <td class="text-center"><strong style="color:#b91c1c">14%</strong></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
-          <td>User Management</td>
-          <td class="text-center">7</td>
-          <td class="text-center">1</td>
-          <td class="text-center"><strong style="color:#b91c1c">14%</strong></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
-          <td>User Self-Service</td>
-          <td class="text-center">6</td>
-          <td class="text-center">1</td>
-          <td class="text-center"><strong style="color:#b91c1c">17%</strong></td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
+          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
           <td>Identity Governance</td>
           <td class="text-center">6</td>
           <td class="text-center">1</td>
           <td class="text-center"><strong style="color:#b91c1c">17%</strong></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
+          <td class="ps-3"><strong>Initech Systems</strong></td>
+          <td>Identity Governance</td>
+          <td class="text-center">6</td>
+          <td class="text-center">1</td>
+          <td class="text-center"><strong style="color:#b91c1c">17%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
+          <td>Identity Governance</td>
+          <td class="text-center">6</td>
+          <td class="text-center">1</td>
+          <td class="text-center"><strong style="color:#b91c1c">17%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
           <td>Organization Management (B2B)</td>
           <td class="text-center">10</td>
           <td class="text-center">2</td>
           <td class="text-center"><strong style="color:#b91c1c">20%</strong></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Globex Corporation</strong></td>
-          <td>Branding & UX</td>
+          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
+          <td>Multi-Factor Authentication (MFA)</td>
           <td class="text-center">5</td>
           <td class="text-center">1</td>
           <td class="text-center"><strong style="color:#b91c1c">20%</strong></td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Initech Systems</strong></td>
+          <td class="ps-3"><strong>Nova Financial Services</strong></td>
           <td>Multi-Factor Authentication (MFA)</td>
           <td class="text-center">8</td>
           <td class="text-center">2</td>
           <td class="text-center"><strong style="color:#b91c1c">25%</strong></td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Globex Corporation</strong></td>
+          <td>Multi-Factor Authentication (MFA)</td>
+          <td class="text-center">7</td>
+          <td class="text-center">2</td>
+          <td class="text-center"><strong style="color:#b91c1c">29%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Meridian Retail</strong></td>
@@ -443,8 +492,8 @@ new Chart(document.getElementById('healthDistChart'), {
 new Chart(document.getElementById('coverageChart'), {
   type: 'bar',
   data: {
-    labels: ["eID Login", "Application Management", "User Self-Service", "User Stores", "Social Login", "User Management", "Organization Management (B2B)", "Branding & UX"],
-    datasets: [{ data: [0, 8, 10, 10, 17, 19, 20, 22], backgroundColor: ["#1f6f78", "#d97706", "#4f772d", "#b45309", "#0f766e", "#9f1239", "#2563eb", "#7c3aed"], borderRadius: 4 }]
+    labels: ["Application Management", "User Stores", "eID Login", "User Management", "User Self-Service", "User Provisioning", "Organization Management (B2B)", "Branding & UX"],
+    datasets: [{ data: [0, 0, 0, 5, 6, 7, 8, 10], backgroundColor: ["#0b3a67", "#ff7300", "#1f6f78", "#4f772d", "#15528d", "#9f1239", "#7c3aed", "#047857"], borderRadius: 4 }]
   },
   options: {
     indexAxis: 'y',
@@ -488,14 +537,32 @@ new Chart(document.getElementById('coverageChart'), {
           <td>Enabled but no observed usage</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
-          <td><code>is.customization.identity-verification</code><div style="font-size:.82rem">Identity Verification</div></td>
+          <td class="ps-3"><strong>Acme Corporation</strong></td>
+          <td><code>apim.monetization.subscription-plans</code><div style="font-size:.82rem">Subscription Plans</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Initech Systems</strong></td>
-          <td><code>is.mfa.passkey</code><div style="font-size:.82rem">Passkey / FIDO2 (WebAuthn)</div></td>
+          <td class="ps-3"><strong>BlueGrid Tech</strong></td>
+          <td><code>apim.monetization.subscription-plans</code><div style="font-size:.82rem">Subscription Plans</div></td>
+          <td>Enabled</td>
+          <td>Enabled but no observed usage</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
+          <td><code>is.org-management.org-discovery</code><div style="font-size:.82rem">Organization Discovery</div></td>
+          <td>Enabled</td>
+          <td>Enabled but no observed usage</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Globex Corporation</strong></td>
+          <td><code>apim.security.mtls</code><div style="font-size:.82rem">mTLS</div></td>
+          <td>Enabled</td>
+          <td>Enabled but no observed usage</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Luna Retail</strong></td>
+          <td><code>apim.gateway.response-caching</code><div style="font-size:.82rem">Response Caching</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
         </tr>
@@ -506,26 +573,38 @@ new Chart(document.getElementById('coverageChart'), {
           <td>Enabled but no observed usage</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Nova Financial Services</strong></td>
-          <td><code>is.customization.identity-verification</code><div style="font-size:.82rem">Identity Verification</div></td>
+          <td class="ps-3"><strong>Northbridge Bank</strong></td>
+          <td><code>apim.gateway.response-caching</code><div style="font-size:.82rem">Response Caching</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
-          <td><code>is.authorization.user-impersonation</code><div style="font-size:.82rem">User Impersonation</div></td>
+          <td class="ps-3"><strong>Orbit Health</strong></td>
+          <td><code>apim.gateway.response-caching</code><div style="font-size:.82rem">Response Caching</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
-          <td><code>is.adaptive-auth.conditional-auth</code><div style="font-size:.82rem">Conditional Authentication</div></td>
+          <td class="ps-3"><strong>Orbit Health</strong></td>
+          <td><code>apim.monetization.subscription-plans</code><div style="font-size:.82rem">Subscription Plans</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
-          <td><code>is.mfa.email-otp</code><div style="font-size:.82rem">Email OTP</div></td>
+          <td class="ps-3"><strong>Orbit Health</strong></td>
+          <td><code>apim.security.mtls</code><div style="font-size:.82rem">mTLS</div></td>
+          <td>Enabled</td>
+          <td>Enabled but no observed usage</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Summit Pay</strong></td>
+          <td><code>apim.analytics.alerting</code><div style="font-size:.82rem">Alerting</div></td>
+          <td>Enabled</td>
+          <td>Enabled but no observed usage</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Summit Pay</strong></td>
+          <td><code>apim.monetization.billing-integration</code><div style="font-size:.82rem">Billing Integration</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
         </tr>
@@ -594,36 +673,6 @@ new Chart(document.getElementById('coverageChart'), {
           <td><code>is.user-management.self-registration</code><div style="font-size:.82rem">User Self-Registration</div></td>
           <td>Enabled</td>
           <td>Enabled but no observed usage</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
-          <td><code>is.org-management.org-discovery</code><div style="font-size:.82rem">Organization Discovery</div></td>
-          <td>Enabled</td>
-          <td>Enabled but no observed usage</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Meridian Retail</strong></td>
-          <td><code>is.governance.notification-settings</code><div style="font-size:.82rem">Notification Settings</div></td>
-          <td>Enabled</td>
-          <td>Enabled but low usage (15 events)</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
-          <td><code>is.branding.ui-branding</code><div style="font-size:.82rem">UI Branding</div></td>
-          <td>Enabled</td>
-          <td>Enabled but low usage (18 events)</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Meridian Retail</strong></td>
-          <td><code>is.branding.email-templates</code><div style="font-size:.82rem">Email Template Customization</div></td>
-          <td>Enabled</td>
-          <td>Enabled but low usage (24 events)</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Initech Systems</strong></td>
-          <td><code>is.user-stores.configure</code><div style="font-size:.82rem">User Store Configuration</div></td>
-          <td>Enabled</td>
-          <td>Enabled but low usage (28 events)</td>
         </tr></tbody>
     </table>
   </div>
@@ -654,68 +703,108 @@ new Chart(document.getElementById('coverageChart'), {
       </thead>
       <tbody>
         <tr>
-          <td class="ps-3"><strong>Acme Corporation</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
-          <td class="text-end">49.6k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="ps-3"><strong>BlueGrid Tech</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">92.1k</td>
+          <td class="text-end">95.0k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">3%</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Initech Systems</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
-          <td class="text-end">78.2k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="ps-3"><strong>Luna Retail</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">45.8k</td>
+          <td class="text-end">43.3k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">-5%</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
-          <td class="text-end">92.6k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="ps-3"><strong>Northbridge Bank</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">71.1k</td>
+          <td class="text-end">76.0k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">7%</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Globex Corporation</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
-          <td class="text-end">61.4k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="ps-3"><strong>Orbit Health</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">27.8k</td>
+          <td class="text-end">28.4k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">2%</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
-          <td class="text-end">11.2k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="ps-3"><strong>Summit Pay</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">42.9k</td>
+          <td class="text-end">44.3k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">3%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Vertex Logistics</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">44.7k</td>
+          <td class="text-end">49.7k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">11%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Nova Financial Services</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
+          <td>2026-05</td>
           <td class="text-end">115.7k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="text-end">107.9k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">-7%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">92.6k</td>
+          <td class="text-end">100.5k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">9%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
+          <td>2026-05</td>
           <td class="text-end">122.4k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="text-end">136.7k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">12%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Acme Corporation</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">121.9k</td>
+          <td class="text-end">124.2k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">2%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Globex Corporation</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">97.1k</td>
+          <td class="text-end">91.2k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">-6%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">11.2k</td>
+          <td class="text-end">10.9k</td>
+          <td><span style="color:#64748b;font-weight:600">➡ Stable</span></td>
+          <td class="text-muted">-3%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Zephyr Logistics</strong></td>
-          <td>2026-04</td>
-          <td class="text-end">N/A</td>
+          <td>2026-05</td>
           <td class="text-end">200.3k</td>
-          <td><span style="color:#64748b;font-weight:600">➡ Baseline only</span></td>
-          <td class="text-muted">single period</td>
+          <td class="text-end">236.6k</td>
+          <td><span style="color:#15803d;font-weight:600">⬆ Growing</span></td>
+          <td class="text-muted">18%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Umbrella Corp</strong></td>
@@ -724,6 +813,14 @@ new Chart(document.getElementById('coverageChart'), {
           <td class="text-end">2.5k</td>
           <td><span style="color:#b91c1c;font-weight:600">⬇ Declining</span></td>
           <td class="text-muted">-88%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Initech Systems</strong></td>
+          <td>2026-05</td>
+          <td class="text-end">78.2k</td>
+          <td class="text-end">45.8k</td>
+          <td><span style="color:#b91c1c;font-weight:600">⬇ Declining</span></td>
+          <td class="text-muted">-41%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Meridian Retail</strong></td>
@@ -744,7 +841,7 @@ new Chart(document.getElementById('trendChart'), {
     labels: ["2026-04", "2026-05"],
     datasets: [{
       label: 'Portfolio Events',
-      data: [961529, 98035],
+      data: [1393937, 1288639],
       borderColor: '#1f6f78',
       backgroundColor: 'rgba(31,111,120,.12)',
       fill: true,
@@ -788,16 +885,76 @@ new Chart(document.getElementById('trendChart'), {
             </thead>
             <tbody>
         <tr>
+          <td class="ps-3"><strong>BlueGrid Tech</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (0%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Luna Retail</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (0%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Northbridge Bank</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (0%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Orbit Health</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (0%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Summit Pay</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (0%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Vertex Logistics</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (0%)</td>
+        </tr>
+        <tr>
           <td class="ps-3"><strong>Umbrella Corp</strong></td>
           <td>Beginner</td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
           <td>Low adoption score (9%)</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>Meridian Retail</strong></td>
+          <td class="ps-3"><strong>Initech Systems</strong></td>
           <td>Advanced</td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-          <td>Usage declining</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (31%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Nova Financial Services</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (31%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (33%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (33%)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Acme Corporation</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Low adoption score (38%)</td>
         </tr></tbody>
           </table>
         </div>
@@ -816,40 +973,22 @@ new Chart(document.getElementById('trendChart'), {
             </thead>
             <tbody>
         <tr>
-          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
-          <td>Advanced</td>
-          <td><span class="status-pill" style="background:#dcfce7;color:#15803d">Healthy</span></td>
-          <td>Expand Social Login</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
-          <td>Advanced</td>
-          <td><span class="status-pill" style="background:#dcfce7;color:#15803d">Healthy</span></td>
-          <td>Expand Application Management</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Nova Financial Services</strong></td>
-          <td>Advanced</td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-          <td>Expand Organization Management (B2B)</td>
-        </tr>
-        <tr>
           <td class="ps-3"><strong>Meridian Retail</strong></td>
           <td>Advanced</td>
           <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
           <td>Expand Application Management</td>
         </tr>
         <tr>
+          <td class="ps-3"><strong>Zephyr Logistics</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
+          <td>Governance</td>
+        </tr>
+        <tr>
           <td class="ps-3"><strong>SafeSoft Technologies</strong></td>
           <td>Advanced</td>
           <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-          <td>Expand Application Management</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
-          <td>Advanced</td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-          <td>Expand Application Management</td>
+          <td>Federation (SAML/OIDC)</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Globex Corporation</strong></td>
@@ -860,20 +999,50 @@ new Chart(document.getElementById('trendChart'), {
         <tr>
           <td class="ps-3"><strong>Acme Corporation</strong></td>
           <td>Advanced</td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-          <td>Expand Application Management</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Governance</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Cyberdyne Systems</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Federation (SAML/OIDC)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Pinnacle Healthcare</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Federation (SAML/OIDC)</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Initech Systems</strong></td>
           <td>Advanced</td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Moderate</span></td>
-          <td>Federation (SAML/OIDC), Adaptive Auth</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Federation (SAML/OIDC)</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Nova Financial Services</strong></td>
+          <td>Advanced</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Federation (SAML/OIDC)</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Umbrella Corp</strong></td>
           <td>Beginner</td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
           <td>MFA, Federation (SAML/OIDC), Governance</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>BlueGrid Tech</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Maintain current adoption</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>Luna Retail</strong></td>
+          <td>Beginner</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">At Risk</span></td>
+          <td>Maintain current adoption</td>
         </tr></tbody>
           </table>
         </div>
@@ -885,7 +1054,7 @@ new Chart(document.getElementById('trendChart'), {
 
 <div class="footer container">
   WSO2 Feature Utilization — Customer Success Management Dashboard
-  &nbsp;·&nbsp; Generated 2026-04-29 08:23
+  &nbsp;·&nbsp; Generated 2026-05-01 13:09
 </div>
 
 </body>

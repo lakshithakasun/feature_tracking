@@ -106,22 +106,26 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
   <title>Report Launcher</title>
   <style>
     :root {{
-      --bg: #f4f7fb;
+      --bg: #f5f7fb;
       --surface: #ffffff;
-      --ink: #162033;
-      --muted: #66758a;
-      --line: #dde5ee;
-      --brand: #214d74;
-      --brand-2: #2d6a73;
+      --ink: #16233a;
+      --muted: #62748d;
+      --line: #d6e0ea;
+      --brand: #0b3a67;
+      --brand-2: #ff7300;
+      --brand-soft: #fff1e6;
+      --brand-soft-2: #eaf2fb;
+      --accent: #ff7300;
+      --accent-deep: #d95f00;
     }}
     body {{ margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); }}
-    .hero {{ background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: white; padding: 1.6rem 1.8rem; }}
+    .hero {{ background: linear-gradient(135deg, var(--brand) 0%, #15528d 58%, var(--brand-2) 100%); color: white; padding: 1.6rem 1.8rem; }}
     .hero h1 {{ margin: 0 0 .4rem; font-size: 1.7rem; }}
     .hero p {{ margin: 0; opacity: .82; }}
     .layout {{ display: grid; grid-template-columns: 360px 1fr; min-height: calc(100vh - 104px); }}
     .panel {{ background: var(--surface); border-right: 1px solid var(--line); padding: 1.2rem; overflow: auto; }}
     .viewer {{ padding: 1rem; }}
-    .card {{ background: #fbfdff; border: 1px solid var(--line); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; }}
+    .card {{ background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border: 1px solid var(--line); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 12px 28px rgba(11, 58, 103, .05); }}
     .card h2 {{ font-size: 1rem; margin: 0 0 .8rem; }}
     .hint {{ color: var(--muted); font-size: .84rem; line-height: 1.5; margin-bottom: .8rem; }}
     label {{ display: block; font-size: .8rem; color: var(--muted); margin: .6rem 0 .35rem; }}
@@ -129,13 +133,17 @@ def report_launcher(request: Request, db: Session = Depends(get_session)):
       width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid var(--line);
       padding: .7rem .8rem; font-size: .92rem; background: white;
     }}
+    select:focus, button:focus {{ outline: none; box-shadow: 0 0 0 3px rgba(255, 115, 0, .16); border-color: var(--accent); }}
     button {{
-      background: var(--brand); color: white; border: none; font-weight: 600; cursor: pointer; margin-top: .85rem;
+      background: linear-gradient(135deg, var(--brand), #15528d); color: white; border: none; font-weight: 600; cursor: pointer; margin-top: .85rem;
+      box-shadow: 0 12px 22px rgba(11, 58, 103, .16); transition: transform .12s, box-shadow .12s, background .12s;
     }}
-    button.secondary {{ background: #eef4fa; color: var(--brand); border: 1px solid #c9d7e6; }}
+    button:hover {{ transform: translateY(-1px); box-shadow: 0 16px 28px rgba(11, 58, 103, .22); }}
+    button.secondary {{ background: linear-gradient(180deg, #fff7f0 0%, var(--brand-soft) 100%); color: var(--accent-deep); border: 1px solid #ffd2b1; box-shadow: none; }}
+    button.secondary:hover {{ background: #ffe7d3; box-shadow: 0 10px 18px rgba(255, 115, 0, .14); }}
     iframe {{
       width: 100%; min-height: calc(100vh - 140px); border: 1px solid var(--line); border-radius: 16px;
-      background: white; box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+      background: white; box-shadow: 0 14px 34px rgba(11, 58, 103, .08);
     }}
     .top-actions {{ display: grid; gap: .7rem; }}
     @media (max-width: 1100px) {{

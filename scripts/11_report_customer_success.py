@@ -29,8 +29,8 @@ from pathlib import Path
 
 
 PALETTE = [
-    "#1f6f78", "#d97706", "#4f772d", "#b45309", "#0f766e",
-    "#9f1239", "#2563eb", "#7c3aed", "#047857", "#b91c1c",
+    "#0b3a67", "#ff7300", "#1f6f78", "#4f772d", "#15528d",
+    "#9f1239", "#7c3aed", "#047857", "#b91c1c", "#d95f00",
 ]
 
 TIER_ORDER = {"core": 1, "premium": 2, "enterprise": 3}
@@ -890,12 +890,13 @@ def build_html(api_base: str) -> str:
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {{
-      --brand-dark: #173b45;
-      --brand-mid: #2d6a73;
+      --brand-dark: #0b3a67;
+      --brand-mid: #15528d;
+      --brand-accent: #ff7300;
     }}
-    body {{ font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#1f2937; }}
+    body {{ font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#16233a; }}
     .page-header {{
-      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 58%, var(--brand-accent) 100%);
       color: white; padding: 2.4rem 0 2rem;
     }}
     .page-header .subtitle {{ opacity:.78; font-size:.94rem; }}
@@ -904,14 +905,14 @@ def build_html(api_base: str) -> str:
       padding:.35rem .8rem; font-size:.76rem; letter-spacing:.05em;
     }}
     .stat-card {{
-      background:white; border-radius:14px; padding:1.2rem 1.3rem;
-      box-shadow:0 2px 10px rgba(15,23,42,.06); height:100%;
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius:14px; padding:1.2rem 1.3rem;
+      box-shadow:0 12px 30px rgba(11,58,103,.06); height:100%;
     }}
     .stat-card .value {{ font-size:1.9rem; font-weight:700; line-height:1; }}
     .stat-card .label {{ color:#64748b; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; margin-top:.35rem; }}
     .stat-card .sub {{ color:#64748b; font-size:.79rem; margin-top:.3rem; }}
     .section-card {{
-      background:white; border-radius:14px; box-shadow:0 2px 10px rgba(15,23,42,.06);
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius:14px; box-shadow:0 12px 30px rgba(11,58,103,.06);
       margin-bottom:1.5rem; overflow:hidden;
     }}
     .section-card .card-header {{
@@ -932,12 +933,12 @@ def build_html(api_base: str) -> str:
     }}
     table tbody td {{ vertical-align:middle; }}
     code {{
-      background:#eff6ff; color:#1d4ed8; padding:.1em .35em; border-radius:4px; font-size:.78em;
+      background:#fff1e6; color:#9a4300; padding:.1em .35em; border-radius:4px; font-size:.78em;
     }}
     .status-pill {{
       display:inline-block; padding:.18rem .55rem; border-radius:999px; font-size:.73rem; font-weight:600;
     }}
-    .footer {{ color:#94a3b8; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }}
+    .footer {{ color:#7b8798; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }}
   </style>
 </head>
 <body>

@@ -8,12 +8,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --brand-dark: #173b45;
-      --brand-mid: #2d6a73;
+      --brand-dark: #0b3a67;
+      --brand-mid: #15528d;
+      --brand-accent: #ff7300;
     }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#1f2937; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background:#f5f7fb; color:#16233a; }
     .page-header {
-      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 58%, var(--brand-accent) 100%);
       color: white; padding: 2.4rem 0 2rem;
     }
     .page-header .subtitle { opacity:.78; font-size:.94rem; }
@@ -22,14 +23,14 @@
       padding:.35rem .8rem; font-size:.76rem; letter-spacing:.05em;
     }
     .stat-card {
-      background:white; border-radius:14px; padding:1.2rem 1.3rem;
-      box-shadow:0 2px 10px rgba(15,23,42,.06); height:100%;
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius:14px; padding:1.2rem 1.3rem;
+      box-shadow:0 12px 30px rgba(11,58,103,.06); height:100%;
     }
     .stat-card .value { font-size:1.9rem; font-weight:700; line-height:1; }
     .stat-card .label { color:#64748b; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; margin-top:.35rem; }
     .stat-card .sub { color:#64748b; font-size:.79rem; margin-top:.3rem; }
     .section-card {
-      background:white; border-radius:14px; box-shadow:0 2px 10px rgba(15,23,42,.06);
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border-radius:14px; box-shadow:0 12px 30px rgba(11,58,103,.06);
       margin-bottom:1.5rem; overflow:hidden;
     }
     .section-card .card-header {
@@ -45,7 +46,7 @@
     .status-pill {
       display:inline-block; padding:.18rem .55rem; border-radius:999px; font-size:.73rem; font-weight:600;
     }
-    .footer { color:#94a3b8; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }
+    .footer { color:#7b8798; font-size:.8rem; padding:1.2rem 0 2rem; text-align:center; }
   </style>
 </head>
 <body>
@@ -60,7 +61,7 @@
     </div>
     <h1 class="mb-1" style="font-size:1.95rem;font-weight:700">Regional Managers Dashboard</h1>
     <div class="subtitle">
-      Generated 2026-04-29 12:14
+      Generated 2026-05-01 13:09
       &nbsp;·&nbsp; objective: regional growth, adoption strength, and GTM prioritization
     </div>
   </div>
@@ -78,7 +79,7 @@
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#1d4ed8">36%</div>
+      <div class="value" style="color:#1d4ed8">23%</div>
       <div class="label">Avg Adoption</div>
       <div class="sub">regional health</div>
     </div>
@@ -106,7 +107,7 @@
   </div>
   <div class="col-6 col-md-2">
     <div class="stat-card">
-      <div class="value" style="color:#b91c1c">4</div>
+      <div class="value" style="color:#b91c1c">7</div>
       <div class="label">High Risk</div>
       <div class="sub">regional warning</div>
     </div>
@@ -135,7 +136,7 @@ new Chart(document.getElementById('regionalScoreChart'), {
   type: 'bar',
   data: {
     labels: ["ap-south", "ap-southeast", "eu-central", "eu-north", "eu-west", "us-east", "us-west"],
-    datasets: [{ data: [33, 31, 40, 31, 40, 42, 36], backgroundColor: ["#b91c1c", "#b91c1c", "#b45309", "#b91c1c", "#b45309", "#b45309", "#b91c1c"], borderRadius: 6 }]
+    datasets: [{ data: [16, 16, 27, 31, 20, 28, 24], backgroundColor: ["#b91c1c", "#b91c1c", "#b91c1c", "#b91c1c", "#b91c1c", "#b91c1c", "#b91c1c"], borderRadius: 6 }]
   },
   options: {
     plugins: { legend: { display: false } },
@@ -177,53 +178,53 @@ new Chart(document.getElementById('regionalScoreChart'), {
       </thead>
       <tbody>
         <tr>
-          <td class="ps-3"><strong>us-east</strong></td>
-          <td class="text-center">2</td>
-          <td class="text-center"><strong style="color:#b45309">42%</strong></td>
-          <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
-          <td class="text-muted">-6%</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>eu-central</strong></td>
-          <td class="text-center">2</td>
-          <td class="text-center"><strong style="color:#b45309">40%</strong></td>
-          <td><span style="color:#15803d;font-weight:600">↑ Growing</span></td>
-          <td class="text-muted">15%</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>eu-west</strong></td>
-          <td class="text-center">1</td>
-          <td class="text-center"><strong style="color:#b45309">40%</strong></td>
-          <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
-          <td class="text-muted">-8%</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>us-west</strong></td>
-          <td class="text-center">2</td>
-          <td class="text-center"><strong style="color:#b91c1c">36%</strong></td>
-          <td><span style="color:#b91c1c;font-weight:600">↓ Declining</span></td>
-          <td class="text-muted">-57%</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>ap-south</strong></td>
-          <td class="text-center">1</td>
-          <td class="text-center"><strong style="color:#b91c1c">33%</strong></td>
-          <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
-          <td class="text-muted">12%</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>ap-southeast</strong></td>
-          <td class="text-center">1</td>
-          <td class="text-center"><strong style="color:#b91c1c">31%</strong></td>
-          <td><span style="color:#b91c1c;font-weight:600">↓ Declining</span></td>
-          <td class="text-muted">-41%</td>
-        </tr>
-        <tr>
           <td class="ps-3"><strong>eu-north</strong></td>
           <td class="text-center">1</td>
           <td class="text-center"><strong style="color:#b91c1c">31%</strong></td>
           <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
           <td class="text-muted">-7%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>us-east</strong></td>
+          <td class="text-center">3</td>
+          <td class="text-center"><strong style="color:#b91c1c">28%</strong></td>
+          <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
+          <td class="text-muted">3%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>eu-central</strong></td>
+          <td class="text-center">3</td>
+          <td class="text-center"><strong style="color:#b91c1c">27%</strong></td>
+          <td><span style="color:#15803d;font-weight:600">↑ Growing</span></td>
+          <td class="text-muted">15%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>us-west</strong></td>
+          <td class="text-center">3</td>
+          <td class="text-center"><strong style="color:#b91c1c">24%</strong></td>
+          <td><span style="color:#b91c1c;font-weight:600">↓ Declining</span></td>
+          <td class="text-muted">-40%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>eu-west</strong></td>
+          <td class="text-center">2</td>
+          <td class="text-center"><strong style="color:#b91c1c">20%</strong></td>
+          <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
+          <td class="text-muted">-6%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>ap-south</strong></td>
+          <td class="text-center">2</td>
+          <td class="text-center"><strong style="color:#b91c1c">16%</strong></td>
+          <td><span style="color:#64748b;font-weight:600">→ Stable</span></td>
+          <td class="text-muted">9%</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>ap-southeast</strong></td>
+          <td class="text-center">2</td>
+          <td class="text-center"><strong style="color:#b91c1c">16%</strong></td>
+          <td><span style="color:#b91c1c;font-weight:600">↓ Declining</span></td>
+          <td class="text-muted">-30%</td>
         </tr></tbody>
     </table>
   </div>
@@ -254,43 +255,43 @@ new Chart(document.getElementById('regionalScoreChart'), {
       <tbody>
         <tr>
           <td class="ps-3"><strong>Single Sign-On (SSO)</strong><div class="text-muted" style="font-size:.76rem">10 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td>
+          <td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">67%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">67%</strong></td><td class="text-center"><strong style="color:#15803d">67%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Multi-Factor Authentication (MFA)</strong><div class="text-muted" style="font-size:.76rem">9 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td>
+          <td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">67%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">67%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Identity Governance</strong><div class="text-muted" style="font-size:.76rem">6 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td>
+          <td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Adaptive / Conditional Authentication</strong><div class="text-muted" style="font-size:.76rem">6 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">67%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Authorization</strong><div class="text-muted" style="font-size:.76rem">5 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Organization Management (B2B)</strong><div class="text-muted" style="font-size:.76rem">3 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Branding & UX</strong><div class="text-muted" style="font-size:.76rem">2 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Enterprise Login</strong><div class="text-muted" style="font-size:.76rem">2 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#15803d">100%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>Social Login</strong><div class="text-muted" style="font-size:.76rem">2 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>User Management</strong><div class="text-muted" style="font-size:.76rem">2 customer activations across regions</div></td>
-          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td><td class="text-center"><strong style="color:#b45309">50%</strong></td>
+          <td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b91c1c">0%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td><td class="text-center"><strong style="color:#b45309">33%</strong></td>
         </tr></tbody>
     </table>
   </div>
@@ -300,7 +301,7 @@ new Chart(document.getElementById('featureRegionChart'), {
   type: 'bar',
   data: {
     labels: ["Single Sign-On (SSO)", "Multi-Factor Authentication (MFA)", "Identity Governance", "Adaptive / Conditional Authentication", "Authorization", "Organization Management (B2B)", "Branding & UX", "Enterprise Login"],
-    datasets: [{"label": "ap-south", "data": [100, 100, 100, 100, 100, 0, 0, 0], "backgroundColor": "#1f6f78", "borderRadius": 3}, {"label": "ap-southeast", "data": [100, 100, 100, 100, 100, 0, 0, 0], "backgroundColor": "#d97706", "borderRadius": 3}, {"label": "eu-central", "data": [100, 100, 50, 100, 50, 50, 0, 50], "backgroundColor": "#4f772d", "borderRadius": 3}, {"label": "eu-north", "data": [100, 100, 100, 100, 100, 0, 0, 0], "backgroundColor": "#b45309", "borderRadius": 3}, {"label": "eu-west", "data": [100, 100, 0, 0, 100, 100, 0, 100], "backgroundColor": "#0f766e", "borderRadius": 3}, {"label": "us-east", "data": [100, 100, 50, 50, 0, 50, 50, 0], "backgroundColor": "#2563eb", "borderRadius": 3}, {"label": "us-west", "data": [100, 50, 50, 0, 0, 0, 50, 0], "backgroundColor": "#9f1239", "borderRadius": 3}]
+    datasets: [{"label": "ap-south", "data": [50, 50, 50, 50, 50, 0, 0, 0], "backgroundColor": "#0b3a67", "borderRadius": 3}, {"label": "ap-southeast", "data": [50, 50, 50, 50, 50, 0, 0, 0], "backgroundColor": "#ff7300", "borderRadius": 3}, {"label": "eu-central", "data": [67, 67, 33, 67, 33, 33, 0, 33], "backgroundColor": "#1f6f78", "borderRadius": 3}, {"label": "eu-north", "data": [100, 100, 100, 100, 100, 0, 0, 0], "backgroundColor": "#4f772d", "borderRadius": 3}, {"label": "eu-west", "data": [50, 50, 0, 0, 50, 50, 0, 50], "backgroundColor": "#15528d", "borderRadius": 3}, {"label": "us-east", "data": [67, 67, 33, 33, 0, 33, 33, 0], "backgroundColor": "#d95f00", "borderRadius": 3}, {"label": "us-west", "data": [67, 33, 33, 0, 0, 0, 33, 0], "backgroundColor": "#0f766e", "borderRadius": 3}]
   },
   options: {
     plugins: {
@@ -341,7 +342,25 @@ new Chart(document.getElementById('featureRegionChart'), {
       <tbody>
         <tr>
           <td class="ps-3"><strong>ap-southeast</strong></td>
-          <td class="text-center">9%</td>
+          <td class="text-center">4%</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
+          <td class="text-muted">Application Management, Branding & UX</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>ap-south</strong></td>
+          <td class="text-center">6%</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
+          <td class="text-muted">Application Management, Branding & UX</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>eu-west</strong></td>
+          <td class="text-center">8%</td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
+          <td class="text-muted">Adaptive / Conditional Authentication, Application Management</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>eu-central</strong></td>
+          <td class="text-center">10%</td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
           <td class="text-muted">Application Management, Branding & UX</td>
         </tr>
@@ -352,32 +371,14 @@ new Chart(document.getElementById('featureRegionChart'), {
           <td class="text-muted">Application Management, Branding & UX</td>
         </tr>
         <tr>
-          <td class="ps-3"><strong>ap-south</strong></td>
-          <td class="text-center">12%</td>
-          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
-          <td class="text-muted">Application Management, Branding & UX</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>eu-central</strong></td>
-          <td class="text-center">14%</td>
-          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
-          <td class="text-muted">Application Management, Branding & UX</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>eu-west</strong></td>
-          <td class="text-center">15%</td>
-          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
-          <td class="text-muted">Adaptive / Conditional Authentication, Application Management</td>
-        </tr>
-        <tr>
           <td class="ps-3"><strong>us-east</strong></td>
-          <td class="text-center">17%</td>
+          <td class="text-center">11%</td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
           <td class="text-muted">Application Management, Authorization</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>us-west</strong></td>
-          <td class="text-center">22%</td>
+          <td class="text-center">15%</td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">Very High</span></td>
           <td class="text-muted">Application Management, Authorization</td>
         </tr></tbody>
@@ -390,8 +391,8 @@ new Chart(document.getElementById('opportunityChart'), {
   data: {
     labels: ["ap-south", "ap-southeast", "eu-central", "eu-north", "eu-west", "us-east", "us-west"],
     datasets: [{
-      data: [12, 9, 14, 11, 15, 17, 22],
-      backgroundColor: ["#1f6f78", "#d97706", "#4f772d", "#b45309", "#0f766e", "#2563eb", "#9f1239"],
+      data: [6, 4, 10, 11, 8, 11, 15],
+      backgroundColor: ["#0b3a67", "#ff7300", "#1f6f78", "#4f772d", "#15528d", "#d95f00", "#0f766e"],
       borderRadius: 6
     }]
   },
@@ -433,7 +434,7 @@ new Chart(document.getElementById('opportunityChart'), {
         <tr>
           <td class="ps-3"><strong>ap-south</strong></td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">High</span></td>
-          <td>Low regional adoption + 1 low-adoption customer(s)</td>
+          <td>Low regional adoption + 2 low-adoption customer(s)</td>
           <td class="text-center">Stable</td>
         </tr>
         <tr>
@@ -443,9 +444,27 @@ new Chart(document.getElementById('opportunityChart'), {
           <td class="text-center">Declining</td>
         </tr>
         <tr>
+          <td class="ps-3"><strong>eu-central</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">High</span></td>
+          <td>Low regional adoption + 2 low-adoption customer(s)</td>
+          <td class="text-center">Growing</td>
+        </tr>
+        <tr>
           <td class="ps-3"><strong>eu-north</strong></td>
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">High</span></td>
           <td>Low regional adoption + 1 low-adoption customer(s)</td>
+          <td class="text-center">Stable</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>eu-west</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">High</span></td>
+          <td>Low regional adoption + 1 low-adoption customer(s)</td>
+          <td class="text-center">Stable</td>
+        </tr>
+        <tr>
+          <td class="ps-3"><strong>us-east</strong></td>
+          <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">High</span></td>
+          <td>Low regional adoption + 2 low-adoption customer(s)</td>
           <td class="text-center">Stable</td>
         </tr>
         <tr>
@@ -453,24 +472,6 @@ new Chart(document.getElementById('opportunityChart'), {
           <td><span class="status-pill" style="background:#fee2e2;color:#b91c1c">High</span></td>
           <td>Low regional adoption + Usage declining</td>
           <td class="text-center">Declining</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>eu-central</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Medium</span></td>
-          <td>Moderate regional adoption + 1 low-adoption customer(s)</td>
-          <td class="text-center">Growing</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>eu-west</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Medium</span></td>
-          <td>Moderate regional adoption</td>
-          <td class="text-center">Stable</td>
-        </tr>
-        <tr>
-          <td class="ps-3"><strong>us-east</strong></td>
-          <td><span class="status-pill" style="background:#fef3c7;color:#b45309">Medium</span></td>
-          <td>Moderate regional adoption + 1 low-adoption customer(s)</td>
-          <td class="text-center">Stable</td>
         </tr></tbody>
     </table>
   </div>
@@ -502,15 +503,15 @@ new Chart(document.getElementById('opportunityChart'), {
       <tbody>
         <tr>
           <td class="ps-3"><strong>ap-south</strong></td>
-          <td class="text-center"><strong>41%</strong></td><td class="text-center"><strong>12%</strong></td>
+          <td class="text-center"><strong>52%</strong></td><td class="text-center"><strong>23%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>ap-southeast</strong></td>
-          <td class="text-center"><strong>21%</strong></td><td class="text-center"><strong>9%</strong></td>
+          <td class="text-center"><strong>31%</strong></td><td class="text-center"><strong>19%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>eu-central</strong></td>
-          <td class="text-center"><strong>54%</strong></td><td class="text-center"><strong>26%</strong></td>
+          <td class="text-center"><strong>64%</strong></td><td class="text-center"><strong>36%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>eu-north</strong></td>
@@ -518,15 +519,15 @@ new Chart(document.getElementById('opportunityChart'), {
         </tr>
         <tr>
           <td class="ps-3"><strong>eu-west</strong></td>
-          <td class="text-center"><strong>23%</strong></td><td class="text-center"><strong>15%</strong></td>
+          <td class="text-center"><strong>35%</strong></td><td class="text-center"><strong>27%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>us-east</strong></td>
-          <td class="text-center"><strong>24%</strong></td><td class="text-center"><strong>21%</strong></td>
+          <td class="text-center"><strong>39%</strong></td><td class="text-center"><strong>36%</strong></td>
         </tr>
         <tr>
           <td class="ps-3"><strong>us-west</strong></td>
-          <td class="text-center"><strong>50%</strong></td><td class="text-center"><strong>52%</strong></td>
+          <td class="text-center"><strong>80%</strong></td><td class="text-center"><strong>82%</strong></td>
         </tr></tbody>
     </table>
   </div>
@@ -536,7 +537,7 @@ new Chart(document.getElementById('regionalTrendChart'), {
   type: 'line',
   data: {
     labels: ["2026-04", "2026-05"],
-    datasets: [{"label": "ap-south", "data": [41, 12], "borderColor": "#1f6f78", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "ap-southeast", "data": [21, 9], "borderColor": "#d97706", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "eu-central", "data": [54, 26], "borderColor": "#4f772d", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "eu-north", "data": [35, 11], "borderColor": "#b45309", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "eu-west", "data": [23, 15], "borderColor": "#0f766e", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "us-east", "data": [24, 21], "borderColor": "#2563eb", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "us-west", "data": [50, 52], "borderColor": "#9f1239", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}]
+    datasets: [{"label": "ap-south", "data": [52, 23], "borderColor": "#0b3a67", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "ap-southeast", "data": [31, 19], "borderColor": "#ff7300", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "eu-central", "data": [64, 36], "borderColor": "#1f6f78", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "eu-north", "data": [35, 11], "borderColor": "#4f772d", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "eu-west", "data": [35, 27], "borderColor": "#15528d", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "us-east", "data": [39, 36], "borderColor": "#d95f00", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}, {"label": "us-west", "data": [80, 82], "borderColor": "#0f766e", "backgroundColor": "transparent", "tension": 0.25, "pointRadius": 4}]
   },
   options: {
     plugins: {
@@ -577,21 +578,21 @@ new Chart(document.getElementById('regionalTrendChart'), {
       <tbody>
         <tr>
           <td class="ps-3"><strong>ap-south</strong></td>
+          <td class="text-center">50%</td>
           <td class="text-center">0%</td>
-          <td class="text-center">0%</td>
-          <td class="text-center">100%</td>
+          <td class="text-center">50%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>ap-southeast</strong></td>
+          <td class="text-center">50%</td>
           <td class="text-center">0%</td>
-          <td class="text-center">0%</td>
-          <td class="text-center">100%</td>
+          <td class="text-center">50%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>eu-central</strong></td>
+          <td class="text-center">33%</td>
           <td class="text-center">0%</td>
-          <td class="text-center">0%</td>
-          <td class="text-center">100%</td>
+          <td class="text-center">67%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>eu-north</strong></td>
@@ -601,21 +602,21 @@ new Chart(document.getElementById('regionalTrendChart'), {
         </tr>
         <tr>
           <td class="ps-3"><strong>eu-west</strong></td>
-          <td class="text-center">0%</td>
-          <td class="text-center">100%</td>
+          <td class="text-center">50%</td>
+          <td class="text-center">50%</td>
           <td class="text-center">0%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>us-east</strong></td>
+          <td class="text-center">33%</td>
           <td class="text-center">0%</td>
-          <td class="text-center">0%</td>
-          <td class="text-center">100%</td>
+          <td class="text-center">67%</td>
         </tr>
         <tr>
           <td class="ps-3"><strong>us-west</strong></td>
-          <td class="text-center">50%</td>
+          <td class="text-center">67%</td>
           <td class="text-center">0%</td>
-          <td class="text-center">50%</td>
+          <td class="text-center">33%</td>
         </tr></tbody>
     </table>
   </div>
@@ -624,7 +625,7 @@ new Chart(document.getElementById('regionalTrendChart'), {
 
 <div class="footer container">
   WSO2 Feature Utilization — Regional Managers Dashboard
-  &nbsp;·&nbsp; Generated 2026-04-29 12:14
+  &nbsp;·&nbsp; Generated 2026-05-01 13:09
 </div>
 
 </body>

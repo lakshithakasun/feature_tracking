@@ -1,14 +1,16 @@
 # WSO2 Feature Utilization — Event Capture Taxonomy Specification
-**Document version:** 1.0  
-**Status:** Proposed — for review and sign-off by Identity Server Engineering Team
+**Document version:** 1.1  
+**Status:** Reference guidance for the current repository and taxonomy structure
 
 ---
 
 ## Purpose
 
-This document defines the standard structure and vocabulary for the `tracking` block in the WSO2 Identity Server feature taxonomy YAML. It establishes what each field means, what values are allowed, and how the product should capture and report utilization data for each feature.
+This document defines the standard structure and vocabulary for the `tracking` block in product taxonomy YAML files. It establishes what each field means, what values are allowed, and how the product should capture and report utilization data for each feature.
 
 The taxonomy YAML already contains the `tracking` block on every feature. However, the fields within it are currently applied inconsistently. This document serves as the agreed reference before any further taxonomy updates or tooling is built against this format.
+
+Although the original examples were Identity Server oriented, the repository now also includes APIM sample taxonomies and demo data. The same structural guidance applies across products.
 
 ---
 
