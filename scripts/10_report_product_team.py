@@ -1252,8 +1252,10 @@ def main():
 
     html    = build_html(args.api, args.product, args.version)
     outfile = args.out or f"report_product_team_{args.version.replace('.', '')}.html"
-    Path(outfile).write_text(html, encoding="utf-8")
-    print(f"\nReport saved → {Path(outfile).resolve()}")
+    out_path = Path(outfile)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html, encoding="utf-8")
+    print(f"\nReport saved → {out_path.resolve()}")
     print(f"Open in browser: open {outfile}")
 
 

@@ -1156,8 +1156,10 @@ def main():
 
     html = build_html(args.api, customer_id, product_id=args.product)
     outfile = args.out or f"reports/technical_owner_{customer_id.replace('-', '_')}.html"
-    Path(outfile).write_text(html, encoding="utf-8")
-    print(f"\nReport saved → {Path(outfile).resolve()}")
+    out_path = Path(outfile)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html, encoding="utf-8")
+    print(f"\nReport saved → {out_path.resolve()}")
 
 
 if __name__ == "__main__":

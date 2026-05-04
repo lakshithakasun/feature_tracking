@@ -13,6 +13,8 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 cd "$ROOT_DIR"
 
+mkdir -p reports
+
 echo "Generating Technical Owner report ..."
 python3 scripts/08_report_account_manager.py --customer acme-corp --out reports/technical_owner_acme.html
 

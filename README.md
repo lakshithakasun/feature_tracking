@@ -322,5 +322,6 @@ Remember:
 ## Notes
 
 - Some legacy files intentionally retain the historical `taxanomy` spelling to avoid breaking existing references.
-- Generated HTML outputs in `reports/` are demo artifacts, not the source of truth.
+- Generated HTML outputs in `reports/` and legacy `report_*.html` files are local demo artifacts, not the source of truth.
+- Live `/views/...` pages are generated dynamically from the current database-backed application state.
 - The main source of truth for setup and usage should now be this README plus the helper scripts.
