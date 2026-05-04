@@ -1,6 +1,6 @@
 # WSO2 Feature Utilization — Event Capture Taxonomy Specification
 **Document version:** 1.1  
-**Status:** Reference guidance for the current repository and taxonomy structure
+**Status:** Reference guidance and target taxonomy standard for the current repository
 
 ---
 
@@ -11,6 +11,8 @@ This document defines the standard structure and vocabulary for the `tracking` b
 The taxonomy YAML already contains the `tracking` block on every feature. However, the fields within it are currently applied inconsistently. This document serves as the agreed reference before any further taxonomy updates or tooling is built against this format.
 
 Although the original examples were Identity Server oriented, the repository now also includes APIM sample taxonomies and demo data. The same structural guidance applies across products.
+
+Important: parts of this document describe the intended standard rather than fields that are already validated or enforced everywhere in the current codebase. Where the repository has not fully converged yet, treat this document as the target reference.
 
 ---
 

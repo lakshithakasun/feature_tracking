@@ -33,7 +33,7 @@ utilization_report_*.yaml  Utilization report schema references
 
 ## Core Views
 
-The project exposes two ways to inspect the data:
+The project uses a single primary entry point:
 
 ### 1. Feature Utilization Explorer
 
@@ -48,7 +48,7 @@ The explorer supports:
 - all-products scope
 - clickable feature summaries
 - detailed feature drill-down pages
-- links back to stakeholder-specific views
+- links to stakeholder-specific views
 
 ### 2. Stakeholder Views
 
@@ -57,13 +57,7 @@ The explorer supports:
 - Regional Managers
 - Technical Owner
 
-These remain available from the stakeholder launcher and via direct routes.
-
-Stakeholder launcher:
-
-```text
-http://127.0.0.1:8001/views
-```
+These are reached from the explorer or via direct routes.
 
 ## Quick Start
 
@@ -106,12 +100,6 @@ bash scripts/00_seed_test_data.sh
 
 ```text
 http://127.0.0.1:8001/views/feature-utilization
-```
-
-7. Open the stakeholder launcher when needed:
-
-```text
-http://127.0.0.1:8001/views
 ```
 
 ### PostgreSQL Setup Notes
@@ -213,15 +201,10 @@ python3 scripts/07_generate_schema_diagram.py
 
 ## Web Routes
 
-Stakeholder launcher:
-
-```text
-http://127.0.0.1:8001/views
-```
-
 Primary explorer:
 
 ```text
+http://127.0.0.1:8001/views
 http://127.0.0.1:8001/views/feature-utilization
 http://127.0.0.1:8001/views/feature-utilization?product_id=identity-server
 http://127.0.0.1:8001/views/feature-utilization?product_id=__all__
@@ -229,9 +212,9 @@ http://127.0.0.1:8001/views/feature-utilization?product_id=__all__
 
 Behavior notes:
 
-- `/views/feature-utilization` is the primary landing page and owns its own filters for product, version, and customer scope
-- `/views` is a separate stakeholder launcher for Product Development, Customer Success, Regional Managers, and Technical Owner views
-- the launcher product selector applies only to stakeholder views that support product-specific scope
+- `/views` redirects to `/views/feature-utilization` for backward compatibility
+- `/views/feature-utilization` is the primary landing page and owns filters for product, version, customer, and region scope
+- stakeholder-specific views are accessed from the explorer or via direct routes
 
 Direct stakeholder routes:
 

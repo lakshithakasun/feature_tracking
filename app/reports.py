@@ -414,6 +414,7 @@ def customer_portfolio(db: Session):
             models.Customer.id.label("customer_id"),
             models.Deployment.id.label("deployment_id"),
             models.Deployment.environment,
+            models.ProductRelease.product_id,
             models.ProductRelease.version,
             models.ProductRelease.is_active,
         )
@@ -428,6 +429,7 @@ def customer_portfolio(db: Session):
         deps_by_customer.setdefault(d.customer_id, []).append({
             "deployment_id": d.deployment_id,
             "environment": d.environment,
+            "product_id": d.product_id,
             "version": d.version,
             "is_active_version": d.is_active,
         })
@@ -637,6 +639,7 @@ def feature_customer_breakdown(
         db.query(
             models.Customer.id.label("customer_id"),
             models.Customer.name.label("customer_name"),
+            models.Customer.region.label("customer_region"),
             models.Customer.tier.label("customer_tier"),
             models.Deployment.id.label("deployment_id"),
             models.Deployment.environment,

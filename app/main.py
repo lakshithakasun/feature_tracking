@@ -1,17 +1,11 @@
-import json
-
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app import models
 from app.database import Base, engine, get_session
 from app.report_views import (
-    ALL_PRODUCTS,
-    available_customers,
-    available_products,
-    available_versions,
     render_customer_success,
     render_feature_detail,
     render_feature_utilization,
@@ -32,14 +26,12 @@ from app.reports import (
     catalog_coverage,
     catalog_taxonomy,
     customer_feature_usage,
-    customer_list,
     customer_portfolio,
     dashboard_summary,
     dimension_breakdown_all,
     feature_customer_breakdown,
     feature_heatmap,
     feature_utilization_summary,
-    regional_summary,
     utilization_by_category,
 )
 from app.schemas import (
@@ -79,242 +71,8 @@ def health():
 
 
 @app.get("/views", response_class=HTMLResponse)
-def report_launcher(request: Request, db: Session = Depends(get_session)):
-    products = available_products(db)
-    customers = customer_list(db)
-    regions_payload = regional_summary(db)
-    regions = sorted(region["region"] for region in regions_payload.get("regions", []))
-
-    product_options = "\n".join(
-        [f'<option value="{ALL_PRODUCTS}">All Products</option>'] + [
-            f'<option value="{product["id"]}">{product["name"]}</option>'
-            for product in products
-        ]
-    )
-
-    customer_options = "\n".join(
-        f'<option value="{c.id}"{" selected" if i == 0 else ""}>{c.name} ({c.id})</option>'
-        for i, c in enumerate(customers)
-    )
-    region_options = "\n".join(
-        f'<option value="{region}">{region}</option>'
-        for region in regions
-    )
-    all_versions = sorted({version for product in products for version in available_versions(db, product["id"])})
-    version_options = "\n".join(f'<option value="{version}">v{version}</option>' for version in all_versions)
-    version_map = {
-        ALL_PRODUCTS: all_versions,
-        **{product["id"]: available_versions(db, product["id"]) for product in products},
-    }
-    customer_map = {
-        ALL_PRODUCTS: [{"id": c.id, "name": c.name} for c in customers],
-        **{product["id"]: available_customers(db, product["id"]) for product in products},
-    }
-    default_view = "about:blank"
-
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Report Launcher</title>
-  <style>
-    :root {{
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --ink: #16233a;
-      --muted: #62748d;
-      --line: #d6e0ea;
-      --brand: #0b3a67;
-      --brand-2: #ff7300;
-      --brand-soft: #fff1e6;
-      --brand-soft-2: #eaf2fb;
-      --accent: #ff7300;
-      --accent-deep: #d95f00;
-    }}
-    body {{ margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); }}
-    .hero {{ background: linear-gradient(135deg, var(--brand) 0%, #15528d 58%, var(--brand-2) 100%); color: white; padding: 1.6rem 1.8rem; }}
-    .hero h1 {{ margin: 0 0 .4rem; font-size: 1.7rem; }}
-    .hero p {{ margin: 0; opacity: .82; }}
-    .layout {{ display: grid; grid-template-columns: 360px 1fr; min-height: calc(100vh - 104px); }}
-    .panel {{ background: var(--surface); border-right: 1px solid var(--line); padding: 1.2rem; overflow: auto; }}
-    .viewer {{ padding: 1rem; }}
-    .card {{ background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%); border: 1px solid var(--line); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 12px 28px rgba(11, 58, 103, .05); }}
-    .scope-card {{ background: linear-gradient(180deg, #fff7f0 0%, #ffffff 100%); border-color: #ffd2b1; }}
-    .section-label {{ margin: 0 0 .75rem; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); }}
-    .card h2 {{ font-size: 1rem; margin: 0 0 .8rem; }}
-    .hint {{ color: var(--muted); font-size: .84rem; line-height: 1.5; margin-bottom: .8rem; }}
-    label {{ display: block; font-size: .8rem; color: var(--muted); margin: .6rem 0 .35rem; }}
-    select, button {{
-      width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid var(--line);
-      padding: .7rem .8rem; font-size: .92rem; background: white;
-    }}
-    select:focus, button:focus {{ outline: none; box-shadow: 0 0 0 3px rgba(255, 115, 0, .16); border-color: var(--accent); }}
-    button {{
-      background: linear-gradient(135deg, var(--brand), #15528d); color: white; border: none; font-weight: 600; cursor: pointer; margin-top: .85rem;
-      box-shadow: 0 12px 22px rgba(11, 58, 103, .16); transition: transform .12s, box-shadow .12s, background .12s;
-    }}
-    button:hover {{ transform: translateY(-1px); box-shadow: 0 16px 28px rgba(11, 58, 103, .22); }}
-    button.secondary {{ background: linear-gradient(180deg, #fff7f0 0%, var(--brand-soft) 100%); color: var(--accent-deep); border: 1px solid #ffd2b1; box-shadow: none; }}
-    button.secondary:hover {{ background: #ffe7d3; box-shadow: 0 10px 18px rgba(255, 115, 0, .14); }}
-    iframe {{
-      width: 100%; min-height: calc(100vh - 140px); border: 1px solid var(--line); border-radius: 16px;
-      background: white; box-shadow: 0 14px 34px rgba(11, 58, 103, .08);
-    }}
-    .top-actions {{ display: grid; gap: .7rem; }}
-    @media (max-width: 1100px) {{
-      .layout {{ grid-template-columns: 1fr; }}
-      .panel {{ border-right: none; border-bottom: 1px solid var(--line); }}
-      iframe {{ min-height: 70vh; }}
-    }}
-  </style>
-</head>
-<body>
-  <div class="hero">
-    <h1>Feature Tracking Report Launcher</h1>
-    <p>Open any stakeholder view from one place, including version-specific, region-specific, and customer-specific reports.</p>
-  </div>
-  <div class="layout">
-    <div class="panel">
-      <div class="section-label">Primary Explorer</div>
-      <div class="card">
-        <h2>Feature Utilization Explorer</h2>
-        <div class="hint">Open the filter-driven explorer for product, version, and customer analysis. This page has its own filters inside, so it does not use the launcher product selection.</div>
-        <button type="button" onclick="openExplorer()">Open Feature Utilization Explorer</button>
-      </div>
-
-      <div class="section-label">Stakeholder Views</div>
-      <div class="card scope-card">
-        <h2>Stakeholder Scope</h2>
-        <div class="hint">Choose the product scope for stakeholder views that support product-specific behavior, including Product Development and Technical Owner.</div>
-        <label for="launcher-product">Product</label>
-        <select id="launcher-product">
-          {product_options}
-        </select>
-      </div>
-
-      <div class="card">
-        <h2>Product Development</h2>
-        <div class="hint">Use the all-versions report for roadmap comparison, or pick a specific release for a focused product version view.</div>
-        <div class="top-actions">
-          <button type="button" onclick="openProductAllVersions()">Open All Versions</button>
-        </div>
-        <label for="pd-version">Version-specific view</label>
-        <select id="pd-version">
-          <option value="">Select version</option>
-          {version_options}
-        </select>
-        <button type="button" class="secondary" onclick="openProductVersion()">Open Version View</button>
-      </div>
-
-      <div class="card">
-        <h2>Customer Success</h2>
-        <div class="hint">Business-facing health, underutilization, churn signals, and adoption growth opportunities.</div>
-        <button type="button" onclick="openReport('/views/customer-success')">Open Customer Success Report</button>
-      </div>
-
-      <div class="card">
-        <h2>Regional Managers</h2>
-        <div class="hint">Open the comparative all-regions dashboard, or pick a single region for a focused regional operating view.</div>
-        <div class="top-actions">
-          <button type="button" onclick="openReport('/views/regional')">Open All Regions</button>
-        </div>
-        <label for="region">Region-specific view</label>
-        <select id="region">
-          <option value="">Select region</option>
-          {region_options}
-        </select>
-        <button type="button" class="secondary" onclick="openRegion()">Open Region View</button>
-      </div>
-
-      <div class="card">
-        <h2>Technical Owner</h2>
-        <div class="hint">Open the account-specific deployment optimization view for a technical owner or solutions architect.</div>
-        <label for="customer">Customer</label>
-        <select id="customer">
-          {customer_options}
-        </select>
-        <button type="button" onclick="openCustomer()">Open Technical Owner View</button>
-      </div>
-    </div>
-
-    <div class="viewer">
-      <div class="card" style="margin-bottom:1rem">
-        <h2>Stakeholder Report Viewer</h2>
-        <div class="hint">Choose one of the stakeholder views from the left to load it here. The product scope selector belongs to the stakeholder-view group only; the Feature Utilization Explorer opens with its own filters.</div>
-      </div>
-      <iframe id="reportFrame" src="{default_view}" title="Report Viewer"></iframe>
-    </div>
-  </div>
-
-  <script>
-    const ALL_PRODUCTS = {json.dumps(ALL_PRODUCTS)};
-    const versionsByProduct = {json.dumps(version_map)};
-    const customersByProduct = {json.dumps(customer_map)};
-
-    function openReport(path) {{
-      document.getElementById('reportFrame').src = path;
-    }}
-    function selectedProduct() {{
-      return document.getElementById('launcher-product').value || ALL_PRODUCTS;
-    }}
-    function populateVersionOptions() {{
-      const select = document.getElementById('pd-version');
-      const product = selectedProduct();
-      const versions = versionsByProduct[product] || [];
-      const current = select.value;
-      select.innerHTML = '<option value="">Select version</option>' + versions.map(v => `<option value="${{v}}">v${{v}}</option>`).join('');
-      if (versions.includes(current)) select.value = current;
-    }}
-    function populateCustomerOptions() {{
-      const select = document.getElementById('customer');
-      const product = selectedProduct();
-      const customers = customersByProduct[product] || [];
-      select.innerHTML = customers.map((c, index) => `<option value="${{c.id}}"${{index === 0 ? ' selected' : ''}}>${{c.name}} (${{c.id}})</option>`).join('');
-    }}
-    function openExplorer() {{
-      window.location = '/views/feature-utilization';
-    }}
-    function openProductAllVersions() {{
-      const product = selectedProduct();
-      if (product === ALL_PRODUCTS) {{
-        alert('Select a specific product first for Product Development.');
-        return;
-      }}
-      openReport('/views/product-dev?product_id=' + encodeURIComponent(product));
-    }}
-    function openProductVersion() {{
-      const version = document.getElementById('pd-version').value;
-      const product = selectedProduct();
-      if (!version || product === ALL_PRODUCTS) return;
-      openReport('/views/product-dev?product_id=' + encodeURIComponent(product) + '&version=' + encodeURIComponent(version));
-    }}
-    function openRegion() {{
-      const region = document.getElementById('region').value;
-      if (!region) return;
-      openReport('/views/regional?region=' + encodeURIComponent(region));
-    }}
-    function openCustomer() {{
-      const customer = document.getElementById('customer').value;
-      if (!customer) {{
-        alert('Select a customer first to open the Technical Owner view.');
-        return;
-      }}
-      const product = selectedProduct();
-      const path = product === ALL_PRODUCTS
-        ? '/views/technical-owner?customer_id=' + encodeURIComponent(customer)
-        : '/views/technical-owner?customer_id=' + encodeURIComponent(customer) + '&product_id=' + encodeURIComponent(product);
-      openReport(path);
-    }}
-    document.getElementById('launcher-product').addEventListener('change', () => {{
-      populateVersionOptions();
-      populateCustomerOptions();
-    }});
-    populateVersionOptions();
-    populateCustomerOptions();
-  </script>
-</body>
-</html>"""
+def report_launcher():
+    return RedirectResponse(url="/views/feature-utilization", status_code=307)
 
 
 # ── PRODUCT CATALOG ───────────────────────────────────────────────────────────
@@ -644,6 +402,7 @@ def view_feature_utilization(
     product_id: str = None,
     version: str = None,
     customer_id: str = None,
+    region: str = None,
     db: Session = Depends(get_session),
 ):
     return render_feature_utilization(
@@ -652,6 +411,7 @@ def view_feature_utilization(
         product_id=product_id,
         version=version,
         customer_id=customer_id,
+        region=region,
     )
 
 
@@ -662,6 +422,7 @@ def view_feature_utilization_detail(
     feature_code: str,
     version: str = None,
     customer_id: str = None,
+    region: str = None,
     db: Session = Depends(get_session),
 ):
     return render_feature_detail(
@@ -671,12 +432,13 @@ def view_feature_utilization_detail(
         feature_code=feature_code,
         version=version,
         customer_id=customer_id,
+        region=region,
     )
 
 
 @app.get("/views/customer-success", response_class=HTMLResponse)
-def view_customer_success(request: Request):
-    return render_customer_success(_api_base_from_request(request))
+def view_customer_success(request: Request, product_id: str = None, version: str = None, region: str = None):
+    return render_customer_success(_api_base_from_request(request), product_id=product_id, version=version, region=region)
 
 
 @app.get("/views/regional", response_class=HTMLResponse)

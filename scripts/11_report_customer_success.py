@@ -16,6 +16,7 @@ Sections:
 Usage:
     python3 scripts/11_report_customer_success.py
     python3 scripts/11_report_customer_success.py --api http://127.0.0.1:8001
+    python3 scripts/11_report_customer_success.py --product identity-server --version 7.3.0
     python3 scripts/11_report_customer_success.py --out reports/customer_success.html
 """
 
@@ -166,31 +167,61 @@ def category_label(category_name: str) -> str:
     return category_name or "Unknown"
 
 
-def load_data(api_base: str) -> dict:
+def load_data(api_base: str, product_id: str | None = None, version: str | None = None, region: str | None = None) -> dict:
     print("Fetching customer success management data...")
     portfolio = fetch(api_base, "/reports/customers/portfolio") or []
-    dashboard = fetch(api_base, "/reports/dashboard") or {}
+    dashboard_path = "/reports/dashboard"
+    if product_id or version:
+        query = []
+        if product_id:
+            query.append(f"product_id={product_id}")
+        if version:
+            query.append(f"version={version}")
+        dashboard_path = f"{dashboard_path}?{'&'.join(query)}"
+    dashboard = fetch(api_base, dashboard_path) or {}
     if not portfolio:
         sys.exit("No customer portfolio data found. Is the API running and data seeded?")
-
-    prod_versions = sorted({
-        deployment["version"]
-        for customer in portfolio
-        for deployment in customer.get("deployments", [])
-        if deployment.get("environment") == "prod"
-    })
-
-    coverage_by_version: dict[str, list] = {}
-    for version in prod_versions:
-        coverage_by_version[version] = (
-            fetch(api_base, f"/reports/catalog/coverage?product_id=identity-server&version={version}") or []
-        )
 
     customer_feature_rows: dict[str, list] = {}
     for customer in portfolio:
         customer_id = customer["customer_id"]
         rows = fetch(api_base, f"/reports/customers/{customer_id}/features") or []
-        customer_feature_rows[customer_id] = rows
+        filtered_rows = [
+            row for row in rows
+            if (not product_id or row.get("product_id") == product_id)
+            and (not version or row.get("version") == version)
+        ]
+        customer_feature_rows[customer_id] = filtered_rows
+
+    filtered_portfolio = []
+    for customer in portfolio:
+        filtered_deployments = [
+            deployment for deployment in customer.get("deployments", [])
+            if (not product_id or deployment.get("product_id") == product_id)
+            and (not version or deployment.get("version") == version)
+        ]
+        filtered_rows = customer_feature_rows.get(customer["customer_id"], [])
+        if region and (customer.get("region") or "unknown") != region:
+            continue
+        if filtered_deployments or filtered_rows:
+            copy = dict(customer)
+            copy["deployments"] = filtered_deployments
+            filtered_portfolio.append(copy)
+
+    portfolio = filtered_portfolio
+
+    prod_release_pairs = sorted({
+        (deployment.get("product_id"), deployment.get("version"))
+        for customer in portfolio
+        for deployment in customer.get("deployments", [])
+        if deployment.get("environment") == "prod" and deployment.get("product_id") and deployment.get("version")
+    }, key=lambda item: ((item[0] or ""), semver_key(item[1] or "")))
+
+    coverage_by_release: dict[tuple[str, str], list] = {}
+    for release_product_id, release_version in prod_release_pairs:
+        coverage_by_release[(release_product_id, release_version)] = (
+            fetch(api_base, f"/reports/catalog/coverage?product_id={release_product_id}&version={release_version}") or []
+        )
 
     customer_metrics = []
     coverage_rows = []
@@ -249,9 +280,21 @@ def load_data(api_base: str) -> dict:
             if current_versions:
                 current_versions = [current_versions[-1]]
 
+        current_release_pairs = sorted({
+            (row.get("product_id"), row.get("version"))
+            for row in current_rows
+            if row.get("product_id") and row.get("version")
+        }, key=lambda item: ((item[0] or ""), semver_key(item[1] or "")))
+        if not current_release_pairs:
+            current_release_pairs = sorted({
+                (deployment.get("product_id"), deployment.get("version"))
+                for deployment in customer.get("deployments", [])
+                if deployment.get("environment") == "prod" and deployment.get("product_id") and deployment.get("version")
+            }, key=lambda item: ((item[0] or ""), semver_key(item[1] or "")))
+
         available_features: dict[str, dict] = {}
-        for version in current_versions:
-            for feature in coverage_by_version.get(version, []):
+        for release_product_id, release_version in current_release_pairs:
+            for feature in coverage_by_release.get((release_product_id, release_version), []):
                 if can_access_feature(customer_tier, feature.get("tier") or "core"):
                     available_features.setdefault(feature["feature_code"], feature)
 
@@ -382,6 +425,9 @@ def load_data(api_base: str) -> dict:
     return {
         "dashboard": dashboard,
         "portfolio": portfolio,
+        "selected_product": product_id,
+        "selected_version": version,
+        "selected_region": region,
         "customers": sorted(customer_metrics, key=lambda row: (-row["score"], row["customer_name"])),
         "coverage_rows": sorted(coverage_rows, key=lambda row: (row["coverage_pct"], row["customer_name"], row["category"])),
         "underutilized_rows": sorted(underutilized_rows, key=lambda row: (row["total_count"], row["customer_name"], row["feature_name"])),
@@ -876,9 +922,17 @@ def section_risk_and_expansion(data: dict) -> str:
 </div>"""
 
 
-def build_html(api_base: str) -> str:
-    data = load_data(api_base)
+def build_html(api_base: str, product_id: str | None = None, version: str | None = None, region: str | None = None) -> str:
+    data = load_data(api_base, product_id=product_id, version=version, region=region)
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
+    scope_parts = []
+    if data.get("selected_product"):
+        scope_parts.append(data["selected_product"])
+    else:
+        scope_parts.append("all products")
+    scope_parts.append(f"v{data['selected_version']}" if data.get("selected_version") else "all versions")
+    scope_parts.append(data["selected_region"] if data.get("selected_region") else "all regions")
+    scope_label = " / ".join(scope_parts)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -948,6 +1002,7 @@ def build_html(api_base: str) -> str:
     <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
       <span class="tag-pill">CUSTOMER SUCCESS MANAGEMENT VIEW</span>
       <span class="tag-pill">Health + Engagement Focused</span>
+      <span class="tag-pill">Scope: {scope_label}</span>
     </div>
     <h1 class="mb-1" style="font-size:1.95rem;font-weight:700">Customer Success Management Dashboard</h1>
     <div class="subtitle">
@@ -978,10 +1033,13 @@ def build_html(api_base: str) -> str:
 def main():
     parser = argparse.ArgumentParser(description="Generate WSO2 Customer Success Management HTML report")
     parser.add_argument("--api", default="http://127.0.0.1:8001", help="API base URL")
+    parser.add_argument("--product", default=None, help="Optional product ID scope")
+    parser.add_argument("--version", default=None, help="Optional version scope")
+    parser.add_argument("--region", default=None, help="Optional region scope")
     parser.add_argument("--out", default="reports/customer_success.html", help="Output HTML path")
     args = parser.parse_args()
 
-    html = build_html(args.api)
+    html = build_html(args.api, product_id=args.product, version=args.version, region=args.region)
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
