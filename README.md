@@ -73,6 +73,8 @@ http://127.0.0.1:8001/views
 - PostgreSQL
 - `psql` client installed locally
 
+This project is designed to run against a local PostgreSQL database. It does not require any checked-in `*.sqlite`, `*.sqlite3`, or `*.db` files.
+
 ### Fastest Setup
 
 1. Clone the repository
@@ -122,6 +124,8 @@ export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/feature_track
 ```
 
 If your local PostgreSQL server uses a different user, password, host, or port, adjust the `DATABASE_URL` accordingly.
+
+SQLite files are not part of the normal setup flow for this repository and are treated as local-only artifacts if they appear during experimentation.
 
 ## Manual Setup
 
