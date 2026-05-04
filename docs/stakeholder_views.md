@@ -20,7 +20,7 @@ The repository exposes one primary UI entry point:
 
 Recommended flow:
 
-1. Start in the feature explorer for product, version, and customer filtering
+1. Start in the feature explorer for product, version, customer, region, and customer-tier filtering
 2. Drill into feature-level detail where needed
 3. Open stakeholder-specific summary views from the explorer when you need a narrative or audience-specific framing
 
@@ -51,6 +51,8 @@ Recommended flow:
 - Product filter, including `All Products`
 - Version filter
 - Customer filter
+- Region filter
+- Customer Tier filter
 - Summary cards for adoption tiers and enablement signals
 - Decision-signal cards such as deprecation-review candidates and enablement-gap priorities
 - Clickable feature table
@@ -117,8 +119,8 @@ Recommended flow:
 - identifying adoption and upsell opportunities
 
 **Current limitations:**
-- the view still contains product-specific assumptions in some of its deeper calculations
-- the current implementation still uses `identity-server` in some coverage logic, so this view is not yet fully product-aware in the same way as the feature explorer
+- the view still contains product-specific assumptions in some of its deeper recommendations and expansion heuristics
+- the current implementation is now scope-aware for product, version, region, and customer tier, but some deeper logic still reflects Identity Server-oriented feature families
 
 ---
 
@@ -202,7 +204,7 @@ Generated HTML reports can still be created locally through the report scripts, 
 
 These are the main documentation-relevant gaps between the current implementation and the broader intended product direction:
 
-- Customer Success is not yet fully product-aware end to end
+- Customer Success is scope-aware, but some deeper heuristics remain product-flavored
 - Regional Managers is not yet fully product-aware end to end
 - Some taxonomy fields described elsewhere remain partially populated or inconsistently used across products
 - Some historical scripts and naming still reflect older Identity Server-first assumptions

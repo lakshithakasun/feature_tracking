@@ -32,6 +32,7 @@ from app.reports import (
     feature_customer_breakdown,
     feature_heatmap,
     feature_utilization_summary,
+    regional_summary,
     utilization_by_category,
 )
 from app.schemas import (
@@ -403,6 +404,7 @@ def view_feature_utilization(
     version: str = None,
     customer_id: str = None,
     region: str = None,
+    customer_tier: str = None,
     db: Session = Depends(get_session),
 ):
     return render_feature_utilization(
@@ -412,6 +414,7 @@ def view_feature_utilization(
         version=version,
         customer_id=customer_id,
         region=region,
+        customer_tier=customer_tier,
     )
 
 
@@ -423,6 +426,7 @@ def view_feature_utilization_detail(
     version: str = None,
     customer_id: str = None,
     region: str = None,
+    customer_tier: str = None,
     db: Session = Depends(get_session),
 ):
     return render_feature_detail(
@@ -433,12 +437,25 @@ def view_feature_utilization_detail(
         version=version,
         customer_id=customer_id,
         region=region,
+        customer_tier=customer_tier,
     )
 
 
 @app.get("/views/customer-success", response_class=HTMLResponse)
-def view_customer_success(request: Request, product_id: str = None, version: str = None, region: str = None):
-    return render_customer_success(_api_base_from_request(request), product_id=product_id, version=version, region=region)
+def view_customer_success(
+    request: Request,
+    product_id: str = None,
+    version: str = None,
+    region: str = None,
+    customer_tier: str = None,
+):
+    return render_customer_success(
+        _api_base_from_request(request),
+        product_id=product_id,
+        version=version,
+        region=region,
+        customer_tier=customer_tier,
+    )
 
 
 @app.get("/views/regional", response_class=HTMLResponse)

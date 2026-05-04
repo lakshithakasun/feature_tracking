@@ -44,7 +44,7 @@ http://127.0.0.1:8001/views/feature-utilization
 ```
 
 The explorer supports:
-- product, version, and customer filters
+- product, version, customer, region, and customer-tier filters
 - all-products scope
 - clickable feature summaries
 - detailed feature drill-down pages
@@ -213,7 +213,7 @@ http://127.0.0.1:8001/views/feature-utilization?product_id=__all__
 Behavior notes:
 
 - `/views` redirects to `/views/feature-utilization` for backward compatibility
-- `/views/feature-utilization` is the primary landing page and owns filters for product, version, customer, and region scope
+- `/views/feature-utilization` is the primary landing page and owns filters for product, version, customer, region, and customer-tier scope
 - stakeholder-specific views are accessed from the explorer or via direct routes
 
 Direct stakeholder routes:
@@ -222,6 +222,7 @@ Direct stakeholder routes:
 http://127.0.0.1:8001/views/product-dev?product_id=identity-server
 http://127.0.0.1:8001/views/product-dev?product_id=identity-server&version=7.3.0
 http://127.0.0.1:8001/views/customer-success
+http://127.0.0.1:8001/views/customer-success?product_id=identity-server&version=7.3.0&region=eu-west&customer_tier=enterprise
 http://127.0.0.1:8001/views/regional
 http://127.0.0.1:8001/views/regional?region=eu-west
 http://127.0.0.1:8001/views/technical-owner?customer_id=acme-corp&product_id=identity-server

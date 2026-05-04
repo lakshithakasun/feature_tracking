@@ -167,7 +167,14 @@ def category_label(category_name: str) -> str:
     return category_name or "Unknown"
 
 
-def load_data(api_base: str, product_id: str | None = None, version: str | None = None, region: str | None = None) -> dict:
+def load_data(
+    api_base: str,
+    product_id: str | None = None,
+    version: str | None = None,
+    region: str | None = None,
+    customer_tier: str | None = None,
+) -> dict:
+    selected_customer_tier = customer_tier
     print("Fetching customer success management data...")
     portfolio = fetch(api_base, "/reports/customers/portfolio") or []
     dashboard_path = "/reports/dashboard"
@@ -203,6 +210,8 @@ def load_data(api_base: str, product_id: str | None = None, version: str | None 
         filtered_rows = customer_feature_rows.get(customer["customer_id"], [])
         if region and (customer.get("region") or "unknown") != region:
             continue
+        if selected_customer_tier and (customer.get("tier") or "unknown") != selected_customer_tier:
+            continue
         if filtered_deployments or filtered_rows:
             copy = dict(customer)
             copy["deployments"] = filtered_deployments
@@ -233,7 +242,7 @@ def load_data(api_base: str, product_id: str | None = None, version: str | None 
     for customer in portfolio:
         customer_id = customer["customer_id"]
         customer_name = customer["customer_name"]
-        customer_tier = (customer.get("tier") or "core").lower()
+        customer_tier_value = (customer.get("tier") or "core").lower()
         rows = customer_feature_rows.get(customer_id, [])
         prod_rows = [row for row in rows if row.get("environment") == "prod"]
 
@@ -295,7 +304,7 @@ def load_data(api_base: str, product_id: str | None = None, version: str | None 
         available_features: dict[str, dict] = {}
         for release_product_id, release_version in current_release_pairs:
             for feature in coverage_by_release.get((release_product_id, release_version), []):
-                if can_access_feature(customer_tier, feature.get("tier") or "core"):
+                if can_access_feature(customer_tier_value, feature.get("tier") or "core"):
                     available_features.setdefault(feature["feature_code"], feature)
 
         available_by_category: dict[str, set] = defaultdict(set)
@@ -406,7 +415,7 @@ def load_data(api_base: str, product_id: str | None = None, version: str | None 
         customer_metrics.append({
             "customer_id": customer_id,
             "customer_name": customer_name,
-            "tier": customer_tier,
+            "tier": customer_tier_value,
             "region": customer.get("region") or "unknown",
             "status": status,
             "score": adoption_score,
@@ -428,6 +437,7 @@ def load_data(api_base: str, product_id: str | None = None, version: str | None 
         "selected_product": product_id,
         "selected_version": version,
         "selected_region": region,
+        "selected_customer_tier": selected_customer_tier,
         "customers": sorted(customer_metrics, key=lambda row: (-row["score"], row["customer_name"])),
         "coverage_rows": sorted(coverage_rows, key=lambda row: (row["coverage_pct"], row["customer_name"], row["category"])),
         "underutilized_rows": sorted(underutilized_rows, key=lambda row: (row["total_count"], row["customer_name"], row["feature_name"])),
@@ -922,8 +932,14 @@ def section_risk_and_expansion(data: dict) -> str:
 </div>"""
 
 
-def build_html(api_base: str, product_id: str | None = None, version: str | None = None, region: str | None = None) -> str:
-    data = load_data(api_base, product_id=product_id, version=version, region=region)
+def build_html(
+    api_base: str,
+    product_id: str | None = None,
+    version: str | None = None,
+    region: str | None = None,
+    customer_tier: str | None = None,
+) -> str:
+    data = load_data(api_base, product_id=product_id, version=version, region=region, customer_tier=customer_tier)
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     scope_parts = []
     if data.get("selected_product"):
@@ -932,6 +948,7 @@ def build_html(api_base: str, product_id: str | None = None, version: str | None
         scope_parts.append("all products")
     scope_parts.append(f"v{data['selected_version']}" if data.get("selected_version") else "all versions")
     scope_parts.append(data["selected_region"] if data.get("selected_region") else "all regions")
+    scope_parts.append(data["selected_customer_tier"] if data.get("selected_customer_tier") else "all customer tiers")
     scope_label = " / ".join(scope_parts)
 
     return f"""<!DOCTYPE html>
@@ -1036,10 +1053,17 @@ def main():
     parser.add_argument("--product", default=None, help="Optional product ID scope")
     parser.add_argument("--version", default=None, help="Optional version scope")
     parser.add_argument("--region", default=None, help="Optional region scope")
+    parser.add_argument("--customer-tier", default=None, help="Optional customer tier scope")
     parser.add_argument("--out", default="reports/customer_success.html", help="Output HTML path")
     args = parser.parse_args()
 
-    html = build_html(args.api, product_id=args.product, version=args.version, region=args.region)
+    html = build_html(
+        args.api,
+        product_id=args.product,
+        version=args.version,
+        region=args.region,
+        customer_tier=args.customer_tier,
+    )
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")

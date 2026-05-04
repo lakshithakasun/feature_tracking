@@ -32,20 +32,58 @@ def _load_script(filename: str, module_name: str):
     return module
 
 
+def _render_error_html(title: str, message: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{escape(title)}</title>
+  <style>
+    body {{ margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:#f4f7fb; color:#162033; }}
+    .wrap {{ max-width:900px; margin:0 auto; padding:3rem 1.25rem; }}
+    .card {{ background:#fff; border:1px solid #dde5ee; border-radius:16px; padding:1.25rem 1.4rem; box-shadow:0 10px 28px rgba(15,23,42,.05); }}
+    h1 {{ margin:0 0 .75rem; font-size:1.6rem; }}
+    p {{ margin:.4rem 0; color:#5f7187; }}
+    a {{ color:#15528d; text-decoration:none; font-weight:600; }}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>{escape(title)}</h1>
+      <p>{escape(message)}</p>
+      <p><a href="/views/feature-utilization">Back to Feature Utilization Explorer</a></p>
+    </div>
+  </div>
+</body>
+</html>"""
+
+
 def render_product_dev(api_base: str, product_id: str = "identity-server", version: str | None = None) -> str:
     module = _load_script("12_report_product_dev.py", "product_dev_report")
     data = module.load_data(api_base, product_id, version_filter=version)
     return module.build_html(data, product_id)
 
 
-def render_customer_success(api_base: str, product_id: str | None = None, version: str | None = None, region: str | None = None) -> str:
+def render_customer_success(
+    api_base: str,
+    product_id: str | None = None,
+    version: str | None = None,
+    region: str | None = None,
+    customer_tier: str | None = None,
+) -> str:
     module = _load_script("11_report_customer_success.py", "customer_success_report")
-    return module.build_html(api_base, product_id=product_id, version=version, region=region)
+    return module.build_html(api_base, product_id=product_id, version=version, region=region, customer_tier=customer_tier)
 
 
 def render_regional(api_base: str, region: str | None = None) -> str:
     module = _load_script("09_report_regional_gm.py", "regional_managers_report")
-    return module.build_html(api_base, region_filter=region)
+    try:
+        return module.build_html(api_base, region_filter=region)
+    except SystemExit as exc:
+        message = str(exc) or "The regional report could not be generated for the current scope."
+        return _render_error_html("Regional Managers View Unavailable", message)
 
 
 def render_technical_owner(api_base: str, customer_id: str, product_id: str | None = None) -> str:
@@ -76,7 +114,7 @@ def available_versions(db: Session, product_id: str | None) -> list[str]:
 
 def available_customers(db: Session, product_id: str | None, version: str | None = None) -> list[dict]:
     q = (
-        db.query(models.Customer.id, models.Customer.name, models.Customer.region)
+        db.query(models.Customer.id, models.Customer.name, models.Customer.region, models.Customer.tier)
         .join(models.Deployment, models.Deployment.customer_id == models.Customer.id)
         .join(models.ProductRelease, models.ProductRelease.id == models.Deployment.product_release_id)
     )
@@ -85,7 +123,7 @@ def available_customers(db: Session, product_id: str | None, version: str | None
     if version:
         q = q.filter(models.ProductRelease.version == version)
     rows = q.distinct().order_by(models.Customer.name).all()
-    return [{"id": row.id, "name": row.name, "region": row.region} for row in rows]
+    return [{"id": row.id, "name": row.name, "region": row.region, "tier": row.tier} for row in rows]
 
 
 def available_regions(db: Session) -> list[str]:
@@ -97,6 +135,17 @@ def available_regions(db: Session) -> list[str]:
         .all()
     )
     return [row.region for row in rows if row.region]
+
+
+def available_customer_tiers(db: Session) -> list[str]:
+    rows = (
+        db.query(models.Customer.tier)
+        .distinct()
+        .filter(models.Customer.tier.isnot(None))
+        .order_by(models.Customer.tier)
+        .all()
+    )
+    return [row.tier for row in rows if row.tier]
 
 
 def available_customer_products(db: Session, customer_id: str) -> list[dict]:
@@ -168,13 +217,16 @@ def build_feature_explorer_dataset(
     version: str | None = None,
     customer_id: str | None = None,
     region: str | None = None,
+    customer_tier: str | None = None,
 ) -> dict:
     products = available_products(db)
     regions = available_regions(db)
+    customer_tiers = available_customer_tiers(db)
     if not products:
         return {
             "products": [],
             "regions": [],
+            "customer_tiers": [],
             "versions": [],
             "customers": [],
             "rows": [],
@@ -182,6 +234,7 @@ def build_feature_explorer_dataset(
             "selected_version": None,
             "selected_customer": None,
             "selected_region": None,
+            "selected_customer_tier": None,
             "scope_customer_count": 0,
         }
 
@@ -190,6 +243,7 @@ def build_feature_explorer_dataset(
     selected_product = None if not product_id or product_id == ALL_PRODUCTS else (product_id if product_id in valid_product_ids else products[0]["id"])
     selected_product_key = selected_product or ALL_PRODUCTS
     selected_region = region if region in regions else None
+    selected_customer_tier = customer_tier if customer_tier in customer_tiers else None
 
     versions = available_versions(db, selected_product)
     selected_version = version if version in versions else None
@@ -197,6 +251,8 @@ def build_feature_explorer_dataset(
     customers = available_customers(db, selected_product, selected_version)
     if selected_region:
         customers = [customer for customer in customers if customer.get("region") == selected_region]
+    if selected_customer_tier:
+        customers = [customer for customer in customers if (customer.get("tier") or "unknown") == selected_customer_tier]
     valid_customer_ids = {customer["id"] for customer in customers}
     selected_customer = customer_id if customer_id in valid_customer_ids else None
     customer_products = available_customer_products(db, selected_customer) if selected_customer else []
@@ -212,6 +268,10 @@ def build_feature_explorer_dataset(
         if selected_region:
             product_customers = [
                 customer for customer in product_customers if customer.get("region") == selected_region
+            ]
+        if selected_customer_tier:
+            product_customers = [
+                customer for customer in product_customers if (customer.get("tier") or "unknown") == selected_customer_tier
             ]
         product_scope_customer_ids[scope_product] = {customer["id"] for customer in product_customers}
 
@@ -371,6 +431,7 @@ def build_feature_explorer_dataset(
     return {
         "products": products,
         "regions": regions,
+        "customer_tiers": customer_tiers,
         "versions": versions,
         "customers": customers,
         "rows": rows,
@@ -378,6 +439,7 @@ def build_feature_explorer_dataset(
         "selected_version": selected_version,
         "selected_customer": selected_customer,
         "selected_region": selected_region,
+        "selected_customer_tier": selected_customer_tier,
         "scope_customer_count": scope_customer_count,
         "scope_products": customer_products if selected_customer and not selected_product else [
             {"id": product_id, "name": product_names.get(product_id, product_id)}
@@ -489,6 +551,8 @@ def _feature_scope_trends(
     product_id: str | None,
     version: str | None = None,
     customer_id: str | None = None,
+    region: str | None = None,
+    customer_tier: str | None = None,
 ) -> dict[str, dict]:
     q = (
         db.query(
@@ -512,6 +576,10 @@ def _feature_scope_trends(
         q = q.filter(models.ProductRelease.version == version)
     if customer_id:
         q = q.filter(models.Customer.id == customer_id)
+    if region:
+        q = q.filter(models.Customer.region == region)
+    if customer_tier:
+        q = q.filter(models.Customer.tier == customer_tier)
 
     grouped: dict[str, list] = defaultdict(list)
     for row in q.all():
@@ -526,19 +594,30 @@ def render_feature_utilization(
     version: str | None = None,
     customer_id: str | None = None,
     region: str | None = None,
+    customer_tier: str | None = None,
 ) -> str:
-    data = build_feature_explorer_dataset(db, product_id=product_id, version=version, customer_id=customer_id, region=region)
+    data = build_feature_explorer_dataset(
+        db,
+        product_id=product_id,
+        version=version,
+        customer_id=customer_id,
+        region=region,
+        customer_tier=customer_tier,
+    )
     rows = data["rows"]
     selected_product = data["selected_product"]
     selected_product_id = None if selected_product == ALL_PRODUCTS else selected_product
     selected_version = data["selected_version"]
     selected_customer = data["selected_customer"]
     selected_region = data["selected_region"]
+    selected_customer_tier = data["selected_customer_tier"]
     trend_map = _feature_scope_trends(
         db,
         product_id=selected_product_id,
         version=selected_version,
         customer_id=selected_customer,
+        region=selected_region,
+        customer_tier=selected_customer_tier,
     )
 
     product_options = f'<option value="{ALL_PRODUCTS}"{" selected" if selected_product == ALL_PRODUCTS else ""}>All Products</option>\n' + "\n".join(
@@ -557,6 +636,10 @@ def render_feature_utilization(
         f'<option value="{escape(item)}"{" selected" if item == selected_region else ""}>{escape(item)}</option>'
         for item in data["regions"]
     )
+    tier_options = '<option value="">All customer tiers</option>\n' + "\n".join(
+        f'<option value="{escape(item)}"{" selected" if item == selected_customer_tier else ""}>{escape(item)}</option>'
+        for item in data["customer_tiers"]
+    )
 
     row_html = []
     for index, row in enumerate(rows, start=1):
@@ -567,6 +650,8 @@ def render_feature_utilization(
             params["customer_id"] = selected_customer
         if selected_region:
             params["region"] = selected_region
+        if selected_customer_tier:
+            params["customer_tier"] = selected_customer_tier
         detail_href = f"{base_url}/views/feature-utilization/detail?{urlencode(params)}"
         row_html.append(
             f"""
@@ -600,10 +685,20 @@ def render_feature_utilization(
             f"Showing {len(rows)} features for customer scope <strong>{escape(selected_customer)}</strong> "
             f"across <strong>{escape(scope_product_names)}</strong>."
         )
+    elif selected_region and selected_customer_tier:
+        summary_text = (
+            f"Showing {len(rows)} features across <strong>{data['scope_customer_count']}</strong> customers "
+            f"in region <strong>{escape(selected_region)}</strong> and tier <strong>{escape(selected_customer_tier)}</strong>."
+        )
     elif selected_region:
         summary_text = (
             f"Showing {len(rows)} features across <strong>{data['scope_customer_count']}</strong> customers "
             f"in region <strong>{escape(selected_region)}</strong>."
+        )
+    elif selected_customer_tier:
+        summary_text = (
+            f"Showing {len(rows)} features across <strong>{data['scope_customer_count']}</strong> customers "
+            f"in tier <strong>{escape(selected_customer_tier)}</strong>."
         )
     elif selected_product == ALL_PRODUCTS:
         summary_text = (
@@ -639,6 +734,8 @@ def render_feature_utilization(
         cs_params["version"] = selected_version
     if selected_region:
         cs_params["region"] = selected_region
+    if selected_customer_tier:
+        cs_params["customer_tier"] = selected_customer_tier
     cs_href = f"{base_url}/views/customer-success"
     if cs_params:
         cs_href = f"{cs_href}?{urlencode(cs_params)}"
@@ -811,7 +908,7 @@ def render_feature_utilization(
 <body>
   <div class="hero">
     <h1>Feature Utilization Explorer</h1>
-    <p>Filter by product, version, customer, and region, then click any feature row for a detailed summary.</p>
+    <p>Filter by product, version, customer, region, and customer tier, then click any feature row for a detailed summary.</p>
   </div>
   <div class="wrap">
     <form method="get" action="{base_url}/views/feature-utilization" class="card filters">
@@ -831,6 +928,10 @@ def render_feature_utilization(
         <div>
           <label for="region">Region Filter</label>
           <select id="region" name="region" onchange="this.form.submit()">{region_options}</select>
+        </div>
+        <div>
+          <label for="customer_tier">Customer Tier Filter</label>
+          <select id="customer_tier" name="customer_tier" onchange="this.form.submit()">{tier_options}</select>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
           <button type="submit">Apply Filters</button>
@@ -1066,8 +1167,16 @@ def render_feature_detail(
     version: str | None = None,
     customer_id: str | None = None,
     region: str | None = None,
+    customer_tier: str | None = None,
 ) -> str:
-    explorer = build_feature_explorer_dataset(db, product_id=product_id, version=version, customer_id=customer_id, region=region)
+    explorer = build_feature_explorer_dataset(
+        db,
+        product_id=product_id,
+        version=version,
+        customer_id=customer_id,
+        region=region,
+        customer_tier=customer_tier,
+    )
     summary = next((row for row in explorer["rows"] if row["code"] == feature_code), None)
     rows = feature_customer_breakdown(
         db,
@@ -1078,6 +1187,8 @@ def render_feature_detail(
     )
     if region:
         rows = [row for row in rows if getattr(row, "customer_region", None) == region]
+    if customer_tier:
+        rows = [row for row in rows if (getattr(row, "customer_tier", None) or "unknown") == customer_tier]
     dimensions = _aggregate_dimensions(rows)
     back_params = {"product_id": product_id}
     if version:
@@ -1086,6 +1197,8 @@ def render_feature_detail(
         back_params["customer_id"] = customer_id
     if region:
         back_params["region"] = region
+    if customer_tier:
+        back_params["customer_tier"] = customer_tier
     back_href = f"{base_url}/views/feature-utilization?{urlencode(back_params)}"
 
     if summary is None:
