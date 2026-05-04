@@ -137,7 +137,9 @@ def _catalog_scope_rows(
                     "name": row.feature_name,
                     "category": row.category,
                     "tier": row.tier or "",
+                    "tiers": {row.tier} if row.tier else set(),
                     "status": row.status or "",
+                    "statuses": {row.status} if row.status else set(),
                     "introduced_in": row.introduced_in or "",
                     "versions": set(),
                     "total_usage": 0,
@@ -151,6 +153,10 @@ def _catalog_scope_rows(
                 },
                 )
                 feature["versions"].add(scope_version)
+                if row.tier:
+                    feature["tiers"].add(row.tier)
+                if row.status:
+                    feature["statuses"].add(row.status)
                 feature["total_usage"] += int(row.total_usage or 0)
                 feature["report_count"] += int(row.report_count or 0)
     return feature_map
@@ -200,6 +206,14 @@ def build_feature_explorer_dataset(
         else [product["id"] for product in customer_products] if customer_products else sorted(product_names.keys())
     )
     scoped_versions = [selected_version] if selected_version else versions
+    product_scope_customer_ids: dict[str, set[str]] = {}
+    for scope_product in scoped_product_ids:
+        product_customers = available_customers(db, scope_product, selected_version)
+        if selected_region:
+            product_customers = [
+                customer for customer in product_customers if customer.get("region") == selected_region
+            ]
+        product_scope_customer_ids[scope_product] = {customer["id"] for customer in product_customers}
 
     feature_map = _catalog_scope_rows(
         db,
@@ -225,7 +239,9 @@ def build_feature_explorer_dataset(
                     "name": row.feature_name,
                     "category": row.category,
                     "tier": "",
+                    "tiers": set(),
                     "status": "",
+                    "statuses": set(),
                     "introduced_in": "",
                     "versions": set(),
                     "total_usage": 0,
@@ -267,7 +283,9 @@ def build_feature_explorer_dataset(
                         "name": row["feature_code"],
                         "category": "",
                         "tier": "",
+                        "tiers": set(),
                         "status": "",
+                        "statuses": set(),
                         "introduced_in": "",
                         "versions": {scope_version},
                         "total_usage": 0,
@@ -288,6 +306,11 @@ def build_feature_explorer_dataset(
     scope_customer_count = 1 if selected_customer else len(customers)
     rows: list[dict] = []
     for feature in feature_map.values():
+        feature_scope_customer_count = (
+            1
+            if selected_customer
+            else len(product_scope_customer_ids.get(feature["product_id"], valid_customer_ids))
+        )
         if selected_customer:
             enabled_count = 1 if feature["enabled"] else 0
             active_count = 1 if feature["active"] else 0
@@ -296,10 +319,18 @@ def build_feature_explorer_dataset(
         else:
             enabled_count = len(feature["enabled_customers"])
             active_count = len(feature["active_customers"])
-            enabled_label = f"{enabled_count}/{scope_customer_count}" if scope_customer_count else "0/0"
-            active_label = f"{active_count}/{scope_customer_count}" if scope_customer_count else "0/0"
+            enabled_label = (
+                f"{enabled_count}/{feature_scope_customer_count}" if feature_scope_customer_count else "0/0"
+            )
+            active_label = (
+                f"{active_count}/{feature_scope_customer_count}" if feature_scope_customer_count else "0/0"
+            )
 
-        adoption_pct = round(active_count / scope_customer_count * 100) if scope_customer_count else 0
+        adoption_pct = (
+            round(active_count / feature_scope_customer_count * 100)
+            if feature_scope_customer_count
+            else 0
+        )
         rows.append(
             {
                 "code": feature["code"],
@@ -307,8 +338,20 @@ def build_feature_explorer_dataset(
                 "product_name": feature["product_name"],
                 "name": feature["name"],
                 "category": feature["category"] or "Uncategorised",
-                "tier": feature["tier"] or "core",
-                "status": feature["status"] or "unknown",
+                "tier": (
+                    sorted(feature["tiers"])[0]
+                    if len(feature["tiers"]) == 1
+                    else f"Mixed ({', '.join(sorted(feature['tiers']))})"
+                    if feature["tiers"]
+                    else feature["tier"] or "core"
+                ),
+                "status": (
+                    sorted(feature["statuses"])[0]
+                    if len(feature["statuses"]) == 1
+                    else f"Mixed ({', '.join(sorted(feature['statuses']))})"
+                    if feature["statuses"]
+                    else feature["status"] or "unknown"
+                ),
                 "introduced_in": feature["introduced_in"] or "",
                 "versions": sorted(v for v in feature["versions"] if v),
                 "total_usage": int(feature["total_usage"]),
@@ -318,6 +361,7 @@ def build_feature_explorer_dataset(
                 "enabled_label": enabled_label,
                 "active_label": active_label,
                 "adoption_pct": adoption_pct,
+                "feature_scope_customer_count": feature_scope_customer_count,
                 "environments": sorted(env for env in feature["environments"] if env),
                 "latest_report_to": feature["latest_report_to"].isoformat() if feature["latest_report_to"] else None,
             }
@@ -1051,6 +1095,7 @@ def render_feature_detail(
         </body></html>"""
 
     trend = _feature_trend(rows)
+    show_region_column = not region and any(getattr(row, "customer_region", None) for row in rows)
     detail_rows = []
     for row in rows:
         report_window = "—"
@@ -1060,6 +1105,7 @@ def render_feature_detail(
             f"""
             <tr>
               <td>{escape(row.customer_name)}</td>
+              {"<td>" + escape(getattr(row, "customer_region", None) or "—") + "</td>" if show_region_column else ""}
               <td>{escape(row.environment or "—")}</td>
               <td>{escape(row.version or "—")}</td>
               <td class="text-center">{"Yes" if row.is_enabled else "No"}</td>
@@ -1084,7 +1130,7 @@ def render_feature_detail(
             """
         )
 
-    scope_label = []
+    scope_label = [summary["product_name"]]
     if version:
         scope_label.append(f"v{version}")
     if region:
@@ -1095,6 +1141,7 @@ def render_feature_detail(
     detail_count = len(rows)
     enabled_rows = sum(1 for row in rows if row.is_enabled)
     active_rows = sum(1 for row in rows if int(row.total_count or 0) > 0)
+    activity_versions = sorted({str(row.version) for row in rows if getattr(row, "version", None)})
     enablement_gap = max(0, summary["enabled_count"] - summary["active_count"])
     breadth_label = (
         f"{summary['active_count']}/{explorer['scope_customer_count']} customers"
@@ -1110,6 +1157,18 @@ def render_feature_detail(
         key_message = "The feature appears enabled, but no active usage was reported."
     recommendations = _decision_recommendations(summary, rows, explorer["rows"], trend, customer_id)
     trend_value = "—" if trend["delta_pct"] is None else f"{trend['delta_pct']:+d}%"
+    decision_signal = ("Monitor", "neutral")
+    if summary["adoption_pct"] >= 70 and (trend["delta_pct"] is None or trend["delta_pct"] >= 0):
+        decision_signal = ("Invest", "good")
+    elif summary["enabled_count"] > summary["active_count"]:
+        decision_signal = ("Improve Adoption", "warn")
+    elif summary["adoption_pct"] == 0 or (
+        summary["adoption_pct"] <= 10 and summary["total_usage"] <= 5
+    ):
+        decision_signal = ("Deprecation Review", "risk")
+    elif trend["delta_pct"] is not None and trend["delta_pct"] < 0:
+        decision_signal = ("Monitor Decline", "warn")
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1137,6 +1196,11 @@ def render_feature_detail(
     .decision-list li {{ margin:.38rem 0; }}
     .series {{ display:flex; flex-wrap:wrap; gap:.45rem; margin-top:.6rem; }}
     .series-chip {{ background:#eef4fa; color:#244a68; padding:.25rem .55rem; border-radius:999px; font-size:.78rem; }}
+    .signal {{ display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .7rem; border-radius:999px; font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }}
+    .signal.good {{ background:#e7f6ec; color:#166534; }}
+    .signal.warn {{ background:#fff4e5; color:#9a4300; }}
+    .signal.risk {{ background:#fdeaea; color:#b42318; }}
+    .signal.neutral {{ background:#eef4fa; color:#244a68; }}
     table {{ width:100%; border-collapse:collapse; }}
     thead th {{ text-align:left; font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); background:#f8fafc; padding:.8rem; border-bottom:1px solid var(--line); }}
     tbody td {{ padding:.85rem .8rem; border-bottom:1px solid #eef2f7; vertical-align:middle; }}
@@ -1171,6 +1235,7 @@ def render_feature_detail(
 
     <div class="insight">
       <div style="font-weight:700;margin-bottom:.35rem">What this summary says</div>
+      <div style="margin-bottom:.5rem"><span class="signal {decision_signal[1]}">{escape(decision_signal[0])}</span></div>
       <div>{escape(key_message)}</div>
       <div class="muted" style="margin-top:.45rem;font-size:.92rem">
         {detail_count} activity rows were found in this scope, with {enabled_rows} enabled record(s) and {active_rows} active record(s).
@@ -1183,14 +1248,16 @@ def render_feature_detail(
     <div class="card" style="margin-bottom:1rem">
       <div class="panel-head">Summary</div>
       <div class="panel-body">
+        <div><strong>Product:</strong> {escape(summary["product_name"])}</div>
         <div><strong>Status:</strong> {escape(summary["status"])}</div>
         <div><strong>Tier:</strong> {escape(summary["tier"])}</div>
-        <div><strong>Versions in scope:</strong> {escape(", ".join(summary["versions"]) if summary["versions"] else "—")}</div>
-        <div><strong>Reports in scope:</strong> {summary["report_count"]}</div>
+        <div><strong>Catalog versions in scope:</strong> {escape(", ".join(summary["versions"]) if summary["versions"] else "—")}</div>
+        <div><strong>Activity versions seen:</strong> {escape(", ".join(activity_versions) if activity_versions else "—")}</div>
+        <div><strong>Activity rows in scope:</strong> {detail_count}</div>
         <div><strong>Total usage count:</strong> {summary["total_usage"]:,}</div>
         <div><strong>Generated:</strong> {generated_at}</div>
         {"<div class='chips'>" + "".join(f"<span class='chip'>{escape(env)}</span>" for env in summary["environments"]) + "</div>" if summary["environments"] else ""}
-        {"<div class='series'>" + "".join(f"<span class='series-chip'>{escape(point['period'])}: {point['usage']:,}</span>" for point in trend['series']) + "</div>" if trend['series'] else ""}
+        {"<div style='margin-top:.7rem'><strong>Usage series:</strong><div class='series'>" + "".join(f"<span class='series-chip'>{escape(point['period'])}: {point['usage']:,}</span>" for point in trend['series']) + "</div></div>" if trend['series'] else ""}
       </div>
     </div>
 
@@ -1203,6 +1270,7 @@ def render_feature_detail(
             <thead>
               <tr>
                 <th>Customer</th>
+                {"<th>Region</th>" if show_region_column else ""}
                 <th>Environment</th>
                 <th>Version</th>
                 <th class="text-center">Enabled</th>
